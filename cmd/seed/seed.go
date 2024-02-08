@@ -29,6 +29,7 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
+	// Init db (GORM)
 	newLogger := logger.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer that std sql logs will write to
 		logger.Config{
@@ -42,10 +43,9 @@ func main() {
 		panic("failed to connect database")
 	}
 
-	// Miglate the schema
-	_ = db.AutoMigrate(&models.Customer{})
-	_ = db.AutoMigrate(&models.Product{})
-	_ = db.AutoMigrate(&models.ShoppingCart{})
-	_ = db.AutoMigrate(&models.CartItem{})
+	// Init seeder.
+	seeder := models.NewSeeder(db)
+	customer := seeder.CreateCustomer()
+	_ = seeder.AddCart(customer)
 
 }
