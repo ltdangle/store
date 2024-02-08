@@ -45,6 +45,7 @@ func main() {
 	}
 
 	// Miglate the schema
+	_ = db.AutoMigrate(&models.User{})
 	_ = db.AutoMigrate(&models.Customer{})
 	_ = db.AutoMigrate(&models.Product{})
 	_ = db.AutoMigrate(&models.Cart{})

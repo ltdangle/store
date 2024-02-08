@@ -6,19 +6,18 @@ import (
 	"gorm.io/gorm"
 )
 
-type Customer struct {
+type User struct {
 	ID        uint `gorm:"primarykey"`
 	Uuid      string
-	UserUuid  string
+	Email     string `gorm:"type:varchar(255);not null"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt
 }
 
-func NewCustomer(user *User) *Customer {
-	return &Customer{
+func NewUser() *User {
+	return &User{
 		Uuid:      NewUuid(),
-		UserUuid:  user.Uuid,
 		CreatedAt: time.Now(),
 	}
 }
