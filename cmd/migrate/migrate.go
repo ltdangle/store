@@ -51,4 +51,12 @@ func main() {
 	_ = db.AutoMigrate(&models.Cart{})
 	_ = db.AutoMigrate(&models.CartItem{})
 
+	// Add constraints.
+	db.Exec(`ALTER TABLE customers
+    			ADD CONSTRAINT fk_user
+    			FOREIGN KEY (user_uuid)
+    			REFERENCES users (uuid)
+    			ON UPDATE CASCADE
+    			ON DELETE SET NULL;
+`)
 }
