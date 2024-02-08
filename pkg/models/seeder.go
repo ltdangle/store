@@ -14,14 +14,20 @@ type Seeder struct {
 func NewSeeder(db *gorm.DB) *Seeder {
 	return &Seeder{db: db}
 }
-func (s *Seeder) CreateCustomer() *User {
+func (s *Seeder) CreateUser() *User {
 	customer := NewUser()
 	customer.Email = faker.Name()
 	s.db.Create(customer)
 	return customer
 }
 
-func (s *Seeder) AddCart(customer *User) *Cart {
+func (s *Seeder) CreateCustomer(user *User) *Customer {
+	customer := NewCustomer(user)
+	s.db.Create(customer)
+	return customer
+}
+
+func (s *Seeder) AddCart(customer *Customer) *Cart {
 	cart := NewCart()
 	cart.UserUuid = customer.Uuid
 	s.db.Create(cart)
