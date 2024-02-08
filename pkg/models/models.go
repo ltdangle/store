@@ -4,9 +4,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type Uuid struct {
-	Uuid string `gorm:"type:varchar(255);not null;uniquIndex"`
-}
 
 type Product struct {
 	gorm.Model
@@ -28,8 +25,8 @@ type ShoppingCart struct {
 type CartItem struct {
 	gorm.Model
 	Uuid
-	ShoppingCartId uint    `gorm:"not null;index"`     // ForeignKey to ShoppingCart model
-	ProductId      uint    `gorm:"not null;index"`     // ForeignKey to the Product model
-	Quantity       int     `gorm:"not null;default:1"` // Quantity of the product in the cart
-	Subtotal       int     `gorm:"not null;default:0"` // Subtotal should be calculated based on Quantity * Product.Price
+	ShoppingCartId uint `gorm:"not null;index"`     // ForeignKey to ShoppingCart model
+	ProductId      uint `gorm:"not null;index"`     // ForeignKey to the Product model
+	Quantity       int  `gorm:"not null;default:1"` // Quantity of the product in the cart
+	Subtotal       int  `gorm:"not null;default:0"` // Subtotal should be calculated based on Quantity * Product.Price
 }
