@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type ShoppingCart struct {
+type Cart struct {
 	ID        uint `gorm:"primarykey"`
 	Uuid      string
 	UserUuid  string `gorm:"not null;index"`
@@ -16,8 +16,8 @@ type ShoppingCart struct {
 	DeletedAt gorm.DeletedAt
 }
 
-func NewCart() *ShoppingCart {
-	return &ShoppingCart{
+func NewCart() *Cart {
+	return &Cart{
 		Uuid:      NewUuid(),
 		CreatedAt: time.Now(),
 	}

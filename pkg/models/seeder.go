@@ -19,7 +19,7 @@ func (s *Seeder) CreateCustomer() *Customer {
 	return customer
 }
 
-func (s *Seeder) AddCart(customer *Customer) *ShoppingCart {
+func (s *Seeder) AddCart(customer *Customer) *Cart {
 	cart := NewCart()
 	cart.UserUuid = customer.Uuid
 	s.db.Create(cart)
