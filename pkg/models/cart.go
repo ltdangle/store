@@ -7,15 +7,18 @@ import (
 )
 
 type ShoppingCart struct {
-	gorm.Model
-	Uuid     string
-	UserUuid string `gorm:"not null;index"`
-	Total    int    `gorm:"not null;default:0"`
+	ID        uint `gorm:"primarykey"`
+	Uuid      string
+	UserUuid  string `gorm:"not null;index"`
+	Total     int    `gorm:"not null;default:0"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt
 }
 
 func NewCart() *ShoppingCart {
 	return &ShoppingCart{
-		Uuid:  NewUuid(),
-		Model: gorm.Model{CreatedAt: time.Now()},
+		Uuid:      NewUuid(),
+		CreatedAt: time.Now(),
 	}
 }

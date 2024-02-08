@@ -7,14 +7,17 @@ import (
 )
 
 type Customer struct {
-	gorm.Model
-	Uuid string
-	Email string `gorm:"type:varchar(255);not null"`
+	ID        uint `gorm:"primarykey"`
+	Uuid      string
+	Email     string `gorm:"type:varchar(255);not null"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt
 }
 
 func NewCustomer() *Customer {
 	return &Customer{
-		Uuid:  NewUuid(),
-		Model: gorm.Model{CreatedAt: time.Now()},
+		Uuid:      NewUuid(),
+		CreatedAt: time.Now(),
 	}
 }
