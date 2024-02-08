@@ -47,16 +47,15 @@ func main() {
 	// Miglate the schema
 	_ = db.AutoMigrate(&models.User{})
 	_ = db.AutoMigrate(&models.Customer{})
+	db.Exec(`ALTER TABLE customers
+    			ADD CONSTRAINT fk_user
+    			FOREIGN KEY (user_uuid)
+    			REFERENCES users (uuid)
+    			ON UPDATE CASCADE;
+`)
 	_ = db.AutoMigrate(&models.Product{})
 	_ = db.AutoMigrate(&models.Cart{})
 	_ = db.AutoMigrate(&models.CartItem{})
 
 	// Add constraints.
-	db.Exec(`ALTER TABLE customers
-    			ADD CONSTRAINT fk_user
-    			FOREIGN KEY (user_uuid)
-    			REFERENCES users (uuid)
-    			ON UPDATE CASCADE
-    			ON DELETE SET NULL;
-`)
 }
