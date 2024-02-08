@@ -47,6 +47,8 @@ func main() {
 	seeder := models.NewSeeder(db)
 	customer := seeder.CreateCustomer()
 	cart := seeder.AddCart(customer)
-	_ = seeder.AddCartItem(cart)
+	cartItem := seeder.AddCartItem(cart)
+	product := seeder.CreateProduct()
+	seeder.AddProduct(cartItem, product)
 
 }

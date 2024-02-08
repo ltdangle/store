@@ -16,3 +16,10 @@ type Product struct {
 	UpdatedAt   time.Time
 	DeletedAt   gorm.DeletedAt
 }
+
+func NewProduct() *Product {
+	return &Product{
+		Uuid:      NewUuid(),
+		CreatedAt: time.Now(),
+	}
+}
