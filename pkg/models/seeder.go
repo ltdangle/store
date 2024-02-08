@@ -25,3 +25,9 @@ func (s *Seeder) AddCart(customer *Customer) *Cart {
 	s.db.Create(cart)
 	return cart
 }
+func (s *Seeder) AddCartItem(cart *Cart) *CartItem {
+	item := NewCartItem()
+	item.CartUuid = cart.Uuid
+	s.db.Create(item)
+	return item
+}
