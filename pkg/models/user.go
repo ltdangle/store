@@ -12,7 +12,7 @@ type User struct {
 	ID        uint   `gorm:"primarykey"`
 	Uuid      string `gorm:"unique"`
 	Type      string
-	Email     string `gorm:"type:varchar(255);not null"`
+	Email     string `gorm:"type:varchar(255);not null;unique"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt

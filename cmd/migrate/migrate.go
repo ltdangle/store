@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	cfg := infra.ReadConfig("../../.env")
+	cfg := infra.ReadConfig(".env")
 	db := infra.Gorm(cfg)
 
 	// Miglate the schema
