@@ -14,9 +14,15 @@ type customerRepo struct {
 func NewCustomerRepo(db *gorm.DB) *customerRepo {
 	return &customerRepo{db: db}
 }
-func (repo *customerRepo) Save(customer *models.User) {
-	repo.db.Save(customer)
+func (repo *customerRepo) Save(customer *models.User) error {
+	tx := repo.db.Save(customer)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
+
 }
+
 func (repo *customerRepo) FindByUuid(uuid string) (*models.User, error) {
 	var customer models.User
 

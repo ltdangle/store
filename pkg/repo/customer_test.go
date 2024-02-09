@@ -13,5 +13,6 @@ func TestCustomerRepo(t *testing.T) {
 	repo := NewCustomerRepo(gorm)
 	customer := models.NewCustomer()
 	repo.Save(customer)
+	repo.Save(customer)
 	t.Log("test ran")
 }
