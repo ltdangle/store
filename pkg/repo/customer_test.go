@@ -4,6 +4,7 @@ import (
 	"store/pkg/infra"
 	"store/pkg/models"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -29,4 +30,11 @@ func TestCustomerRepo(t *testing.T) {
 	foundCustomer, err := repo.FindByUuid(customer.Uuid)
 	assert.Nil(t, err)
 	assert.Equal(t, customer.Email, foundCustomer.Email)
+	assert.Equal(t, customer.CreatedAt.Format(time.UnixDate), foundCustomer.CreatedAt.Format(time.UnixDate))
+
+	// Customer could not be found.
+	_, err = repo.FindByUuid("wrong_uuid")
+	assert.NotNil(t, err)
+
+	// Test deleting customer.
 }
