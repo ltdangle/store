@@ -1,61 +1,18 @@
 package main
 
 import (
-	"log"
-	"os"
+	"store/pkg/infra"
 	"store/pkg/models"
-	"time"
-
-	"github.com/caarlos0/env/v9"
-	"github.com/joho/godotenv"
-	// "gorm.io/driver/mysql"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
 
-type config struct {
-	MYSQL_DSN    string `env:"MYSQL_DSN"`
-	POSTGRES_URL string `env:"POSTGRES_URL"`
-}
-
 func main() {
-	// Load .env config.
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
-	cfg := config{}
-	if err := env.Parse(&cfg); err != nil {
-		log.Fatal(err.Error())
-	}
-
-	newLogger := logger.New(
-		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer that std sql logs will write to
-		logger.Config{
-			SlowThreshold: time.Second, // Slow SQL threshold
-			LogLevel:      logger.Info, // Log level
-			Colorful:      true,        // Disable color
-		},
-	)
-	db, err := gorm.Open(postgres.Open(cfg.POSTGRES_URL), &gorm.Config{Logger: newLogger})
-	if err != nil {
-		panic("failed to connect database")
-	}
+	cfg := infra.ReadConfig("../../.env")
+	db := infra.Gorm(cfg)
 
 	// Miglate the schema
 	_ = db.AutoMigrate(&models.User{})
-	_ = db.AutoMigrate(&models.Customer{})
-	db.Exec(`ALTER TABLE customers
-    			ADD CONSTRAINT fk_user
-    			FOREIGN KEY (user_uuid)
-    			REFERENCES users (uuid)
-    			ON UPDATE CASCADE;
-`)
 	_ = db.AutoMigrate(&models.Product{})
 	_ = db.AutoMigrate(&models.Cart{})
 	_ = db.AutoMigrate(&models.CartItem{})
 
-	// Add constraints.
 }
