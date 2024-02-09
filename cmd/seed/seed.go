@@ -3,6 +3,10 @@ package main
 import (
 	"store/pkg/infra"
 	"store/pkg/models"
+	"store/pkg/repo"
+	"store/pkg/service"
+
+	"github.com/bxcodec/faker/v3"
 )
 
 func main() {
@@ -14,9 +18,13 @@ func main() {
 	db.Exec("DELETE FROM carts")
 	db.Exec("DELETE FROM cart_items")
 
+	// Int customer service.
+	cstmrRpo := repo.NewCustomerRepo(db)
+	cstmrSrvc := service.NewCustomerService(cstmrRpo)
+	customer, _ := cstmrSrvc.Create(service.CreateCustomerRqst{Email: faker.Email()})
+
 	// Init seeder.
 	seeder := models.NewSeeder(db)
-	customer := seeder.CreateCustomer()
 	cart := seeder.AddCart(customer)
 	cartItem := seeder.AddCartItem(cart)
 	product := seeder.CreateProduct()

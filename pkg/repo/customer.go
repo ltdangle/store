@@ -6,14 +6,14 @@ import (
 	"gorm.io/gorm"
 )
 
-type customerRepo struct {
+type CustomerRepo struct {
 	db *gorm.DB
 }
 
-func NewCustomerRepo(db *gorm.DB) *customerRepo {
-	return &customerRepo{db: db}
+func NewCustomerRepo(db *gorm.DB) *CustomerRepo {
+	return &CustomerRepo{db: db}
 }
-func (repo *customerRepo) Save(customer *models.User) error {
+func (repo *CustomerRepo) Save(customer *models.User) error {
 	tx := repo.db.Save(customer)
 	if tx.Error != nil {
 		return tx.Error
@@ -21,7 +21,7 @@ func (repo *customerRepo) Save(customer *models.User) error {
 	return nil
 
 }
-func (repo *customerRepo) FindByUuid(uuid string) (*models.User, error) {
+func (repo *CustomerRepo) FindByUuid(uuid string) (*models.User, error) {
 	var customer models.User
 
 	result := repo.db.Where("uuid= ? AND type= ?", uuid, models.USER_CUSTOMER).First(&customer)
@@ -32,7 +32,7 @@ func (repo *customerRepo) FindByUuid(uuid string) (*models.User, error) {
 	return &customer, nil
 }
 
-func (repo *customerRepo) FindByEmail(email string) (*models.User, error) {
+func (repo *CustomerRepo) FindByEmail(email string) (*models.User, error) {
 	var customer models.User
 
 	result := repo.db.Where("email= ? AND type= ?", email, models.USER_CUSTOMER).First(&customer)
@@ -43,7 +43,7 @@ func (repo *customerRepo) FindByEmail(email string) (*models.User, error) {
 	return &customer, nil
 }
 
-func (repo *customerRepo) Delete(uuid string) error {
+func (repo *CustomerRepo) Delete(uuid string) error {
 	var customer models.User
 
 	result := repo.db.Where("uuid= ?", uuid).Delete(&customer)
