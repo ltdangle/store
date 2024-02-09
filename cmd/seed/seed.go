@@ -13,9 +13,9 @@ func main() {
 	cfg := infra.ReadConfig(".env")
 	db := infra.Gorm(cfg)
 	// Truncate tables.
+	db.Exec("DELETE FROM carts")
 	db.Exec("DELETE FROM users")
 	db.Exec("DELETE FROM products")
-	db.Exec("DELETE FROM carts")
 	db.Exec("DELETE FROM cart_items")
 
 	// Int customer service.
