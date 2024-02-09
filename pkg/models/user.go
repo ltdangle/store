@@ -10,7 +10,7 @@ const USER_CUSTOMER = "customer"
 
 type User struct {
 	ID        uint   `gorm:"primarykey"`
-	Uuid      string
+	Uuid      string `gorm:"unique"`
 	Type      string
 	Email     string `gorm:"type:varchar(255);not null;unique"`
 	CreatedAt time.Time
