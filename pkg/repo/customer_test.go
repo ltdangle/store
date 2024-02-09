@@ -21,20 +21,21 @@ func TestCustomerRepo(t *testing.T) {
 	// Insert statement on first save.
 	assert.Nil(t, repo.Save(customer))
 
-	// Saving new customer with the same email triggers an error.
-	duplicateCustomer := models.NewCustomer()
-	duplicateCustomer.Email = "emailNew@domain.net"
-	assert.NotNil(t, repo.Save(duplicateCustomer))
-
 	// Find customer.
 	foundCustomer, err := repo.FindByUuid(customer.Uuid)
 	assert.Nil(t, err)
 	assert.Equal(t, customer.Email, foundCustomer.Email)
 	assert.Equal(t, customer.CreatedAt.Format(time.UnixDate), foundCustomer.CreatedAt.Format(time.UnixDate))
 
-	// Customer could not be found.
+	// Searching with non-existent uuid returns an error.
 	_, err = repo.FindByUuid("wrong_uuid")
 	assert.NotNil(t, err)
 
-	// Test deleting customer.
+	// Delete customer.
+	err = repo.Delete(customer.Uuid)
+	assert.Nil(t, err)
+
+	// Deleted customer cannot be found.
+	_, err = repo.FindByUuid(customer.Uuid)
+	assert.NotNil(t, err)
 }

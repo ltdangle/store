@@ -1,7 +1,6 @@
 package repo
 
 import (
-	"errors"
 	"store/pkg/models"
 
 	"gorm.io/gorm"
@@ -28,12 +27,19 @@ func (repo *customerRepo) FindByUuid(uuid string) (*models.User, error) {
 
 	result := repo.db.Where("uuid= ? AND type= ?", uuid, models.USER_CUSTOMER).First(&customer)
 	if result.Error != nil {
-		if result.Error == gorm.ErrRecordNotFound {
-			return nil, errors.New("customer not found")
-		} else {
-			return nil, result.Error
-		}
+		return nil, result.Error
 	}
 
 	return &customer, nil
+}
+
+func (repo *customerRepo) Delete(uuid string) error {
+	var customer models.User
+
+	result := repo.db.Where("uuid= ?", uuid).Delete(&customer)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
 }
