@@ -21,11 +21,21 @@ func (repo *customerRepo) Save(customer *models.User) error {
 	return nil
 
 }
-
 func (repo *customerRepo) FindByUuid(uuid string) (*models.User, error) {
 	var customer models.User
 
 	result := repo.db.Where("uuid= ? AND type= ?", uuid, models.USER_CUSTOMER).First(&customer)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &customer, nil
+}
+
+func (repo *customerRepo) FindByEmail(email string) (*models.User, error) {
+	var customer models.User
+
+	result := repo.db.Where("email= ? AND type= ?", email, models.USER_CUSTOMER).First(&customer)
 	if result.Error != nil {
 		return nil, result.Error
 	}

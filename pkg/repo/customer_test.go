@@ -21,11 +21,15 @@ func TestCustomerRepo(t *testing.T) {
 	// Insert statement on first save.
 	assert.Nil(t, repo.Save(customer))
 
-	// Find customer.
+	// Find customer by uuid.
 	foundCustomer, err := repo.FindByUuid(customer.Uuid)
 	assert.Nil(t, err)
 	assert.Equal(t, customer.Email, foundCustomer.Email)
 	assert.Equal(t, customer.CreatedAt.Format(time.UnixDate), foundCustomer.CreatedAt.Format(time.UnixDate))
+
+	// Find customer by email.
+	foundCustomer, _= repo.FindByEmail(customer.Email)
+	assert.Equal(t, customer.Email, foundCustomer.Email)
 
 	// Searching with non-existent uuid returns an error.
 	_, err = repo.FindByUuid("wrong_uuid")
