@@ -20,6 +20,13 @@ type Product struct {
 	DeletedAt gorm.DeletedAt
 }
 
+func NewProduct() *Product {
+	return &Product{
+		Uuid:      NewUuid(),
+		CreatedAt: time.Now(),
+	}
+}
+
 type ProductField struct {
 	ID          uint   `gorm:"primarykey"`
 	Uuid        string `gorm:"unique"`
@@ -35,8 +42,8 @@ type ProductField struct {
 	DeletedAt gorm.DeletedAt
 }
 
-func NewProduct() *Product {
-	return &Product{
+func NewProductField() *ProductField {
+	return &ProductField{
 		Uuid:      NewUuid(),
 		CreatedAt: time.Now(),
 	}
