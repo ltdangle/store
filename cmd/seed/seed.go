@@ -42,6 +42,12 @@ func main() {
 	seeder.BuildFurnitureProduct("Custom table", "A table build to your specifications")
 	seeder.BuildFurnitureProduct("Custom shelf", "A shelf build to your specifications")
 
+	cart := models.NewCart()
+	lineItem1 := models.NewCartItem()
+	cart.CartItems = append(cart.CartItems, lineItem1)
+	db.Save(cart)
+	db.Save(lineItem1)
+
 	// Int customer service.
 	// cstmrRpo := repo.NewCustomerRepo(db)
 	// cstmrSrvc := service.NewCustomerService(cstmrRpo)

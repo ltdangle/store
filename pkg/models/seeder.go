@@ -11,7 +11,7 @@ type Seeder struct {
 func NewSeeder(db *gorm.DB) *Seeder {
 	return &Seeder{db: db}
 }
-func (seeder *Seeder) BuildFurnitureProduct(name string, description string) {
+func (seeder *Seeder) BuildFurnitureProduct(name string, description string) *Product {
 
 	instrctns := NewProductField(NewBaseProductField())
 	instrctns.Type = "string"
@@ -58,6 +58,7 @@ func (seeder *Seeder) BuildFurnitureProduct(name string, description string) {
 	if tx.Error != nil {
 		panic(tx.Error)
 	}
+	return product
 }
 
 func (seeder *Seeder) BuildBasicFurnitureProduct(name string, description string) {

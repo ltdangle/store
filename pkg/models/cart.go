@@ -10,7 +10,8 @@ type Cart struct {
 	ID        uint   `gorm:"primarykey"`
 	Uuid      string `gorm:"unique"`
 	UserUuid  string
-	Total     int `gorm:"not null;default:0"`
+	CartItems []*CartItem `gorm:"foreignKey:CartID"`
+	Total     int         `gorm:"not null;default:0"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt
