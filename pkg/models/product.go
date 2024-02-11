@@ -9,10 +9,11 @@ import (
 type Product struct {
 	ID   uint   `gorm:"primarykey"`
 	Uuid string `gorm:"unique"`
-	Name string `gorm:"type:varchar(255);not null"`
 
+	Type        string
+	Name        string          `gorm:"type:varchar(255);not null"`
 	Description string          `gorm:"type:text;not null"`
-	BasePrice       int             `gorm:"not null;default:0"`
+	BasePrice   int             `gorm:"not null;default:0"`
 	Fields      []*ProductField `gorm:"foreignKey:ProductID"`
 
 	CreatedAt time.Time
