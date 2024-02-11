@@ -28,3 +28,12 @@ func (service *CustomerService) Create(rqst CreateCustomerRqst) (*models.User, e
 
 	return customer, nil
 }
+
+func (service *CustomerService) FindByUuuid(uuid string) (*models.User, error) {
+	customer, err := service.repo.FindByUuid(uuid)
+	if err != nil {
+		return nil, err
+	}
+
+	return customer, nil
+}
