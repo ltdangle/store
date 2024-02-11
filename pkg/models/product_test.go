@@ -32,7 +32,7 @@ func TestProduct(t *testing.T) {
 		t.Fail()
 	}
 	fmt.Println("XXXX"+fndPrdct.Uuid)
-	fmt.Println(fndPrdct.Fields)
+	fmt.Println(fndPrdct)
 	fmt.Println("XXXX")
 
 }
