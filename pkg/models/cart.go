@@ -30,7 +30,7 @@ type CartItem struct {
 	CartUuid string
 
 	CartID  uint
-	Product Product `gorm:"foreignKey:CartItemID;references:ID"`
+	Product *Product `gorm:"foreignKey:CartItemID;references:ID"`
 
 	Quantity  int `gorm:"not null;default:1"`
 	Subtotal  int `gorm:"not null;default:0"`

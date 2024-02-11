@@ -15,6 +15,6 @@ type ProductField struct {
 	ProductID uint
 }
 
-func NewProductField(b *BaseProductField) *ProductField {
-	return &ProductField{BaseProductField: b}
+func NewProductField() *ProductField {
+	return &ProductField{BaseProductField: NewBaseProductField()}
 }

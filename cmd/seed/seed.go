@@ -6,7 +6,7 @@ import (
 	"store/pkg/infra"
 	"store/pkg/models"
 	"store/pkg/repo"
-	// "store/pkg/service"
+	"store/pkg/service"
 	// "github.com/bxcodec/faker/v3"
 )
 
@@ -37,23 +37,23 @@ func main() {
 
 	// Seed products.
 	seeder := models.NewSeeder(db)
-	seeder.BuildBasicFurnitureProduct("Base custom table", "A table build to your specifications")
-	seeder.BuildBasicFurnitureProduct("Base custom shelf", "A shelf build to your specifications")
+	baseProduct := seeder.BuildBasicFurnitureProduct("Base custom shelf", "A shelf build to your specifications")
 
-	seeder.BuildFurnitureProduct("Custom table", "A table build to your specifications")
-	product := seeder.BuildFurnitureProduct("Custom shelf", "A shelf build to your specifications")
+	productService := service.NewProductService(repo.NewProductRepo(db), db)
+	product, err := productService.CopyBaseProduct(baseProduct)
+	if err != nil {
+		panic(err)
+	}
 
+	// TODO: CartService...
 	cart := models.NewCart()
-	lineItem1 := models.NewCartItem()
-	lineItem1.Product = *product
-	cart.CartItems = append(cart.CartItems, lineItem1)
-	db.Save(product)
-	db.Save(cart)
-	db.Save(lineItem1)
+	err = productService.AddProductToCart(cart, product)
+	if err != nil {
+		panic(err)
+	}
 
 	var fndCart models.Cart
 	result := db.Preload("CartItems").Preload("CartItems.Product").Where("uuid = ?", cart.Uuid).First(&fndCart)
-	// TODO: ProductService, CartService...
 
 	if result.Error != nil {
 		panic(result.Error)
@@ -62,10 +62,5 @@ func main() {
 		fmt.Println(item.Product.Name)
 	}
 	fmt.Println(fndCart)
-	// Int customer service.
-	// cstmrRpo := repo.NewCustomerRepo(db)
-	// cstmrSrvc := service.NewCustomerService(cstmrRpo)
-	// customer, _ := cstmrSrvc.Create(service.CreateCustomerRqst{Email: faker.Email()})
-	// fmt.Println(customer)
 
 }

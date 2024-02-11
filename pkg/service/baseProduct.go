@@ -48,3 +48,12 @@ func (service *BaseProductService) FindByUuuid(uuid string) (*models.BaseProduct
 
 	return product, nil
 }
+
+func (service *BaseProductService) AddField(product *models.BaseProduct, field *models.BaseProductField) error {
+	product.Fields = append(product.Fields, field)
+	err := service.Save(product)
+	if err != nil {
+		return err
+	}
+	return nil
+}
