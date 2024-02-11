@@ -7,12 +7,12 @@ import (
 )
 
 type CartItem struct {
-	ID          uint `gorm:"primarykey"`
-	Uuid        string
-	CartUuid    string `gorm:"not null;index"`
-	ProductUuid string `gorm:"not null;index"`
-	Quantity    int    `gorm:"not null;default:1"`
-	Subtotal    int    `gorm:"not null;default:0"`
+	ID          uint   `gorm:"primarykey"`
+	Uuid        string `gorm:"unique"`
+	CartUuid    string
+	ProductUuid string
+	Quantity    int `gorm:"not null;default:1"`
+	Subtotal    int `gorm:"not null;default:0"`
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	DeletedAt   gorm.DeletedAt

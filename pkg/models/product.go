@@ -7,8 +7,8 @@ import (
 )
 
 type Product struct {
-	ID          uint `gorm:"primarykey"`
-	Uuid        string
+	ID          uint   `gorm:"primarykey"`
+	Uuid        string `gorm:"unique"`
 	Name        string `gorm:"type:varchar(255);not null"`
 	Description string `gorm:"type:text;not null"`
 	Price       int    `gorm:"not null;default:0"`
