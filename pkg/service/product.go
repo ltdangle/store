@@ -16,13 +16,21 @@ func NewProductService(repo *repo.ProductRepo) *ProductService {
 type NewProductRqst struct {
 	Name        string
 	Description string
-	Price       int
+	BasePrice   int
+}
+
+func (service *ProductService) Save(product *models.BaseProduct) error {
+	err := service.repo.Save(product)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (service *ProductService) Create(rqst NewProductRqst) (*models.BaseProduct, error) {
 	product := models.NewBaseProduct()
 	product.Name = rqst.Name
-	product.BasePrice = rqst.Price
+	product.BasePrice = rqst.BasePrice
 
 	err := service.repo.Save(product)
 	if err != nil {

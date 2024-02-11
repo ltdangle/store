@@ -53,7 +53,7 @@ func main() {
 
 	var fndCart models.Cart
 	result := db.Preload("CartItems").Preload("CartItems.Product").Where("uuid = ?", cart.Uuid).First(&fndCart)
-	// TODO: now select cart and see how deep the rabit hole (preload) goes...
+	// TODO: ProductService, CartService...
 
 	if result.Error != nil {
 		panic(result.Error)

@@ -6,15 +6,15 @@ import (
 	"gorm.io/gorm"
 )
 
-type ProductRepo struct {
+type BaseProductRepo struct {
 	db *gorm.DB
 }
 
-func NewProductRepo(db *gorm.DB) *ProductRepo {
-	return &ProductRepo{db: db}
+func NewBaseProductRepo(db *gorm.DB) *BaseProductRepo {
+	return &BaseProductRepo{db: db}
 }
 
-func (repo *ProductRepo) Save(product *models.Product) error {
+func (repo *BaseProductRepo) Save(product *models.BaseProduct) error {
 	tx := repo.db.Save(product)
 	if tx.Error != nil {
 		return tx.Error
@@ -22,8 +22,8 @@ func (repo *ProductRepo) Save(product *models.Product) error {
 	return nil
 }
 
-func (repo *ProductRepo) FindByUuid(uuid string) (*models.Product, error) {
-	var product models.Product
+func (repo *BaseProductRepo) FindByUuid(uuid string) (*models.BaseProduct, error) {
+	var product models.BaseProduct
 
 	result := repo.db.Preload("Fields").Where("uuid= ?", uuid).First(&product)
 	if result.Error != nil {
@@ -33,8 +33,8 @@ func (repo *ProductRepo) FindByUuid(uuid string) (*models.Product, error) {
 	return &product, nil
 }
 
-func (repo *ProductRepo) Delete(uuid string) error {
-	var product models.Product
+func (repo *BaseProductRepo) Delete(uuid string) error {
+	var product models.BaseProduct
 
 	result := repo.db.Where("uuid= ?", uuid).Delete(&product)
 	if result.Error != nil {
