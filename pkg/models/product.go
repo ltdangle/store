@@ -7,14 +7,32 @@ import (
 )
 
 type Product struct {
+	ID   uint   `gorm:"primarykey"`
+	Uuid string `gorm:"unique"`
+	Name string `gorm:"type:varchar(255);not null"`
+
+	Description string          `gorm:"type:text;not null"`
+	Price       int             `gorm:"not null;default:0"`
+	Fields      []*ProductField `gorm:"foreignKey:ProductID"`
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt
+}
+
+type ProductField struct {
 	ID          uint   `gorm:"primarykey"`
 	Uuid        string `gorm:"unique"`
-	Name        string `gorm:"type:varchar(255);not null"`
-	Description string `gorm:"type:text;not null"`
-	Price       int    `gorm:"not null;default:0"`
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
-	DeletedAt   gorm.DeletedAt
+	Type        string
+	Title       string
+	Description string
+	Value       string
+
+	ProductID uint
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt
 }
 
 func NewProduct() *Product {

@@ -12,6 +12,7 @@ func Migrate(envFile string) {
 	// Miglate the schema
 	_ = db.AutoMigrate(&models.User{})
 	_ = db.AutoMigrate(&models.Product{})
+	_ = db.AutoMigrate(&models.ProductField{})
 	_ = db.AutoMigrate(&models.Cart{})
 	db.Exec(`ALTER TABLE carts
     			ADD CONSTRAINT fk_user
