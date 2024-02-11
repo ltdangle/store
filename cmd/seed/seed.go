@@ -34,8 +34,8 @@ func main() {
 
 	// Seed products.
 	seeder := models.NewSeeder(db)
-	seeder.BuildProduct("Custom table", "A table build to your specifications")
-	seeder.BuildProduct("Custom shelf", "A shelf build to your specifications")
+	seeder.BuildFurnitureProduct("Custom table", "A table build to your specifications")
+	seeder.BuildFurnitureProduct("Custom shelf", "A shelf build to your specifications")
 
 	// Int customer service.
 	// cstmrRpo := repo.NewCustomerRepo(db)
