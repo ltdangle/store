@@ -33,8 +33,9 @@ func main() {
 	repo.Migrate(".env")
 
 	// Seed products.
-	seeder :=models.NewSeeder(db)
-	seeder.BuildProducts()
+	seeder := models.NewSeeder(db)
+	seeder.BuildProduct("Custom table", "A table build to your specifications")
+	seeder.BuildProduct("Custom shelf", "A shelf build to your specifications")
 
 	// Int customer service.
 	// cstmrRpo := repo.NewCustomerRepo(db)

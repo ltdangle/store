@@ -12,7 +12,7 @@ func NewSeeder(db *gorm.DB) *Seeder {
 	return &Seeder{db: db}
 }
 
-func (seeder *Seeder) BuildProducts() {
+func (seeder *Seeder) BuildProduct(name string, description string) {
 
 	instrctns := NewProductField()
 	instrctns.Type = "string"
@@ -45,7 +45,8 @@ func (seeder *Seeder) BuildProducts() {
 	color.Value = ""
 
 	product := NewProduct()
-	product.Name = "Custom table"
+	product.Name = name
+	product.Description = description
 	product.Fields = append(product.Fields, instrctns)
 	product.Fields = append(product.Fields, date)
 	product.Fields = append(product.Fields, file)

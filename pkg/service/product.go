@@ -22,7 +22,7 @@ type NewProductRqst struct {
 func (service *ProductService) Create(rqst NewProductRqst) (*models.Product, error) {
 	product := models.NewProduct()
 	product.Name = rqst.Name
-	product.Price = rqst.Price
+	product.BasePrice = rqst.Price
 
 	err := service.repo.Save(product)
 	if err != nil {

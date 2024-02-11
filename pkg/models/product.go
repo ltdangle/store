@@ -12,7 +12,7 @@ type Product struct {
 	Name string `gorm:"type:varchar(255);not null"`
 
 	Description string          `gorm:"type:text;not null"`
-	Price       int             `gorm:"not null;default:0"`
+	BasePrice       int             `gorm:"not null;default:0"`
 	Fields      []*ProductField `gorm:"foreignKey:ProductID"`
 
 	CreatedAt time.Time
