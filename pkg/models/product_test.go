@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"store/pkg/infra"
 	"testing"
 )
@@ -18,12 +17,13 @@ func TestProduct(t *testing.T) {
 	product := NewProduct()
 	product.Fields = append(product.Fields, field1)
 
+	// Save product.
 	tx := db.Save(product)
 	if tx.Error != nil {
-		panic(tx.Error)
+		t.Fatal(tx.Error)
 	}
-	t.Log("Product saved!")
 
+	// Retrieve product with fields.
 	var fndPrdct Product
 
 	result := db.Preload("Fields").Where("uuid= ?", product.Uuid).First(&fndPrdct)
@@ -31,8 +31,5 @@ func TestProduct(t *testing.T) {
 		t.Log(result.Error)
 		t.Fail()
 	}
-	fmt.Println("XXXX"+fndPrdct.Uuid)
-	fmt.Println(fndPrdct)
-	fmt.Println("XXXX")
-
+	// TODO: perhaps store field data in product json field?
 }
