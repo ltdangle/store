@@ -16,6 +16,8 @@ func main() {
 	// Drop tables.
 	tables := []string{
 		"users",
+		"base_products",
+		"base_product_fields",
 		"products",
 		"product_fields",
 		"carts",
@@ -34,6 +36,9 @@ func main() {
 
 	// Seed products.
 	seeder := models.NewSeeder(db)
+	seeder.BuildBasicFurnitureProduct("Base custom table", "A table build to your specifications")
+	seeder.BuildBasicFurnitureProduct("Base custom shelf", "A shelf build to your specifications")
+
 	seeder.BuildFurnitureProduct("Custom table", "A table build to your specifications")
 	seeder.BuildFurnitureProduct("Custom shelf", "A shelf build to your specifications")
 

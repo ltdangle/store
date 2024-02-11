@@ -10,13 +10,13 @@ import (
 func TestProduct(t *testing.T) {
 	cfg := infra.ReadConfig("../../.env")
 	db := infra.Gorm(cfg)
-	field1 := NewProductField()
+	field1 := NewBaseProductField()
 	field1.Type = "string"
 	field1.Title = "Instructions"
 	field1.Description = "Please enter your order instructions"
 	field1.Value = "This is default value"
 
-	product := NewProduct()
+	product := NewBaseProduct()
 	product.Fields = append(product.Fields, field1)
 
 	// Save product.
@@ -26,7 +26,7 @@ func TestProduct(t *testing.T) {
 	}
 
 	// Retrieve product with fields.
-	var fndPrdct Product
+	var fndPrdct BaseProduct
 
 	result := db.Preload("Fields").Where("uuid= ?", product.Uuid).First(&fndPrdct)
 	if result.Error != nil {

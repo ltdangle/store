@@ -19,8 +19,8 @@ type NewProductRqst struct {
 	Price       int
 }
 
-func (service *ProductService) Create(rqst NewProductRqst) (*models.Product, error) {
-	product := models.NewProduct()
+func (service *ProductService) Create(rqst NewProductRqst) (*models.BaseProduct, error) {
+	product := models.NewBaseProduct()
 	product.Name = rqst.Name
 	product.BasePrice = rqst.Price
 
@@ -32,7 +32,7 @@ func (service *ProductService) Create(rqst NewProductRqst) (*models.Product, err
 	return product, nil
 }
 
-func (service *ProductService) FindByUuuid(uuid string) (*models.Product, error) {
+func (service *ProductService) FindByUuuid(uuid string) (*models.BaseProduct, error) {
 	product, err := service.repo.FindByUuid(uuid)
 	if err != nil {
 		return nil, err

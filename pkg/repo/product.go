@@ -14,7 +14,7 @@ func NewProductRepo(db *gorm.DB) *ProductRepo {
 	return &ProductRepo{db: db}
 }
 
-func (repo *ProductRepo) Save(product *models.Product) error {
+func (repo *ProductRepo) Save(product *models.BaseProduct) error {
 	tx := repo.db.Save(product)
 	if tx.Error != nil {
 		return tx.Error
@@ -22,8 +22,8 @@ func (repo *ProductRepo) Save(product *models.Product) error {
 	return nil
 }
 
-func (repo *ProductRepo) FindByUuid(uuid string) (*models.Product, error) {
-	var product models.Product
+func (repo *ProductRepo) FindByUuid(uuid string) (*models.BaseProduct, error) {
+	var product models.BaseProduct
 
 	result := repo.db.Preload("Fields").Where("uuid= ?", uuid).First(&product)
 	if result.Error != nil {
@@ -34,7 +34,7 @@ func (repo *ProductRepo) FindByUuid(uuid string) (*models.Product, error) {
 }
 
 func (repo *ProductRepo) Delete(uuid string) error {
-	var product models.Product
+	var product models.BaseProduct
 
 	result := repo.db.Where("uuid= ?", uuid).Delete(&product)
 	if result.Error != nil {
