@@ -6,8 +6,8 @@ type Product struct {
 	CartItemID uint
 }
 
-func NewProduct(baseProduct *BaseProduct) *Product {
-	return &Product{BaseProduct: baseProduct}
+func NewProduct() *Product {
+	return &Product{BaseProduct: NewBaseProduct()}
 }
 
 type ProductField struct {

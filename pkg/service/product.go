@@ -19,16 +19,8 @@ type NewProductRqst struct {
 	BasePrice   int
 }
 
-func (service *ProductService) Save(product *models.BaseProduct) error {
-	err := service.repo.Save(product)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (service *ProductService) Create(rqst NewProductRqst) (*models.BaseProduct, error) {
-	product := models.NewBaseProduct()
+func (service *ProductService) Create(rqst NewProductRqst) (*models.Product, error) {
+	product := models.NewProduct()
 	product.Name = rqst.Name
 	product.BasePrice = rqst.BasePrice
 
@@ -40,7 +32,15 @@ func (service *ProductService) Create(rqst NewProductRqst) (*models.BaseProduct,
 	return product, nil
 }
 
-func (service *ProductService) FindByUuuid(uuid string) (*models.BaseProduct, error) {
+func (service *ProductService) Save(product *models.Product) error {
+	err := service.repo.Save(product)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (service *ProductService) FindByUuuid(uuid string) (*models.Product, error) {
 	product, err := service.repo.FindByUuid(uuid)
 	if err != nil {
 		return nil, err
