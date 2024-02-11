@@ -25,7 +25,7 @@ func (repo *ProductRepo) Save(product *models.Product) error {
 func (repo *ProductRepo) FindByUuid(uuid string) (*models.Product, error) {
 	var product models.Product
 
-	result := repo.db.Where("uuid= ?", uuid).First(&product)
+	result := repo.db.Preload("Fields").Where("uuid= ?", uuid).First(&product)
 	if result.Error != nil {
 		return nil, result.Error
 	}

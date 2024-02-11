@@ -3,6 +3,8 @@ package models
 import (
 	"store/pkg/infra"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestProduct(t *testing.T) {
@@ -28,8 +30,8 @@ func TestProduct(t *testing.T) {
 
 	result := db.Preload("Fields").Where("uuid= ?", product.Uuid).First(&fndPrdct)
 	if result.Error != nil {
-		t.Log(result.Error)
-		t.Fail()
+		t.Fatal(result.Error)
 	}
-	// TODO: perhaps store field data in product json field?
+	assert.Equal(t, product.Uuid, fndPrdct.Uuid)
+	// TODO: perhaps store field data in product json field? With Json, you can structure product form...
 }

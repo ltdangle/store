@@ -1,12 +1,12 @@
 package main
 
 import (
-	"fmt"
+	// "fmt"
 	"store/pkg/infra"
+	"store/pkg/models"
 	"store/pkg/repo"
-	"store/pkg/service"
-
-	"github.com/bxcodec/faker/v3"
+	// "store/pkg/service"
+	// "github.com/bxcodec/faker/v3"
 )
 
 func main() {
@@ -17,6 +17,7 @@ func main() {
 	tables := []string{
 		"users",
 		"products",
+		"product_fields",
 		"carts",
 		"cart_items",
 	}
@@ -31,11 +32,15 @@ func main() {
 	// Migrate db.
 	repo.Migrate(".env")
 
+	// Seed products.
+	seeder :=models.NewSeeder(db)
+	seeder.BuildProducts()
+
 	// Int customer service.
-	cstmrRpo := repo.NewCustomerRepo(db)
-	cstmrSrvc := service.NewCustomerService(cstmrRpo)
-	customer, _ := cstmrSrvc.Create(service.CreateCustomerRqst{Email: faker.Email()})
-	fmt.Println(customer)
+	// cstmrRpo := repo.NewCustomerRepo(db)
+	// cstmrSrvc := service.NewCustomerService(cstmrRpo)
+	// customer, _ := cstmrSrvc.Create(service.CreateCustomerRqst{Email: faker.Email()})
+	// fmt.Println(customer)
 
 	// TODO: create product
 	// TODO: create cart
