@@ -2,7 +2,8 @@ package models
 
 type Product struct {
 	*BaseProduct
-	Fields []*ProductField `gorm:"foreignKey:ProductID"`
+	Fields     []*ProductField `gorm:"foreignKey:ProductID"`
+	CartItemID uint
 }
 
 func NewProduct(baseProduct *BaseProduct) *Product {

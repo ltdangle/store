@@ -40,11 +40,13 @@ func main() {
 	seeder.BuildBasicFurnitureProduct("Base custom shelf", "A shelf build to your specifications")
 
 	seeder.BuildFurnitureProduct("Custom table", "A table build to your specifications")
-	seeder.BuildFurnitureProduct("Custom shelf", "A shelf build to your specifications")
+	product:=seeder.BuildFurnitureProduct("Custom shelf", "A shelf build to your specifications")
 
 	cart := models.NewCart()
 	lineItem1 := models.NewCartItem()
+	lineItem1.Product = *product
 	cart.CartItems = append(cart.CartItems, lineItem1)
+	db.Save(product)
 	db.Save(cart)
 	db.Save(lineItem1)
 
