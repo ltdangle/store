@@ -43,7 +43,7 @@ func (seeder *Seeder) BuildFurnitureProduct(name string, description string) {
 	color.Description = "Project color"
 	color.Value = ""
 
-	product := NewProduct(*NewBaseProduct())
+	product := NewProduct(NewBaseProduct())
 	product.Type = "furniture"
 	product.Name = name
 	product.Description = description

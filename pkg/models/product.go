@@ -1,11 +1,11 @@
 package models
 
 type Product struct {
-	BaseProduct
+	*BaseProduct
 	Fields []*ProductField `gorm:"foreignKey:ProductID"`
 }
 
-func NewProduct(baseProduct BaseProduct) *Product {
+func NewProduct(baseProduct *BaseProduct) *Product {
 	return &Product{BaseProduct: baseProduct}
 }
 
