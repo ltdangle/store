@@ -1,7 +1,6 @@
 package service
 
 import (
-	"errors"
 	"store/pkg/models"
 	"store/pkg/repo"
 
@@ -74,17 +73,3 @@ func (service *ProductService) CopyBaseProduct(baseProduct *models.BaseProduct) 
 	return product, nil
 }
 
-func (service *ProductService) AddProductToCart(cart *models.Cart, product *models.Product) error {
-	cartItem := models.NewCartItem()
-	cartItem.Product = product
-	cart.CartItems = append(cart.CartItems, cartItem)
-
-	tx := service.db.Save(cart)
-	if tx.Error != nil {
-		return tx.Error
-	} else if tx.RowsAffected == 0 {
-		return errors.New("0 affected rows")
-	}
-
-	return nil
-}

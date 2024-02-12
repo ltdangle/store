@@ -45,9 +45,13 @@ func main() {
 		panic(err)
 	}
 
-	// TODO: CartService...
-	cart := models.NewCart()
-	err = productService.AddProductToCart(cart, product)
+	cartService := service.NewCartService(repo.NewCartRepo(db))
+	cart, err := cartService.CreateCart()
+	if err != nil {
+		panic(err)
+	}
+
+	err = cartService.AddProductToCart(cart, product)
 	if err != nil {
 		panic(err)
 	}
