@@ -24,8 +24,7 @@ func (repo *CartRepo) Save(cart *models.Cart) error {
 
 func (repo *CartRepo) FindByUuid(uuid string) (*models.Cart, error) {
 	var cart models.Cart
-
-	result := repo.db.Where("uuid= ?", uuid).First(&cart)
+	result := repo.db.Preload("CartItems").Preload("CartItems.Product").Where("uuid = ?", uuid).First(&cart)
 	if result.Error != nil {
 		return nil, result.Error
 	}

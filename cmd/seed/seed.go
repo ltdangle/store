@@ -44,8 +44,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
-	cartService := service.NewCartService(repo.NewCartRepo(db))
+	cartRepo := repo.NewCartRepo(db)
+	cartService := service.NewCartService(cartRepo)
 	cart, err := cartService.CreateCart()
 	if err != nil {
 		panic(err)
@@ -56,15 +56,15 @@ func main() {
 		panic(err)
 	}
 
-	var fndCart models.Cart
-	result := db.Preload("CartItems").Preload("CartItems.Product").Where("uuid = ?", cart.Uuid).First(&fndCart)
-
-	if result.Error != nil {
-		panic(result.Error)
+	fndCart, error := cartRepo.FindByUuid(cart.Uuid)
+	if error != nil {
+		panic(error)
 	}
+
 	for _, item := range fndCart.CartItems {
 		fmt.Println(item.Product.Name)
 	}
+
 	fmt.Println(fndCart)
 
 }
