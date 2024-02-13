@@ -10,3 +10,16 @@ templ Hello(cart *models.Cart) {
 	}
 </ul>
 }
+
+templ Index(cart *models.Cart) {
+<!DOCTYPE html>
+<html lang="en">
+
+<head></head>
+
+<body>
+	@Hello(cart)
+</body>
+
+</html>
+}

@@ -28,7 +28,7 @@ func (cntrl *CartController) View(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Fprint(w, err.Error())
 	} else {
-		component := tmpl.Hello(cart)
+		component := tmpl.Index(cart)
 		_ = component.Render(context.Background(), w)
 	}
 
