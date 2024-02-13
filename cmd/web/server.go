@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"store/pkg/dc"
 
@@ -21,10 +20,4 @@ func main() {
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
-}
-func Login(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	uuid := vars["uuid"]
-	w.WriteHeader(http.StatusOK)
-	fmt.Fprint(w, uuid)
 }

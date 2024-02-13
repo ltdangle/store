@@ -1,10 +1,12 @@
 package web
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"store/pkg/repo"
 	"store/pkg/service"
+	"store/pkg/web/tmpl"
 
 	"github.com/gorilla/mux"
 )
@@ -23,13 +25,13 @@ func (cntrl *CartController) View(w http.ResponseWriter, r *http.Request) {
 	// TODO: Validate uuid.
 	cart, err := cntrl.repo.FindByUuid(uuid)
 
-	var output string
 	if err != nil {
-		output = err.Error()
+		fmt.Fprint(w, err.Error())
 	} else {
-		output = fmt.Sprintf("Cart %s created at %s", cart.Uuid, cart.CreatedAt.String())
+		component := tmpl.Hello(cart)
+		_ = component.Render(context.Background(), w)
 	}
 
-	w.WriteHeader(http.StatusOK)
-	fmt.Fprint(w, output)
+	// w.WriteHeader(http.StatusOK)
+
 }

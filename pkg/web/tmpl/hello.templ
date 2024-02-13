@@ -1,0 +1,10 @@
+package tmpl
+
+import "store/pkg/models"
+
+templ Hello(cart *models.Cart) {
+	<div>Cart { cart.Uuid }</div>
+	if 1==1 {
+		<p>1=1</p>
+	}
+}
