@@ -26,9 +26,9 @@ type Dc struct {
 	CartController *web.CartController
 }
 
-func NewDc() *Dc {
+func NewDc(envFile string ) *Dc {
 	dc := &Dc{}
-	cfg := infra.ReadConfig(".env")
+	cfg := infra.ReadConfig(envFile)
 	dc.Db = infra.Gorm(cfg)
 
 	dc.CustomerRepo = repo.NewCustomerRepo(dc.Db)
@@ -40,6 +40,6 @@ func NewDc() *Dc {
 	dc.CartRepo = repo.NewCartRepo(dc.Db)
 	dc.CartService = service.NewCartService(dc.CartRepo)
 
-	dc.CartController = web.NewCartController(dc.CartService)
+	dc.CartController = web.NewCartController(dc.CartService,dc.CartRepo)
 	return dc
 }

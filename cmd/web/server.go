@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	dc := dc.NewDc()
+	dc := dc.NewDc(".env")
 
 	router := mux.NewRouter()
 

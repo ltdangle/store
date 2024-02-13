@@ -5,7 +5,7 @@ tmp_dir = "tmp"
 [build]
 args_bin = []
 # bin = "./tmp/main"
-bin = "/usr/local/bin/tmux send-keys -t 21:1 C-c KPEnter && /usr/local/bin/tmux send-keys -t 21:1 'go run cmd/web/server.go' KPEnter "
+bin = "/usr/local/bin/tmux send-keys -t 21:1.1 C-c KPEnter && /usr/local/bin/tmux send-keys -t 21:1.1 'go run cmd/web/server.go' KPEnter "
 # cmd = "go build -o ./tmp/main ."
 delay = 1000
 exclude_dir = ["assets", "tmp", "vendor", "testdata"]
