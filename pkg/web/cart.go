@@ -1,6 +1,7 @@
 package web
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"net/http"
@@ -25,13 +26,13 @@ func (cntrl *CartController) View(w http.ResponseWriter, r *http.Request) {
 	// TODO: Validate uuid.
 	cart, err := cntrl.repo.FindByUuid(uuid)
 
+	var html bytes.Buffer
+
 	if err != nil {
 		fmt.Fprint(w, err.Error())
 	} else {
-		component := tmpl.Index(cart)
-		_ = component.Render(context.Background(), w)
+		_ = tmpl.Index(cart).Render(context.Background(), &html)
+		fmt.Fprint(w, html.String())
 	}
-
-	// w.WriteHeader(http.StatusOK)
 
 }
