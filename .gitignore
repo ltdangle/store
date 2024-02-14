@@ -1,1 +1,2 @@
-pkg/web/tmpl/*.txt
+pkg/web/*.txt
+pkg/web/*_templ.go

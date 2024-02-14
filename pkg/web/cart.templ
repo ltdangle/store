@@ -1,18 +1,16 @@
-package tmpl
+package web
 
-import "store/pkg/models"
 import "strconv"
 
-templ Hello(cart *models.Cart) {
-	<div>Cart { cart.Uuid }</div>
+templ Hello(cartVM CartVM) {
+	<div>Cart { cartVM.Cart.Uuid } <a href={ templ.SafeURL(cartVM.DelteCartUrl) }>[ X ]</a> </div>
 	<ul>
-		for _,item:=range cart.CartItems {
+		for _,item:=range cartVM.Cart.CartItems {
 			<li>
 				{ item.Uuid } -
 				{ item.Product.Name } -
 				quantity: { strconv.Itoa(item.Quantity) } -
 				price: $ { strconv.Itoa(item.Subtotal) }
-				<a href="">[x]</a>
 			</li>
 		}
 	</ul>
