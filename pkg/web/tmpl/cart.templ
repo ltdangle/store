@@ -1,0 +1,19 @@
+package tmpl
+
+import "store/pkg/models"
+import "strconv"
+
+templ Hello(cart *models.Cart) {
+	<div>Cart { cart.Uuid }</div>
+	<ul>
+		for _,item:=range cart.CartItems {
+			<li>
+				{ item.Uuid } -
+				{ item.Product.Name } -
+				quantity: { strconv.Itoa(item.Quantity) } -
+				price: $ { strconv.Itoa(item.Subtotal) }
+				<a href="">[x]</a>
+			</li>
+		}
+	</ul>
+}

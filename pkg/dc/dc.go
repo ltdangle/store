@@ -6,6 +6,7 @@ import (
 	"store/pkg/service"
 	"store/pkg/web"
 
+	"github.com/gorilla/mux"
 	"gorm.io/gorm"
 )
 
@@ -23,10 +24,12 @@ type Dc struct {
 	ProductService     *service.ProductService
 	CartService        *service.CartService
 
+	Router *mux.Router
+
 	CartController *web.CartController
 }
 
-func NewDc(envFile string ) *Dc {
+func NewDc(envFile string) *Dc {
 	dc := &Dc{}
 	cfg := infra.ReadConfig(envFile)
 	dc.Db = infra.Gorm(cfg)
@@ -40,6 +43,9 @@ func NewDc(envFile string ) *Dc {
 	dc.CartRepo = repo.NewCartRepo(dc.Db)
 	dc.CartService = service.NewCartService(dc.CartRepo)
 
-	dc.CartController = web.NewCartController(dc.CartService,dc.CartRepo)
+	dc.Router = mux.NewRouter()
+
+	dc.CartController = web.NewCartController(dc.Router, dc.CartService, dc.CartRepo)
+
 	return dc
 }

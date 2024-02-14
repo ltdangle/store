@@ -1,0 +1,23 @@
+package tmpl
+
+import "store/pkg/models"
+
+templ Template(cart *models.Cart) {
+<!DOCTYPE html>
+<html lang="en">
+<style>
+  body {
+    background-color: black;
+    color: white;
+  }
+</style>
+
+<head></head>
+
+<body>
+  <h1>Shopping cart</h1>
+  @Hello(cart)
+</body>
+
+</html>
+}
