@@ -41,7 +41,7 @@ func (cntrl *CartController) View(w http.ResponseWriter, r *http.Request) {
 	} else {
 
 		// TODO: extract route passing logic; 1. check router.Get() for nil; 2. router.URL() for error.
-		cartUrl, err := cntrl.router.Get(CART_ROUTE).URL("uuid", uuid)
+		cartUrl, err := cntrl.router.Get(CART_ITEM_DELETE_ROUTE).URL("uuid", uuid)
 		if err != nil {
 			//TODO: log error
 			fmt.Println(err)
@@ -58,5 +58,16 @@ func (cntrl *CartController) View(w http.ResponseWriter, r *http.Request) {
 		_ = Template(vm).Render(context.Background(), &html)
 		fmt.Fprint(w, html.String())
 	}
-
+}
+func (cntrl *CartController) DeleteItem(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	cartItemUuid:= vars["cartItemUuid"]
+	err := cntrl.service.RemoveCartItem(cartItemUuid)
+	if err != nil {
+		//TODO: log error
+		fmt.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	fmt.Fprint(w, "Deleted")
 }

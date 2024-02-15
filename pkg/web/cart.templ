@@ -3,14 +3,15 @@ package web
 import "strconv"
 
 templ Hello(cartVM CartVM) {
-	<div>Cart { cartVM.Cart.Uuid } <a href={ templ.SafeURL(cartVM.DelteCartUrl) }>[ X ]</a> </div>
+	<div>Cart { cartVM.Cart.Uuid } </div>
 	<ul>
 		for _,item:=range cartVM.Cart.CartItems {
 			<li>
 				{ item.Uuid } -
 				{ item.Product.Name } -
 				quantity: { strconv.Itoa(item.Quantity) } -
-				price: $ { strconv.Itoa(item.Subtotal) }
+				price: $ { strconv.Itoa(item.Subtotal) } -
+				<a href={ templ.SafeURL(cartVM.DelteCartUrl) }>[ X ]</a>
 			</li>
 		}
 	</ul>

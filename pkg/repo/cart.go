@@ -31,7 +31,18 @@ func (repo *CartRepo) FindByUuid(uuid string) (*models.Cart, error) {
 
 	return &cart, nil
 }
+func (repo *CartRepo) FindByCartItemUuid(cartItemUuid string) (*models.Cart, error) {
+	var cart models.Cart
 
+	err := repo.db.Joins("JOIN cart_items ON cart_items.cart_id = carts.id").
+		Where("cart_items.uuid = ?", cartItemUuid).
+		First(&cart).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &cart, nil
+}
 func (repo *CartRepo) Delete(uuid string) error {
 	var cart models.User
 

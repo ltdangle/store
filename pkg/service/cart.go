@@ -1,9 +1,9 @@
 package service
 
 import (
+	"fmt"
 	"store/pkg/models"
 	"store/pkg/repo"
-
 )
 
 type CartService struct {
@@ -33,5 +33,18 @@ func (service *CartService) AddProductToCart(cart *models.Cart, product *models.
 		return error
 	}
 
+	return nil
+}
+
+func (service *CartService) RemoveCartItem(cartItemUuid string) error {
+	// retrive cart
+	cart, err := service.repo.FindByCartItemUuid(cartItemUuid)
+	if err != nil {
+		return err
+	}
+	fmt.Println("Delete cart item from cart: ")
+	fmt.Println(cart)
+	// TODO: check if it belongs to a user
+	// delete cart item
 	return nil
 }
