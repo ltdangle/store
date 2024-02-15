@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"fmt"
 	"store/pkg/models"
 	"store/pkg/repo"
 )
