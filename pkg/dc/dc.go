@@ -41,7 +41,8 @@ func NewDc(envFile string) *Dc {
 	dc.ProductService = service.NewProductService(dc.ProductRepo, dc.Db)
 
 	dc.CartRepo = repo.NewCartRepo(dc.Db)
-	dc.CartService = service.NewCartService(dc.CartRepo)
+	dc.CartItemRepo = repo.NewCartItemRepo(dc.Db)
+	dc.CartService = service.NewCartService(dc.CartRepo, dc.CartItemRepo)
 
 	dc.Router = mux.NewRouter()
 

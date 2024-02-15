@@ -1,17 +1,19 @@
 package service
 
 import (
+	"errors"
 	"fmt"
 	"store/pkg/models"
 	"store/pkg/repo"
 )
 
 type CartService struct {
-	repo *repo.CartRepo
+	repo         *repo.CartRepo
+	cartItemRepo *repo.CartItemRepo
 }
 
-func NewCartService(repo *repo.CartRepo) *CartService {
-	return &CartService{repo: repo}
+func NewCartService(repo *repo.CartRepo, cartItemRepo *repo.CartItemRepo) *CartService {
+	return &CartService{repo: repo, cartItemRepo: cartItemRepo}
 }
 
 func (service *CartService) CreateCart() (*models.Cart, error) {
@@ -37,16 +39,17 @@ func (service *CartService) AddProductToCart(cart *models.Cart, product *models.
 }
 
 func (service *CartService) RemoveCartItem(cartItemUuid string) error {
-	// retrive cart
-	cart, err := service.repo.FindByCartItemUuid(cartItemUuid)
+	// Make sure active cart exists.
+	_, err := service.repo.FindByCartItemUuid(cartItemUuid)
 	if err != nil {
-		return err
+		return errors.New("CartService: cart with cartItem " + cartItemUuid + " not found")
 	}
-	// TODO: we are here
 
-	fmt.Println("Delete cart item from cart: ")
-	fmt.Println(cart)
+	// Delete cart item.
 	// TODO: check if it belongs to a user
-	// delete cart item
+	err = service.cartItemRepo.Delete(cartItemUuid)
+	if err != nil {
+		return errors.New("CartService: cartItem " + cartItemUuid + "could not be deleted")
+	}
 	return nil
 }
