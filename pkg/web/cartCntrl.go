@@ -23,8 +23,7 @@ func NewCartController(router *mux.Router, service *service.CartService, repo *r
 }
 
 type CartVM struct {
-	Cart         *models.Cart
-	DelteCartUrl string
+	Cart *models.Cart
 }
 
 func (cntrl *CartController) View(w http.ResponseWriter, r *http.Request) {
@@ -39,29 +38,17 @@ func (cntrl *CartController) View(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Fprint(w, err.Error())
 	} else {
-
-		// TODO: extract route passing logic; 1. check router.Get() for nil; 2. router.URL() for error.
-		cartUrl, err := cntrl.router.Get(CART_ITEM_DELETE_ROUTE).URL("uuid", uuid)
-		if err != nil {
-			//TODO: log error
-			fmt.Println(err)
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-
 		vm := CartVM{
-			Cart:         cart,
-			DelteCartUrl: cartUrl.String(),
+			Cart: cart,
 		}
 
-		fmt.Println("Cart route: " + cartUrl.String())
 		_ = Template(vm).Render(context.Background(), &html)
 		fmt.Fprint(w, html.String())
 	}
 }
 func (cntrl *CartController) DeleteItem(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	cartItemUuid:= vars["cartItemUuid"]
+	cartItemUuid := vars["uuid"]
 	err := cntrl.service.RemoveCartItem(cartItemUuid)
 	if err != nil {
 		//TODO: log error

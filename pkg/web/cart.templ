@@ -11,7 +11,7 @@ templ Hello(cartVM CartVM) {
 				{ item.Product.Name } -
 				quantity: { strconv.Itoa(item.Quantity) } -
 				price: $ { strconv.Itoa(item.Subtotal) } -
-				<a href={ templ.SafeURL(cartVM.DelteCartUrl) }>[ X ]</a>
+				<a href={ "/cartItem/" + templ.SafeURL(item.Uuid) + "/delete" }>[ X ]</a>
 			</li>
 		}
 	</ul>

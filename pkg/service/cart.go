@@ -42,6 +42,8 @@ func (service *CartService) RemoveCartItem(cartItemUuid string) error {
 	if err != nil {
 		return err
 	}
+	// TODO: we are here
+
 	fmt.Println("Delete cart item from cart: ")
 	fmt.Println(cart)
 	// TODO: check if it belongs to a user
