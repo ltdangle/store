@@ -1,8 +1,6 @@
 package main
 
 import (
-	// "fmt"
-	"fmt"
 	"store/pkg/infra"
 	"store/pkg/models"
 	"store/pkg/repo"
@@ -37,13 +35,23 @@ func main() {
 
 	// Seed products.
 	seeder := models.NewSeeder(db)
-	baseProduct := seeder.BuildBasicFurnitureProduct("Base custom shelf", "A shelf build to your specifications")
+	baseProducts := []*models.BaseProduct{
+		seeder.BuildBasicFurnitureProduct("shelf", "A shelf build to your specifications"),
+		seeder.BuildBasicFurnitureProduct("chair", "A chair build to your specifications"),
+		seeder.BuildBasicFurnitureProduct("table", "A table build to your specifications"),
+		seeder.BuildBasicFurnitureProduct("sofa", "A sofa build to your specifications"),
+	}
 
 	productService := service.NewProductService(repo.NewProductRepo(db), db)
-	product, err := productService.CopyBaseProduct(baseProduct)
-	if err != nil {
-		panic(err)
+	var products []*models.Product
+	for _, baseProduct := range baseProducts {
+		product, err := productService.CopyBaseProduct(baseProduct)
+		if err != nil {
+			panic(err)
+		}
+		products = append(products, product)
 	}
+
 	cartRepo := repo.NewCartRepo(db)
 	cartItemRepo := repo.NewCartItemRepo(db)
 	cartService := service.NewCartService(cartRepo, cartItemRepo)
@@ -52,20 +60,11 @@ func main() {
 		panic(err)
 	}
 
-	err = cartService.AddProductToCart(cart, product)
-	if err != nil {
-		panic(err)
+	for _, product := range products {
+		err = cartService.AddProductToCart(cart, product)
+		if err != nil {
+			panic(err)
+		}
 	}
-
-	fndCart, error := cartRepo.FindByUuid(cart.Uuid)
-	if error != nil {
-		panic(error)
-	}
-
-	for _, item := range fndCart.CartItems {
-		fmt.Println(item.Product.Name)
-	}
-
-	fmt.Println(fndCart)
 
 }
