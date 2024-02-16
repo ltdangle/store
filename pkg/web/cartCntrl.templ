@@ -1,19 +1,19 @@
 package web
 
 import "strconv"
+import "github.com/gorilla/mux"
 
-templ Hello(cartVM CartVM) {
-	<div>Cart { cartVM.Cart.Uuid } </div>
-	<ul>
-		for _,item:=range cartVM.Cart.CartItems {
-			<li>
-				{ item.Uuid } -
-				{ item.Product.Name } -
-				quantity: { strconv.Itoa(item.Quantity) } -
-				price: $ { strconv.Itoa(item.Subtotal) } -
-				// TODO: encapsulate
-				<a href={ "/cartItem/" + templ.SafeURL(item.Uuid) + "/delete" }>[ X ]</a>
-			</li>
-		}
-	</ul>
+templ Hello(router *mux.Router, cartVM CartVM) {
+<div>Cart { cartVM.Cart.Uuid } </div>
+<ul>
+	for _,item:=range cartVM.Cart.CartItems {
+	<li>
+		{ item.Uuid } -
+		{ item.Product.Name } -
+		quantity: { strconv.Itoa(item.Quantity) } -
+		price: $ { strconv.Itoa(item.Subtotal) } -
+		<a href={ templ.SafeURL(UrlInternal(router, CART_ITEM_DELETE_ROUTE, "uuid" , item.Uuid).Value) }>[ X ]</a>
+	</li>
+	}
+</ul>
 }

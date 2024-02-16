@@ -34,6 +34,7 @@ func seed(w http.ResponseWriter, r *http.Request) {
 	// The command you want to run
 	cmd := exec.Command("go", "run", "cmd/seed/seed.go")
 
+
 	// Create a buffer to capture the output
 	var out bytes.Buffer
 	cmd.Stdout = &out
@@ -42,6 +43,7 @@ func seed(w http.ResponseWriter, r *http.Request) {
 	if err := cmd.Start(); err != nil {
 		log.Fatal(err)
 	}
+
 
 	// Wait for the command to finish
 	if err := cmd.Wait(); err != nil {
