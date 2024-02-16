@@ -36,10 +36,10 @@ func main() {
 	// Seed products.
 	seeder := models.NewSeeder(db)
 	baseProducts := []*models.BaseProduct{
-		seeder.BuildBasicFurnitureProduct("shelf", "A shelf build to your specifications"),
-		seeder.BuildBasicFurnitureProduct("chair", "A chair build to your specifications"),
-		seeder.BuildBasicFurnitureProduct("table", "A table build to your specifications"),
-		seeder.BuildBasicFurnitureProduct("sofa", "A sofa build to your specifications"),
+		seeder.BuildBasicProduct("shelf", "A shelf build to your specifications"),
+		seeder.BuildBasicProduct("chair", "A chair build to your specifications"),
+		seeder.BuildBasicProduct("table", "A table build to your specifications"),
+		seeder.BuildBasicProduct("sofa", "A sofa build to your specifications"),
 	}
 
 	productService := service.NewProductService(repo.NewProductRepo(db), db)

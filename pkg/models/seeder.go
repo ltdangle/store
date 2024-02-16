@@ -12,7 +12,7 @@ func NewSeeder(db *gorm.DB) *Seeder {
 	return &Seeder{db: db}
 }
 
-func (seeder *Seeder) BuildBasicFurnitureProduct(name string, description string) *BaseProduct {
+func (seeder *Seeder) BuildBasicProduct(name string, description string) *BaseProduct {
 
 	instrctns := NewBaseProductField()
 	instrctns.Type = "string"

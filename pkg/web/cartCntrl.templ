@@ -12,6 +12,9 @@ templ Hello(router *mux.Router, cartVM CartVM) {
 		{ item.Product.Name } -
 		quantity: { strconv.Itoa(item.Quantity) } -
 		price: $ { strconv.Itoa(item.Subtotal) } -
+		for _,field:=range item.Product.Fields {
+		<li>{ field.Title } : { field.Value }</li>
+		}
 		<a href={ templ.SafeURL(UrlInternal(router, CART_ITEM_DELETE_ROUTE, "uuid" , item.Uuid).Value) }>[ X ]</a>
 	</li>
 	}
