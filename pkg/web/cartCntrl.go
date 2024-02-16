@@ -52,11 +52,14 @@ func (cntrl *CartController) View(w http.ResponseWriter, r *http.Request) {
 func (cntrl *CartController) DeleteItem(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	cartItemUuid := vars["uuid"]
-	err := cntrl.service.RemoveCartItem(cartItemUuid)
+	cart, err := cntrl.service.RemoveCartItem(cartItemUuid)
 	if err != nil {
 		cntrl.logger.Warn(fmt.Sprintf("CartController.DeleteItem: cart with cartItem %s : %s", cartItemUuid, err.Error()))
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	fmt.Fprint(w, "Deleted")
+	cartUrl, _ := cntrl.router.Get(CART_ROUTE).URL("uuid", cart.Uuid)
+	cntrl.logger.Info(fmt.Sprintf("CartController.DeleteItem: item deleted, redirect to %s", cartUrl))
+
+	http.Redirect(w, r, cartUrl.String(), http.StatusTemporaryRedirect)
 }

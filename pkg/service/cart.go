@@ -37,18 +37,18 @@ func (service *CartService) AddProductToCart(cart *models.Cart, product *models.
 	return nil
 }
 
-func (service *CartService) RemoveCartItem(cartItemUuid string) error {
+func (service *CartService) RemoveCartItem(cartItemUuid string) (*models.Cart, error) {
 	// Make sure active cart exists.
-	_, err := service.repo.FindByCartItemUuid(cartItemUuid)
+	cart, err := service.repo.FindByCartItemUuid(cartItemUuid)
 	if err != nil {
-		return errors.New("CartService: cart with cartItem " + cartItemUuid + " not found")
+		return nil, errors.New("CartService: cart with cartItem " + cartItemUuid + " not found")
 	}
 
 	// Delete cart item.
 	// TODO: check if it belongs to a user
 	err = service.cartItemRepo.Delete(cartItemUuid)
 	if err != nil {
-		return errors.New("CartService: cartItem " + cartItemUuid + "could not be deleted")
+		return nil, errors.New("CartService: cartItem " + cartItemUuid + "could not be deleted")
 	}
-	return nil
+	return cart, nil
 }
