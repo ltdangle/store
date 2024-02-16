@@ -8,7 +8,6 @@ import (
 	"store/pkg/models"
 	"store/pkg/repo"
 	"store/pkg/service"
-	"time"
 
 	"github.com/gorilla/mux"
 )
@@ -28,17 +27,11 @@ type CartVM struct {
 }
 
 func (cntrl *CartController) View(w http.ResponseWriter, r *http.Request) {
-	// Set headers to disable caching
-	w.Header().Set("Cache-Control", "no-store, no-cache, must-revalidate, max- age=0")
-	w.Header().Set("Pragma", "no-cache")
-	w.Header().Set("Expires", time.Now().Format(http.TimeFormat))
-
 	var html bytes.Buffer
 
 	vars := mux.Vars(r)
 	uuid := vars["uuid"]
 
-	// TODO: Validate uuid.
 	cart, err := cntrl.repo.FindByUuid(uuid)
 
 	if err != nil {
@@ -49,7 +42,7 @@ func (cntrl *CartController) View(w http.ResponseWriter, r *http.Request) {
 		}
 
 		_ = Template(vm).Render(context.Background(), &html)
-		fmt.Fprint(w, html.String())
+		response(w, html.String())
 	}
 }
 func (cntrl *CartController) DeleteItem(w http.ResponseWriter, r *http.Request) {
