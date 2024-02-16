@@ -7,6 +7,7 @@ import (
 	"store/pkg/web"
 
 	"github.com/gorilla/mux"
+	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
 
@@ -34,6 +35,8 @@ func NewDc(envFile string) *Dc {
 	cfg := infra.ReadConfig(envFile)
 	dc.Db = infra.Gorm(cfg)
 
+	logger := logrus.New()
+
 	dc.CustomerRepo = repo.NewCustomerRepo(dc.Db)
 	dc.CustomerService = service.NewCustomerService(dc.CustomerRepo)
 
@@ -46,7 +49,7 @@ func NewDc(envFile string) *Dc {
 
 	dc.Router = mux.NewRouter()
 
-	dc.CartController = web.NewCartController(dc.Router, dc.CartService, dc.CartRepo)
+	dc.CartController = web.NewCartController(dc.Router, dc.CartService, dc.CartRepo, logger)
 
 	return dc
 }
