@@ -28,6 +28,8 @@ type CartVM struct {
 	Cart *models.Cart
 }
 
+const CART_VIEW_ROUTE = "cart"
+
 func (cntrl *CartController) View(w http.ResponseWriter, r *http.Request) {
 	var html bytes.Buffer
 
@@ -49,6 +51,8 @@ func (cntrl *CartController) View(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+const CART_ITEM_DELETE_ROUTE = "delete cart item"
+
 func (cntrl *CartController) DeleteItem(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	cartItemUuid := vars["uuid"]
@@ -60,7 +64,7 @@ func (cntrl *CartController) DeleteItem(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	cartUrl := UrlInternal(cntrl.router, CART_ROUTE, "uuid", cart.Uuid)
+	cartUrl := UrlInternal(cntrl.router, CART_VIEW_ROUTE, "uuid", cart.Uuid)
 	if cartUrl.Error != nil {
 		cntrl.logger.Warn("CartController.DeleteItem: could not parse redirect url")
 	}

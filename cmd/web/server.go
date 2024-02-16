@@ -19,7 +19,7 @@ const (
 func main() {
 	dc := dc.NewDc(".env")
 
-	dc.Router.HandleFunc("/cart/{uuid}", dc.CartController.View).Methods("GET").Name(web.CART_ROUTE)
+	dc.Router.HandleFunc("/cart/{uuid}", dc.CartController.View).Methods("GET").Name(web.CART_VIEW_ROUTE)
 	dc.Router.HandleFunc("/cartItem/{uuid}/delete", dc.CartController.DeleteItem).Methods("GET").Name(web.CART_ITEM_DELETE_ROUTE)
 	dc.Router.HandleFunc("/seed", seed).Methods("GET")
 
