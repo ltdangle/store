@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"store/pkg/dc"
 	"store/pkg/web"
@@ -18,6 +19,9 @@ func main() {
 
 	dc.Router.HandleFunc("/cart/{uuid}", dc.CartController.View).Methods("GET").Name(web.CART_ROUTE)
 	dc.Router.HandleFunc("/cartItem/{uuid}/delete", dc.CartController.DeleteItem).Methods("GET").Name(web.CART_ITEM_DELETE_ROUTE)
+	dc.Router.HandleFunc("/seed", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprint(w, "seed")
+	}).Methods("GET")
 
 	log.Info("Starting server on localhost:8080")
 	err := http.ListenAndServe("localhost:8080", dc.Router)
