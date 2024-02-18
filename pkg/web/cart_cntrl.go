@@ -71,3 +71,9 @@ func (cntrl *CartController) DeleteItem(w http.ResponseWriter, r *http.Request) 
 
 	http.Redirect(w, r, cartUrl.Value, http.StatusTemporaryRedirect)
 }
+
+const CART_ITEM_EDIT_ROUTE = "edit cart item"
+
+func (cntrl *CartController) EditCartItem(w http.ResponseWriter, r *http.Request) {
+	response(w, "edit cart item")
+}
