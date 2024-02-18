@@ -42,7 +42,7 @@ func cart(cartVM CartVM) string {
 		cartItems += cartItem(item) + "\n"
 
 	}
-	cart = strings.Replace(cart, "###cart_item###", cartItems, -1)
+	cart = strings.Replace(cart, "###cart_items###", cartItems, -1)
 
 	return cart
 }
