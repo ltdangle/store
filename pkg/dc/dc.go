@@ -2,6 +2,7 @@ package dc
 
 import (
 	"store/pkg/infra"
+	"store/pkg/logger"
 	"store/pkg/repo"
 	"store/pkg/service"
 	"store/pkg/web"
@@ -26,6 +27,7 @@ type Dc struct {
 	CartService        *service.CartService
 
 	Router *mux.Router
+	Logger logger.LoggerInterface
 
 	CartController *web.CartController
 }
@@ -35,7 +37,7 @@ func NewDc(envFile string) *Dc {
 	cfg := infra.ReadConfig(envFile)
 	dc.Db = infra.Gorm(cfg)
 
-	logger := logrus.New()
+	dc.Logger = logrus.New()
 
 	dc.CustomerRepo = repo.NewCustomerRepo(dc.Db)
 	dc.CustomerService = service.NewCustomerService(dc.CustomerRepo)
@@ -49,7 +51,8 @@ func NewDc(envFile string) *Dc {
 
 	dc.Router = mux.NewRouter()
 
-	dc.CartController = web.NewCartController(dc.Router, dc.CartService, dc.CartRepo, logger)
+	tmpl := web.NewTmpl(dc.Router)
+	dc.CartController = web.NewCartController(dc.Router, dc.CartService, dc.CartRepo, dc.Logger, tmpl)
 
 	return dc
 }

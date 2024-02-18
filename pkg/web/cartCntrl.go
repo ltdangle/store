@@ -16,10 +16,11 @@ type CartController struct {
 	service *service.CartService
 	repo    *repo.CartRepo
 	logger  logger.LoggerInterface
+	tmpl    *Tmpl
 }
 
-func NewCartController(router *mux.Router, service *service.CartService, repo *repo.CartRepo, logger logger.LoggerInterface) *CartController {
-	return &CartController{router: router, service: service, repo: repo, logger: logger}
+func NewCartController(router *mux.Router, service *service.CartService, repo *repo.CartRepo, logger logger.LoggerInterface, tmpl *Tmpl) *CartController {
+	return &CartController{router: router, service: service, repo: repo, logger: logger, tmpl: tmpl}
 }
 
 type CartVM struct {
@@ -29,7 +30,6 @@ type CartVM struct {
 const CART_VIEW_ROUTE = "cart"
 
 func (cntrl *CartController) View(w http.ResponseWriter, r *http.Request) {
-	// var html bytes.Bufer
 
 	vars := mux.Vars(r)
 	uuid := vars["uuid"]
@@ -44,7 +44,7 @@ func (cntrl *CartController) View(w http.ResponseWriter, r *http.Request) {
 			Cart: cart,
 		}
 
-		response(w, template(vm))
+		response(w, cntrl.tmpl.template(vm))
 	}
 }
 

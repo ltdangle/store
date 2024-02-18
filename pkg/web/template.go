@@ -9,9 +9,20 @@ import (
 	"store/pkg/models"
 	"strconv"
 	"strings"
+
+	"github.com/gorilla/mux"
 )
 
-func loadTemplate(tmpl string) string {
+type Tmpl struct {
+	router *mux.Router
+}
+
+func NewTmpl(router *mux.Router) *Tmpl {
+	return &Tmpl{router: router}
+}
+
+// TODO: use "html/template"
+func (t *Tmpl) loadTemplate(tmpl string) string {
 	_, currentFilePath, _, ok := runtime.Caller(0)
 	if !ok {
 		log.Fatal("No caller information")
@@ -27,19 +38,19 @@ func loadTemplate(tmpl string) string {
 
 	return string(content)
 }
-func template(cartVM CartVM) string {
-	html := loadTemplate("template.html")
-	html = strings.Replace(html, "###cart###", cart(cartVM), 1)
+func (t *Tmpl) template(cartVM CartVM) string {
+	html := t.loadTemplate("template.html")
+	html = strings.Replace(html, "###cart###", t.cart(cartVM), 1)
 
 	return html
 }
 
-func cart(cartVM CartVM) string {
-	cart := loadTemplate("cart.html")
+func (t *Tmpl) cart(cartVM CartVM) string {
+	cart := t.loadTemplate("cart.html")
 	var cartItems string
 
 	for _, item := range cartVM.Cart.CartItems {
-		cartItems += cartItem(item) + "\n"
+		cartItems += t.cartItem(item) + "\n"
 
 	}
 	cart = strings.Replace(cart, "###cart_items###", cartItems, -1)
@@ -47,8 +58,8 @@ func cart(cartVM CartVM) string {
 	return cart
 }
 
-func cartItem(item *models.CartItem) string {
-	html := loadTemplate("cart_item.html")
+func (t *Tmpl) cartItem(item *models.CartItem) string {
+	html := t.loadTemplate("cart_item.html")
 	html = strings.Replace(html, "###name###", item.Product.Name, -1)
 	html = strings.Replace(html, "###description###", item.Product.Description, -1)
 	html = strings.Replace(html, "###price###", "$ "+strconv.Itoa(item.Subtotal), -1)
