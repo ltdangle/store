@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"store/pkg/models"
+	"strconv"
 	"strings"
 )
 
@@ -50,6 +51,7 @@ func cartItem(item *models.CartItem) string {
 	html := loadTemplate("cart_item.html")
 	html = strings.Replace(html, "###name###", item.Product.Name, -1)
 	html = strings.Replace(html, "###description###", item.Product.Description, -1)
+	html = strings.Replace(html, "###price###", "$ "+strconv.Itoa(item.Subtotal), -1)
 	var fields []string
 	for _, field := range item.Product.Fields {
 		fieldHtml := fmt.Sprintf(`<li class="mt-1 text-sm text-gray-500"><span style="font-weight:bold">%s</span>:<br /> %s</li>`, field.Title, field.Value)

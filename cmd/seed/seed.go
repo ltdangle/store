@@ -5,6 +5,8 @@ import (
 	"store/pkg/models"
 	"store/pkg/repo"
 	"store/pkg/service"
+
+	"gorm.io/gorm"
 	// "github.com/bxcodec/faker/v3"
 )
 
@@ -59,12 +61,20 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
+	// add products to cart
 	for _, product := range products {
 		err = cartService.AddProductToCart(cart, product)
 		if err != nil {
 			panic(err)
 		}
 	}
+	// set cart item subtotal
+	for _, item := range cart.CartItems {
+		item.Subtotal = 35
+	}
 
+	tx := db.Session(&gorm.Session{FullSaveAssociations: true}).Updates(&cart)
+	if tx.Error != nil {
+		panic(err)
+	}
 }
