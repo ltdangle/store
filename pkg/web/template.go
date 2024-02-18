@@ -1,10 +1,12 @@
 package web
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
 	"runtime"
+	"store/pkg/models"
 	"strings"
 )
 
@@ -33,8 +35,26 @@ func template(cartVM CartVM) string {
 
 func cart(cartVM CartVM) string {
 	cart := loadTemplate("cart.html")
-	cartItem := loadTemplate("cart_item.html")
-	cart = strings.Replace(cart, "###cart_item###", cartItem, -1)
+	var cartItems string
+
+	for _, item := range cartVM.Cart.CartItems {
+		cartItems += cartItem(item) + "\n"
+
+	}
+	cart = strings.Replace(cart, "###cart_item###", cartItems, -1)
 
 	return cart
+}
+
+func cartItem(item *models.CartItem) string {
+	html := loadTemplate("cart_item.html")
+	html = strings.Replace(html, "###name###", item.Product.Name, -1)
+	html = strings.Replace(html, "###description###", item.Product.Description, -1)
+	var fields []string
+	for _, field := range item.Product.Fields {
+		fieldHtml := fmt.Sprintf(`<p class="mt-1 text-sm text-gray-500">%s: %s</p>`, field.Title, field.Value)
+		fields = append(fields, fieldHtml)
+	}
+	html = strings.Replace(html, "###product_fields###", strings.Join(fields, "\n"), -1)
+	return html
 }
