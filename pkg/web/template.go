@@ -52,7 +52,7 @@ func cartItem(item *models.CartItem) string {
 	html = strings.Replace(html, "###description###", item.Product.Description, -1)
 	var fields []string
 	for _, field := range item.Product.Fields {
-		fieldHtml := fmt.Sprintf(`<p class="mt-1 text-sm text-gray-500">%s: %s</p>`, field.Title, field.Value)
+		fieldHtml := fmt.Sprintf(`<li class="mt-1 text-sm text-gray-500"><span style="font-weight:bold">%s</span>:<br /> %s</li>`, field.Title, field.Value)
 		fields = append(fields, fieldHtml)
 	}
 	html = strings.Replace(html, "###product_fields###", strings.Join(fields, "\n"), -1)

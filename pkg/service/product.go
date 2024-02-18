@@ -13,7 +13,7 @@ type ProductService struct {
 }
 
 func NewProductService(repo *repo.ProductRepo, db *gorm.DB) *ProductService {
-	return &ProductService{repo: repo,db:db}
+	return &ProductService{repo: repo, db: db}
 }
 
 type NewProductRqst struct {
@@ -57,12 +57,14 @@ func (service *ProductService) CopyBaseProduct(baseProduct *models.BaseProduct) 
 	product.Type = baseProduct.Type
 	product.Name = baseProduct.Name
 	product.Description = baseProduct.Description
+	product.Description = baseProduct.Description
 	for _, baseField := range baseProduct.Fields {
 		// copy base field
 		field := models.NewProductField()
 		field.Type = baseField.Type
 		field.Title = baseField.Title
 		field.Description = baseField.Description
+		field.Value = baseField.Value
 
 		product.Fields = append(product.Fields, field)
 	}
@@ -72,4 +74,3 @@ func (service *ProductService) CopyBaseProduct(baseProduct *models.BaseProduct) 
 	}
 	return product, nil
 }
-

@@ -18,31 +18,31 @@ func (seeder *Seeder) BuildBasicProduct(name string, description string) *BasePr
 	instrctns.Type = "string"
 	instrctns.Title = "Instructions"
 	instrctns.Description = "Order instructions"
-	instrctns.Value = ""
+	instrctns.Value = "Please take your time and do a good job. Quality over delivery time is preferred."
 
 	date := NewBaseProductField()
 	date.Type = "date"
 	date.Title = "Delivery date"
 	date.Description = "Delivery date of the product"
-	date.Value = ""
+	date.Value = "21/11/2024"
 
 	file := NewBaseProductField()
 	file.Type = "attachment"
 	file.Title = "Attachment"
 	file.Description = "Project attachment"
-	file.Value = ""
+	file.Value = "file1.jpg"
 
 	size := NewBaseProductField()
 	size.Type = "string"
 	size.Title = "Size"
 	size.Description = "Project size"
-	size.Value = ""
+	size.Value = "XL"
 
 	color := NewBaseProductField()
 	color.Type = "string"
 	color.Title = "Color"
 	color.Description = "Project color"
-	color.Value = ""
+	color.Value = "beige"
 
 	product := NewBaseProduct()
 	product.Type = "furniture"
