@@ -69,5 +69,6 @@ func (t *Tmpl) cartItem(item *models.CartItem) string {
 		fields = append(fields, fieldHtml)
 	}
 	html = strings.Replace(html, "###product_fields###", strings.Join(fields, "\n"), -1)
+	html = strings.Replace(html, "###remove_link###", UrlInternal(t.router, CART_ITEM_DELETE_ROUTE, "uuid", item.Uuid).Value, -1)
 	return html
 }
