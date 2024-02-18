@@ -43,8 +43,9 @@ func (cntrl *CartController) View(w http.ResponseWriter, r *http.Request) {
 		vm := CartVM{
 			Cart: cart,
 		}
-
-		response(w, cntrl.tmpl.template(vm))
+		cartTmpl := NewCartTmpl(cntrl.router)
+		cntrl.tmpl.setMain(cartTmpl.cart(vm))
+		response(w, cntrl.tmpl.render())
 	}
 }
 
