@@ -1,8 +1,6 @@
 package web
 
 import (
-	"bytes"
-	"context"
 	"fmt"
 	"net/http"
 	"store/pkg/logger"
@@ -31,7 +29,7 @@ type CartVM struct {
 const CART_VIEW_ROUTE = "cart"
 
 func (cntrl *CartController) View(w http.ResponseWriter, r *http.Request) {
-	var html bytes.Buffer
+	// var html bytes.Bufer
 
 	vars := mux.Vars(r)
 	uuid := vars["uuid"]
@@ -46,8 +44,7 @@ func (cntrl *CartController) View(w http.ResponseWriter, r *http.Request) {
 			Cart: cart,
 		}
 
-		_ = Template(cntrl.router, vm).Render(context.Background(), &html)
-		response(w, html.String())
+		response(w, template(vm))
 	}
 }
 
