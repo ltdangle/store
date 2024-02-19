@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"reflect"
 	"store/pkg/models"
+	"strconv"
 
 	"gorm.io/gorm"
 )
@@ -12,24 +13,17 @@ func GormToForm(entity any, db *gorm.DB) *Form {
 	form := NewForm()
 	var anyStruct struct{}
 	schema := db.Model(&models.Cart{}).First(&anyStruct).Statement.Schema
-	fmt.Println(schema)
+
 	for strucFieldName, field := range schema.FieldsByBindName {
 		fmt.Println(strucFieldName + ": " + field.DBName)
-	}
-	columns, err := db.Migrator().ColumnTypes(entity)
+		switch field.DataType {
+		case "string":
+			form.AddField(&Field{Name: field.Name, Type: "text", Required: field.NotNull, Value: GetFieldValueByName(entity, field.Name)})
 
-	if err == nil {
-		for _, column := range columns {
-
-			isRequired, _ := column.Nullable()
-			switch column.ScanType().String() {
-			case "string":
-				form.AddField(&Field{Name: column.Name(), Type: "text", Required: isRequired, Value: GetFieldValueByName(entity, column.Name())})
-
-			case "int64":
-				form.AddField(&Field{Name: column.Name(), Type: "number", Required: isRequired})
-			}
+		case "uint":
+			form.AddField(&Field{Name: field.Name, Type: "number", Required: field.NotNull, Value: GetFieldValueByName(entity, field.Name)})
 		}
+
 	}
 	return form
 }
@@ -53,10 +47,17 @@ func GetFieldValueByName(data interface{}, name string) string {
 	var str string
 	if str, ok := fieldValue.Interface().(string); ok {
 		// The assertion was successful, str is of type string now
-		fmt.Println(str)
-	} else {
-		// The assertion has failed, myInterface is not of type string
-		fmt.Println("Value is not a string")
+		fmt.Println("Struct value for " + name + " is " + str)
+		return str
 	}
+	if unsigned_int, ok := fieldValue.Interface().(uint); ok {
+		// The assertion was successful, str is of type string now
+		str := strconv.Itoa(int(unsigned_int))
+		fmt.Println("Struct value for " + name + " is " + str)
+		return str
+	}
+	// The assertion has failed, myInterface is not of type string
+	fmt.Println("Value is not a string")
+
 	return str
 }
