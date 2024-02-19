@@ -52,7 +52,7 @@ func NewDc(envFile string) *Dc {
 	dc.Router = mux.NewRouter()
 
 	tmpl := web.NewTmpl(dc.Router)
-	dc.CartController = web.NewCartController(dc.Router, dc.CartService, dc.CartRepo, dc.Logger, tmpl)
+	dc.CartController = web.NewCartController(dc.Router, dc.CartService, dc.CartRepo, dc.Logger, tmpl, dc.Db)
 
 	return dc
 }

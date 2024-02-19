@@ -9,6 +9,7 @@ import (
 	"store/pkg/service"
 
 	"github.com/gorilla/mux"
+	"gorm.io/gorm"
 )
 
 type CartController struct {
@@ -17,10 +18,11 @@ type CartController struct {
 	repo    *repo.CartRepo
 	logger  logger.LoggerInterface
 	tmpl    *Tmpl
+	db      *gorm.DB
 }
 
-func NewCartController(router *mux.Router, service *service.CartService, repo *repo.CartRepo, logger logger.LoggerInterface, tmpl *Tmpl) *CartController {
-	return &CartController{router: router, service: service, repo: repo, logger: logger, tmpl: tmpl}
+func NewCartController(router *mux.Router, service *service.CartService, repo *repo.CartRepo, logger logger.LoggerInterface, tmpl *Tmpl, db *gorm.DB) *CartController {
+	return &CartController{router: router, service: service, repo: repo, logger: logger, tmpl: tmpl, db: db}
 }
 
 type CartVM struct {
@@ -75,5 +77,17 @@ func (cntrl *CartController) DeleteItem(w http.ResponseWriter, r *http.Request) 
 const CART_ITEM_EDIT_ROUTE = "edit cart item"
 
 func (cntrl *CartController) EditCartItem(w http.ResponseWriter, r *http.Request) {
+	var columnNames []string
+
+	// List columns of a model's table
+	columns, err := cntrl.db.Migrator().ColumnTypes(&models.Cart{})
+
+	if err == nil {
+		for _, column := range columns {
+			columnNames = append(columnNames, column.Name()+" - "+column.DatabaseTypeName()+"-"+column.ScanType().String()+";")
+		}
+	}
+	fmt.Println(columnNames)
+
 	response(w, "edit cart item")
 }
