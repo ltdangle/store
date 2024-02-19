@@ -13,7 +13,9 @@ func GormToForm(entity any, db *gorm.DB) *Form {
 	var anyStruct struct{}
 	schema := db.Model(&models.Cart{}).First(&anyStruct).Statement.Schema
 	fmt.Println(schema)
-
+	for strucFieldName, field := range schema.FieldsByBindName {
+		fmt.Println(strucFieldName + ": " + field.DBName)
+	}
 	columns, err := db.Migrator().ColumnTypes(entity)
 
 	if err == nil {
