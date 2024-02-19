@@ -12,6 +12,7 @@ type Field struct {
 	Value       string
 	Options     []string // For select fields, this would be the list of
 	Required    bool
+	Error       string
 }
 
 func NewField() *Field {
@@ -42,11 +43,12 @@ func (form *Form) Render() string {
 		formField := fmt.Sprintf(`
 	 <div>
 		  <label for="%s" class="block text-sm font-medium leading-6 text-gray-900">%s</label>
-		  <div class="mt-2">
+		  <div class="mt-2" style="margin-bottom:1em">
 		    <input type="%s" name="%s" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="%s" value="%s" %s>
+      <p class="mt-2 text-sm text-red-600" style="padding:0;margin:0">%s</p>
 		  </div>
 		</div>`,
-			field.Name, field.Name, field.Type, field.Name, field.Placeholder, field.Value, required)
+			field.Name, field.Name, field.Type, field.Name, field.Placeholder, field.Value, required, field.Error)
 		// formField := fmt.Sprintf(`
 		// <label for="%s">%s</label>
 		// <input type="%s" name="%s" placeholder="%s" value="%s" %s >`,
