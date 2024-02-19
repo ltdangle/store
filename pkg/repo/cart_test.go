@@ -10,7 +10,7 @@ import (
 
 func TestFindCartByUuid(t *testing.T) {
 	cfg := infra.ReadConfig("../../.env")
-	db := infra.Gorm(cfg)
+	db := infra.Gorm(cfg.POSTGRES_URL)
 	repo := NewCartRepo(db)
 	cart := models.NewCart()
 	cartItem := models.NewCartItem()

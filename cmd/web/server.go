@@ -16,7 +16,7 @@ func main() {
 
 	dc.Router.HandleFunc("/cart/{uuid}", dc.CartController.View).Methods("GET").Name(web.CART_VIEW_ROUTE)
 	dc.Router.HandleFunc("/cartItem/{uuid}/delete", dc.CartController.DeleteItem).Methods("GET").Name(web.CART_ITEM_DELETE_ROUTE)
-	dc.Router.HandleFunc("/cartItem/{uuid}/edit", dc.CartController.EditCartItem).Name(web.CART_ITEM_EDIT_ROUTE)
+	dc.Router.HandleFunc("/cartItem/{uuid}/edit", dc.CartController.EditCart).Name(web.CART_EDIT_ROUTE)
 	dc.Router.HandleFunc("/seed", seed).Methods("GET")
 
 	log.Info("Starting server on localhost:8080")

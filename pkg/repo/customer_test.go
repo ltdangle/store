@@ -11,7 +11,7 @@ import (
 
 func TestCustomerRepo(t *testing.T) {
 	cfg := infra.ReadConfig("../../.env")
-	db := infra.Gorm(cfg)
+	db := infra.Gorm(cfg.POSTGRES_URL)
 	db.Exec("DELETE FROM users")
 
 	repo := NewCustomerRepo(db)
@@ -28,7 +28,7 @@ func TestCustomerRepo(t *testing.T) {
 	assert.Equal(t, customer.CreatedAt.Format(time.UnixDate), foundCustomer.CreatedAt.Format(time.UnixDate))
 
 	// Find customer by email.
-	foundCustomer, _= repo.FindByEmail(customer.Email)
+	foundCustomer, _ = repo.FindByEmail(customer.Email)
 	assert.Equal(t, customer.Email, foundCustomer.Email)
 
 	// Searching with non-existent uuid returns an error.
