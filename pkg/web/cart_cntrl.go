@@ -7,6 +7,7 @@ import (
 	"store/pkg/models"
 	"store/pkg/repo"
 	"store/pkg/service"
+	"store/pkg/web/form"
 
 	"github.com/gorilla/mux"
 	"gorm.io/gorm"
@@ -89,5 +90,17 @@ func (cntrl *CartController) EditCartItem(w http.ResponseWriter, r *http.Request
 	}
 	fmt.Println(columnNames)
 
-	response(w, "edit cart item")
+	// Form.
+	f := form.NewForm()
+	f.Method = "POST"
+	f.Action = UrlInternal(cntrl.router, CART_ITEM_DELETE_ROUTE).Value
+	f.AddField(&form.Field{Name: "Text", Type: "text", Value: "text value", Required: true})
+	f.AddField(&form.Field{Name: "Number", Type: "number", Value: "", Required: true})
+	f.AddField(&form.Field{Name: "Email", Type: "email", Value: "", Required: true})
+	f.AddField(&form.Field{Name: "Password", Type: "password", Value: "", Required: true})
+	f.AddField(&form.Field{Name: "Date", Type: "date", Value: "", Required: true})
+	f.AddField(&form.Field{Name: "File", Type: "file", Value: "", Required: true})
+
+	cntrl.tmpl.setMain(f.Render())
+	response(w, cntrl.tmpl.render())
 }

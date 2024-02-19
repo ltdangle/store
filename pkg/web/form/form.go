@@ -14,10 +14,18 @@ type Field struct {
 	Required    bool
 }
 
+func NewField() *Field {
+	return &Field{}
+}
+
 type Form struct {
 	Method string
 	Action string
 	Fields []*Field
+}
+
+func NewForm() *Form {
+	return &Form{}
 }
 
 func (form *Form) AddField(field *Field) {
@@ -32,18 +40,35 @@ func (form *Form) Render() string {
 			required = "required"
 		}
 		formField := fmt.Sprintf(`
-  <label for="%s">%s</label>
-  <input type="%s" name="%s" placeholder="%s" value="%s" %s >`,
+	 <div>
+		  <label for="%s" class="block text-sm font-medium leading-6 text-gray-900">%s</label>
+		  <div class="mt-2">
+		    <input type="%s" name="%s" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="%s" value="%s" %s>
+		  </div>
+		</div>`,
 			field.Name, field.Name, field.Type, field.Name, field.Placeholder, field.Value, required)
+		// formField := fmt.Sprintf(`
+		// <label for="%s">%s</label>
+		// <input type="%s" name="%s" placeholder="%s" value="%s" %s >`,
+		// 	field.Name, field.Name, field.Type, field.Name, field.Placeholder, field.Value, required)
 
 		fieldsHtml = append(fieldsHtml, formField)
 	}
 
 	formHtml := fmt.Sprintf(`
 <form action="%s" method="%s" >
-	  	%s
+  <div class="space-y-12">
+    <div class="border-b border-gray-900/10 pb-12">
+      <h2 class="text-base font-semibold leading-7 text-gray-900">Profile</h2>
+      <p class="mt-1 text-sm leading-6 text-gray-600">This information will be displayed publicly so be careful what you share.</p>
 
-  <input type="submit" value="Submit">
+	  	%s
+    </div>
+ </div>
+<div class="mt-6 flex items-center justify-end gap-x-6">
+    <button type="button" class="text-sm font-semibold leading-6 text-gray-900">Cancel</button>
+    <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Save</button>
+</div>
 </form>`,
 		form.Action, form.Method, strings.Join(fieldsHtml, ""),
 	)
