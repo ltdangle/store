@@ -3,8 +3,8 @@ package form
 import (
 	"fmt"
 	"reflect"
-	"store/pkg/models"
 	"strconv"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -12,16 +12,19 @@ import (
 func GormToForm(entity any, db *gorm.DB) *Form {
 	form := NewForm()
 	var anyStruct struct{}
-	schema := db.Model(&models.Cart{}).First(&anyStruct).Statement.Schema
+	schema := db.Model(entity).First(&anyStruct).Statement.Schema
 
 	for strucFieldName, field := range schema.FieldsByBindName {
 		fmt.Println(strucFieldName + ": " + field.DBName)
 		switch field.DataType {
 		case "string":
 			form.AddField(&Field{Name: field.Name, Type: "text", Required: field.NotNull, Value: GetFieldValueByName(entity, field.Name)})
-
 		case "uint":
 			form.AddField(&Field{Name: field.Name, Type: "number", Required: field.NotNull, Value: GetFieldValueByName(entity, field.Name)})
+		case "int":
+			form.AddField(&Field{Name: field.Name, Type: "number", Required: field.NotNull, Value: GetFieldValueByName(entity, field.Name)})
+		case "time":
+			form.AddField(&Field{Name: field.Name, Type: "time", Required: field.NotNull, Value: GetFieldValueByName(entity, field.Name)})
 		}
 
 	}
@@ -46,17 +49,25 @@ func GetFieldValueByName(data interface{}, name string) string {
 
 	var str string
 	if str, ok := fieldValue.Interface().(string); ok {
-		// The assertion was successful, str is of type string now
 		fmt.Println("Struct value for " + name + " is " + str)
 		return str
 	}
 	if unsigned_int, ok := fieldValue.Interface().(uint); ok {
-		// The assertion was successful, str is of type string now
 		str := strconv.Itoa(int(unsigned_int))
 		fmt.Println("Struct value for " + name + " is " + str)
 		return str
 	}
-	// The assertion has failed, myInterface is not of type string
+	if unsigned_int, ok := fieldValue.Interface().(int); ok {
+		str := strconv.Itoa(int(unsigned_int))
+		fmt.Println("Struct value for " + name + " is " + str)
+		return str
+	}
+	if time_type, ok := fieldValue.Interface().(time.Time); ok {
+		str = time_type.String()
+		fmt.Println("Struct value for " + name + " is " + str)
+		return str
+	}
+
 	fmt.Println("Value is not a string")
 
 	return str

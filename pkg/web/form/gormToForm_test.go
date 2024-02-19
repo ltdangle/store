@@ -11,8 +11,7 @@ func TestGormToForm(t *testing.T) {
 
 	cfg := infra.ReadConfig("../../../.env")
 	db := infra.Gorm(cfg.POSTGRES_URL)
-	cart := models.NewCart()
-	cart.ID = 1
-	cart.Total = 234
-	fmt.Println(GormToForm(cart, db))
+	seeder := models.NewSeeder(db)
+	product := seeder.BuildBasicProduct("a bookshelf", "custom built bookshelf")
+	fmt.Println(GormToForm(product, db))
 }
