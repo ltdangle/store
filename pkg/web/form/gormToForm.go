@@ -3,8 +3,6 @@ package form
 import (
 	"fmt"
 	"reflect"
-	"strconv"
-	"time"
 
 	"gorm.io/gorm"
 )
@@ -31,6 +29,7 @@ func GormToForm(entity any, db *gorm.DB) *Form {
 	return form
 }
 
+// TODO: return errors
 func GetFieldValueByName(data interface{}, name string) string {
 	value := reflect.ValueOf(data)
 	if value.Kind() == reflect.Ptr {
@@ -46,29 +45,5 @@ func GetFieldValueByName(data interface{}, name string) string {
 		fmt.Printf("No field with name %s found\n", name)
 		return ""
 	}
-
-	var str string
-	if str, ok := fieldValue.Interface().(string); ok {
-		fmt.Println("Struct value for " + name + " is " + str)
-		return str
-	}
-	if unsigned_int, ok := fieldValue.Interface().(uint); ok {
-		str := strconv.Itoa(int(unsigned_int))
-		fmt.Println("Struct value for " + name + " is " + str)
-		return str
-	}
-	if unsigned_int, ok := fieldValue.Interface().(int); ok {
-		str := strconv.Itoa(int(unsigned_int))
-		fmt.Println("Struct value for " + name + " is " + str)
-		return str
-	}
-	if time_type, ok := fieldValue.Interface().(time.Time); ok {
-		str = time_type.String()
-		fmt.Println("Struct value for " + name + " is " + str)
-		return str
-	}
-
-	fmt.Println("Value is not a string")
-
-	return str
+	return fmt.Sprintf("%v", fieldValue.Interface())
 }
