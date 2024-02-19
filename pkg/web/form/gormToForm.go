@@ -21,8 +21,10 @@ func GormToForm(entity any, db *gorm.DB) *Form {
 			form.AddField(&Field{Name: field.Name, Type: "number", Required: field.NotNull, Value: GetFieldValueByName(entity, field.Name)})
 		case "int":
 			form.AddField(&Field{Name: field.Name, Type: "number", Required: field.NotNull, Value: GetFieldValueByName(entity, field.Name)})
+		case "date":
+			form.AddField(&Field{Name: field.Name, Type: "text", Required: field.NotNull, Value: GetFieldValueByName(entity, field.Name)})
 		case "time":
-			form.AddField(&Field{Name: field.Name, Type: "time", Required: field.NotNull, Value: GetFieldValueByName(entity, field.Name)})
+			form.AddField(&Field{Name: field.Name, Type: "text", Required: field.NotNull, Value: GetFieldValueByName(entity, field.Name)})
 		}
 
 	}
@@ -45,5 +47,11 @@ func GetFieldValueByName(data interface{}, name string) string {
 		fmt.Printf("No field with name %s found\n", name)
 		return ""
 	}
+
+	// Zero value.
+	if fieldValue.IsZero() {
+		return ""
+	}
+
 	return fmt.Sprintf("%v", fieldValue.Interface())
 }
