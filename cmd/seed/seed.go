@@ -12,7 +12,7 @@ import (
 
 func main() {
 	cfg := infra.ReadConfig(".env")
-	db := infra.Gorm(cfg)
+	db := infra.Gorm(cfg.POSTGRES_URL)
 
 	// Drop tables.
 	tables := []string{

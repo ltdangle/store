@@ -91,16 +91,17 @@ func (cntrl *CartController) EditCartItem(w http.ResponseWriter, r *http.Request
 	fmt.Println(columnNames)
 
 	// Form.
-	f := form.NewForm()
-	f.Method = "POST"
-	f.Action = UrlInternal(cntrl.router, CART_ITEM_DELETE_ROUTE).Value
-	f.AddField(&form.Field{Name: "Text", Type: "text", Value: "text value", Required: true})
-	f.AddField(&form.Field{Name: "Number", Type: "number", Value: "", Required: true})
-	f.AddField(&form.Field{Name: "Email", Type: "email", Value: "", Required: true, Error: "dis is incorrect"})
-	f.AddField(&form.Field{Name: "Password", Type: "password", Value: "", Required: true})
-	f.AddField(&form.Field{Name: "Date", Type: "date", Value: "", Required: true})
-	f.AddField(&form.Field{Name: "File", Type: "file", Value: "", Required: true})
+	// f := form.NewForm()
+	// f.Method = "POST"
+	// f.Action = UrlInternal(cntrl.router, CART_ITEM_DELETE_ROUTE).Value
+	// f.AddField(&form.Field{Name: "Text", Type: "text", Value: "text value", Required: true})
+	// f.AddField(&form.Field{Name: "Number", Type: "number", Value: "", Required: true})
+	// f.AddField(&form.Field{Name: "Email", Type: "email", Value: "", Required: true, Error: "dis is incorrect"})
+	// f.AddField(&form.Field{Name: "Password", Type: "password", Value: "", Required: true})
+	// f.AddField(&form.Field{Name: "Date", Type: "date", Value: "", Required: true})
+	// f.AddField(&form.Field{Name: "File", Type: "file", Value: "", Required: true})
 
+	f := form.GormToForm(&models.Cart{}, cntrl.db)
 	cntrl.tmpl.setMain(f.Render())
 	response(w, cntrl.tmpl.render())
 }

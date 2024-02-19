@@ -35,7 +35,7 @@ type Dc struct {
 func NewDc(envFile string) *Dc {
 	dc := &Dc{}
 	cfg := infra.ReadConfig(envFile)
-	dc.Db = infra.Gorm(cfg)
+	dc.Db = infra.Gorm(cfg.POSTGRES_URL)
 
 	dc.Logger = logrus.New()
 

@@ -7,7 +7,7 @@ import (
 
 func Migrate(envFile string) {
 	cfg := infra.ReadConfig(envFile)
-	db := infra.Gorm(cfg)
+	db := infra.Gorm(cfg.POSTGRES_URL)
 
 	// Miglate the schema
 	_ = db.AutoMigrate(&models.User{})

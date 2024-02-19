@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-func Gorm(cfg Config) *gorm.DB {
+func Gorm(postgresUrl string ) *gorm.DB {
 
 	// Init db (GORM)
 	newLogger := logger.New(
@@ -21,7 +21,7 @@ func Gorm(cfg Config) *gorm.DB {
 			Colorful:      true,        // Disable color
 		},
 	)
-	db, err := gorm.Open(postgres.Open(cfg.POSTGRES_URL), &gorm.Config{Logger: newLogger})
+	db, err := gorm.Open(postgres.Open(postgresUrl), &gorm.Config{Logger: newLogger})
 	if err != nil {
 		panic("failed to connect database")
 	}

@@ -49,10 +49,6 @@ func (form *Form) Render() string {
 		  </div>
 		</div>`,
 			field.Name, field.Name, field.Type, field.Name, field.Placeholder, field.Value, required, field.Error)
-		// formField := fmt.Sprintf(`
-		// <label for="%s">%s</label>
-		// <input type="%s" name="%s" placeholder="%s" value="%s" %s >`,
-		// 	field.Name, field.Name, field.Type, field.Name, field.Placeholder, field.Value, required)
 
 		fieldsHtml = append(fieldsHtml, formField)
 	}

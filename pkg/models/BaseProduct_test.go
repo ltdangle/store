@@ -9,7 +9,7 @@ import (
 
 func TestProduct(t *testing.T) {
 	cfg := infra.ReadConfig("../../.env")
-	db := infra.Gorm(cfg)
+	db := infra.Gorm(cfg.POSTGRES_URL)
 	field1 := NewBaseProductField()
 	field1.Type = "string"
 	field1.Title = "Instructions"
