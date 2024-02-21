@@ -1,6 +1,7 @@
 package web
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -10,13 +11,26 @@ import (
 	"github.com/gorilla/mux"
 )
 
+type Link struct {
+	url  string
+	text string
+}
+
 type Tmpl struct {
-	router *mux.Router
-	main   string
+	router       *mux.Router
+	main         string
+	leftNavLinks []Link
 }
 
 func NewTmpl(router *mux.Router) *Tmpl {
-	return &Tmpl{router: router}
+	t := &Tmpl{router: router}
+	// TODO: fix
+	url := UrlInternal(t.router, CART_VIEW_ROUTE, "uuid", "someuuid").Value
+	t.AddNavLink(url, "Cart")
+	t.AddNavLink(url, "CartItem")
+	t.AddNavLink(url, "Product")
+	t.AddNavLink(url, "Product fields")
+	return t
 }
 
 // TODO: use "html/template"
@@ -36,11 +50,36 @@ func LoadTemplate(tmpl string) string {
 
 	return string(content)
 }
+
+func (t *Tmpl) AddNavLink(url string, text string) {
+	link := Link{url: url, text: text}
+	t.leftNavLinks = append(t.leftNavLinks, link)
+}
+
+func (t *Tmpl) buildLeftNav() string {
+	var links []string
+	for _, link := range t.leftNavLinks {
+		html := fmt.Sprintf(`
+								<li>
+									<a href="%s" class="text-gray-400 hover:text-white hover:bg-gray-800 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold">
+									   %s	
+									</a>
+								</li>
+            `,
+			link.url, link.text,
+		)
+		links = append(links, html)
+	}
+	return strings.Join(links, "\n")
+}
+
 func (t *Tmpl) SetMain(html string) {
 	t.main = html
 }
 func (t *Tmpl) Render() string {
+
 	html := LoadTemplate("template.html")
+	html = strings.Replace(html, "###left-nav###", t.buildLeftNav(), 1)
 	html = strings.Replace(html, "###cart###", t.main, 1)
 
 	return html

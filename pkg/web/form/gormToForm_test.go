@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestGormToForm(t *testing.T) {
+func TestGormToForm(_ *testing.T) {
 
 	cfg := infra.ReadConfig("../../../.env")
 	db := infra.Gorm(cfg.POSTGRES_URL)

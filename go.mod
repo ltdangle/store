@@ -8,7 +8,6 @@ require (
 	github.com/gorilla/mux v1.8.1
 	github.com/gorilla/schema v1.2.1
 	github.com/joho/godotenv v1.5.1
-	github.com/monoculum/formam/v3 v3.6.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.8.4
 	gorm.io/driver/postgres v1.5.6
@@ -23,7 +22,6 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/kr/text v0.2.0 // indirect
-	github.com/monoculum/formam v3.5.5+incompatible // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
 	golang.org/x/crypto v0.14.0 // indirect

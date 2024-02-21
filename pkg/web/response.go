@@ -18,21 +18,21 @@ func response(w http.ResponseWriter, html string) {
 
 }
 
-type Url struct {
+type ParsedUrl struct {
 	Value string
 	Error error
 }
 
-func UrlInternal(router *mux.Router, routeName string, pairs ...string) Url {
+func UrlInternal(router *mux.Router, routeName string, pairs ...string) ParsedUrl {
 	route := router.Get(routeName)
 	if route == nil {
-		return Url{Error: fmt.Errorf("UrlInternal: url for route %s not found", routeName)}
+		return ParsedUrl{Error: fmt.Errorf("UrlInternal: url for route %s not found", routeName)}
 	}
 
 	url, err := route.URL(pairs...)
 	if err != nil || url == nil {
-		return Url{Error: fmt.Errorf("UrlInternal: url params %s for route %s could not be parsed", pairs, routeName)}
+		return ParsedUrl{Error: fmt.Errorf("UrlInternal: url params %s for route %s could not be parsed", pairs, routeName)}
 	}
 
-	return Url{Value: url.String()}
+	return ParsedUrl{Value: url.String()}
 }

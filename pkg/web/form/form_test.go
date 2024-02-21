@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestForm(t *testing.T) {
+func TestForm(_ *testing.T) {
 	form := &Form{}
 	form.AddField(&Field{Type: "text", Value: "text value", Required: true})
 	form.AddField(&Field{Type: "int", Value: "42", Required: true})

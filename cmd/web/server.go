@@ -29,7 +29,7 @@ func main() {
 	}
 }
 
-func seed(w http.ResponseWriter, r *http.Request) {
+func seed(w http.ResponseWriter, _ *http.Request) {
 	// The command you want to run
 	cmd := exec.Command("go", "run", "cmd/seed/seed.go")
 
