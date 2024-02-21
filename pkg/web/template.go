@@ -20,7 +20,7 @@ func NewTmpl(router *mux.Router) *Tmpl {
 }
 
 // TODO: use "html/template"
-func loadTemplate(tmpl string) string {
+func LoadTemplate(tmpl string) string {
 	_, currentFilePath, _, ok := runtime.Caller(0)
 	if !ok {
 		log.Fatal("No caller information")
@@ -36,11 +36,11 @@ func loadTemplate(tmpl string) string {
 
 	return string(content)
 }
-func (t *Tmpl) setMain(html string) {
+func (t *Tmpl) SetMain(html string) {
 	t.main = html
 }
-func (t *Tmpl) render() string {
-	html := loadTemplate("template.html")
+func (t *Tmpl) Render() string {
+	html := LoadTemplate("template.html")
 	html = strings.Replace(html, "###cart###", t.main, 1)
 
 	return html

@@ -18,7 +18,7 @@ func NewCartTmpl(router *mux.Router) *CartTmpl {
 }
 
 func (t *CartTmpl) cart(cartVM CartVM) string {
-	html := loadTemplate("cart.html")
+	html := LoadTemplate("cart.html")
 	var cartItems string
 
 	for _, item := range cartVM.Cart.CartItems {
@@ -31,7 +31,7 @@ func (t *CartTmpl) cart(cartVM CartVM) string {
 }
 
 func (t *CartTmpl) cartItem(item *models.CartItem) string {
-	html := loadTemplate("cart_item.html")
+	html := LoadTemplate("cart_item.html")
 	html = strings.Replace(html, "###name###", item.Product.Name, -1)
 	html = strings.Replace(html, "###description###", item.Product.Description, -1)
 	html = strings.Replace(html, "###price###", "$ "+strconv.Itoa(item.Subtotal), -1)
