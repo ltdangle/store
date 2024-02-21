@@ -13,7 +13,7 @@ func GormToForm(entity any, db *gorm.DB) *Form {
 	schema := db.Model(entity).First(&anyStruct).Statement.Schema
 
 	for _, field := range schema.Fields {
-		switch field.GORMDataType {
+		switch field.DataType {
 		case "string":
 			form.AddField(&Field{Name: field.Name, Type: "text", Required: field.NotNull, Value: GetFieldValueByName(entity, field.Name)})
 		case "uint":
@@ -33,11 +33,13 @@ func GetFieldValueByName(data interface{}, name string) string {
 		value = value.Elem()
 	}
 
+	// TODO: return errors
 	if value.Kind() != reflect.Struct {
-		fmt.Println("provided interface is not a struct")
+		panic("provided interface is not a struct")
 	}
 
 	fieldValue := value.FieldByName(name)
+	// TODO: return errors
 	if !fieldValue.IsValid() {
 		fmt.Printf("No field with name %s found\n", name)
 		return ""
