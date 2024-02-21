@@ -10,11 +10,11 @@ type Cart struct {
 	ID        uint   `gorm:"primarykey"`
 	Uuid      string `gorm:"unique"`
 	UserUuid  string
-	CartItems []*CartItem `gorm:"foreignKey:CartID"`
-	Total     int         `gorm:"not null;default:0"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt
+	CartItems []*CartItem    `gorm:"foreignKey:CartID"`
+	Total     int            `gorm:"not null;default:0"`
+	CreatedAt time.Time      `schema:"-"`
+	UpdatedAt time.Time      `schema:"-"`
+	DeletedAt gorm.DeletedAt `schema:"-"`
 }
 
 func NewCart() *Cart {

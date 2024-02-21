@@ -82,19 +82,29 @@ func (cntrl *CartController) EditCart(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPost:
 		if err := r.ParseForm(); err != nil {
-			http.Error(w, "Error parsing the form", http.StatusBadRequest)
+			cntrl.tmpl.setMain(err.Error())
+			response(w, cntrl.tmpl.render())
 			return
 		}
+
+		var cart models.Cart
+
 		// gorilla schema
 		var decoder = schema.NewDecoder()
-		var cart models.Cart
 		err := decoder.Decode(&cart, r.PostForm)
 		if err != nil {
 			cntrl.logger.Warn(err)
+			cntrl.tmpl.setMain(err.Error())
+			response(w, cntrl.tmpl.render())
+			return
 		}
+
 		err = cntrl.repo.Save(&cart)
 		if err != nil {
 			cntrl.logger.Warn(err)
+			cntrl.tmpl.setMain(err.Error())
+			response(w, cntrl.tmpl.render())
+			return
 		}
 
 		id := r.FormValue("ID")
