@@ -2,6 +2,7 @@ package form
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 )
 
@@ -13,6 +14,8 @@ type Field struct {
 	Options     []string // For select fields, this would be the list of
 	Required    bool
 	Error       string
+	// Vertical position in form.
+	Position int
 }
 
 func NewField() *Field {
@@ -23,6 +26,8 @@ type Form struct {
 	Method string
 	Action string
 	Fields []*Field
+	// Tracks sequence of added form fields to display in the same order later.
+	FieldCounter int
 }
 
 func NewForm() *Form {
@@ -30,7 +35,16 @@ func NewForm() *Form {
 }
 
 func (form *Form) AddField(field *Field) {
+	// Update field position.
+	form.FieldCounter++
+	field.Position = form.FieldCounter
+
 	form.Fields = append(form.Fields, field)
+
+	// Sort fields by position.
+	sort.Slice(form.Fields, func(i, j int) bool {
+		return form.Fields[i].Position < form.Fields[j].Position
+	})
 }
 
 func (form *Form) Render() string {

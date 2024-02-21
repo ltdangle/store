@@ -12,8 +12,7 @@ func GormToForm(entity any, db *gorm.DB) *Form {
 	var anyStruct struct{}
 	schema := db.Model(entity).First(&anyStruct).Statement.Schema
 
-	for strucFieldName, field := range schema.FieldsByBindName {
-		fmt.Println(strucFieldName + ": " + field.DBName)
+	for _, field := range schema.Fields{
 		switch field.DataType {
 		case "string":
 			form.AddField(&Field{Name: field.Name, Type: "text", Required: field.NotNull, Value: GetFieldValueByName(entity, field.Name)})
