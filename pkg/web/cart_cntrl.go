@@ -10,6 +10,7 @@ import (
 	"store/pkg/web/form"
 
 	"github.com/gorilla/mux"
+	"github.com/gorilla/schema"
 	"gorm.io/gorm"
 )
 
@@ -78,15 +79,42 @@ func (cntrl *CartController) DeleteItem(w http.ResponseWriter, r *http.Request) 
 const CART_EDIT_ROUTE = "edit cart"
 
 func (cntrl *CartController) EditCart(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	uuid := vars["uuid"]
-	cart, err := cntrl.repo.FindByUuid(uuid)
-	if err != nil {
-		cntrl.logger.Warn(fmt.Sprintf("CartController.View: cart %s : %s", uuid, err.Error()))
-		fmt.Fprint(w, err.Error())
-	}
+	switch r.Method {
+	case http.MethodPost:
+		if err := r.ParseForm(); err != nil {
+			http.Error(w, "Error parsing the form", http.StatusBadRequest)
+			return
+		}
+		// gorilla schema
+		var decoder = schema.NewDecoder()
+		var cart models.Cart
+		err := decoder.Decode(&cart, r.PostForm)
+		if err != nil {
+			cntrl.logger.Warn(err)
+		}
+		err = cntrl.repo.Save(&cart)
+		if err != nil {
+			cntrl.logger.Warn(err)
+		}
 
-	f := form.GormToForm(cart, cntrl.db)
-	cntrl.tmpl.setMain(f.Render())
-	response(w, cntrl.tmpl.render())
+		id := r.FormValue("ID")
+		cntrl.logger.Info(id)
+		cntrl.tmpl.setMain("id: " + id)
+		response(w, cntrl.tmpl.render())
+
+	case http.MethodGet:
+		vars := mux.Vars(r)
+		uuid := vars["uuid"]
+
+		cart, err := cntrl.repo.FindByUuid(uuid)
+		if err != nil {
+			cntrl.logger.Warn(fmt.Sprintf("CartController.View: cart %s : %s", uuid, err.Error()))
+			fmt.Fprint(w, err.Error())
+		}
+
+		f := form.GormToForm(cart, cntrl.db)
+		f.Method = "POST"
+		cntrl.tmpl.setMain(f.Render())
+		response(w, cntrl.tmpl.render())
+	}
 }

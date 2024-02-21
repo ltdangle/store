@@ -21,10 +21,10 @@ func GormToForm(entity any, db *gorm.DB) *Form {
 			form.AddField(&Field{Name: field.Name, Type: "number", Required: field.NotNull, Value: GetFieldValueByName(entity, field.Name)})
 		case "int":
 			form.AddField(&Field{Name: field.Name, Type: "number", Required: field.NotNull, Value: GetFieldValueByName(entity, field.Name)})
-		case "date":
-			form.AddField(&Field{Name: field.Name, Type: "text", Required: field.NotNull, Value: GetFieldValueByName(entity, field.Name)})
-		case "time":
-			form.AddField(&Field{Name: field.Name, Type: "text", Required: field.NotNull, Value: GetFieldValueByName(entity, field.Name)})
+			// case "date":
+			// 	form.AddField(&Field{Name: field.Name, Type: "text", Required: field.NotNull, Value: GetFieldValueByName(entity, field.Name)})
+			// case "time":
+			// 	form.AddField(&Field{Name: field.Name, Type: "text", Required: field.NotNull, Value: GetFieldValueByName(entity, field.Name)})
 		}
 
 	}
