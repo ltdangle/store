@@ -107,10 +107,13 @@ func (cntrl *CartController) EditCart(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		id := r.FormValue("ID")
-		cntrl.logger.Info(id)
-		cntrl.tmpl.setMain("id: " + id)
-		response(w, cntrl.tmpl.render())
+		cartUrl := UrlInternal(cntrl.router, CART_VIEW_ROUTE, "uuid", cart.Uuid)
+		if cartUrl.Error != nil {
+			cntrl.logger.Warn("CartController: could not parse redirect url")
+		}
+
+		r.Method = http.MethodGet
+		http.Redirect(w, r, cartUrl.Value, http.StatusTemporaryRedirect)
 
 	case http.MethodGet:
 		vars := mux.Vars(r)

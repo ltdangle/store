@@ -14,6 +14,7 @@ import (
 func main() {
 	dc := dc.NewDc(".env")
 
+	dc.Router.Use(loggingMiddleware)
 	dc.Router.HandleFunc("/cart/{uuid}", dc.CartController.View).Methods("GET").Name(web.CART_VIEW_ROUTE)
 	dc.Router.HandleFunc("/cartItem/{uuid}/delete", dc.CartController.DeleteItem).Methods("GET").Name(web.CART_ITEM_DELETE_ROUTE)
 	dc.Router.HandleFunc("/cartItem/{uuid}/edit", dc.CartController.EditCart).Name(web.CART_EDIT_ROUTE)
@@ -46,4 +47,14 @@ func seed(w http.ResponseWriter, r *http.Request) {
 
 	// Output the result
 	fmt.Fprint(w, out.String())
+}
+
+func loggingMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Do stuff here
+		log.Println(r.RequestURI)
+
+		// Call the next handler, which can be another middleware in the chain, or the final handler.
+		next.ServeHTTP(w, r)
+	})
 }
