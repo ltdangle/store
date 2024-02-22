@@ -49,7 +49,7 @@ func (cntrl *CartController) View(w http.ResponseWriter, r *http.Request) {
 		}
 		cartTmpl := NewCartTmpl(cntrl.router)
 		cntrl.tmpl.SetMain(cartTmpl.cart(vm))
-		response(w, cntrl.tmpl.Render())
+		cntrl.router.Response(w, cntrl.tmpl.Render())
 	}
 }
 
@@ -83,7 +83,7 @@ func (cntrl *CartController) EditCart(w http.ResponseWriter, r *http.Request) {
 	case http.MethodPost:
 		if err := r.ParseForm(); err != nil {
 			cntrl.tmpl.SetMain(err.Error())
-			response(w, cntrl.tmpl.Render())
+			cntrl.router.Response(w, cntrl.tmpl.Render())
 			return
 		}
 
@@ -95,7 +95,7 @@ func (cntrl *CartController) EditCart(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			cntrl.logger.Warn(err)
 			cntrl.tmpl.SetMain(err.Error())
-			response(w, cntrl.tmpl.Render())
+			cntrl.router.Response(w, cntrl.tmpl.Render())
 			return
 		}
 
@@ -103,7 +103,7 @@ func (cntrl *CartController) EditCart(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			cntrl.logger.Warn(err)
 			cntrl.tmpl.SetMain(err.Error())
-			response(w, cntrl.tmpl.Render())
+			cntrl.router.Response(w, cntrl.tmpl.Render())
 			return
 		}
 
@@ -122,6 +122,6 @@ func (cntrl *CartController) EditCart(w http.ResponseWriter, r *http.Request) {
 		f := form.GormToForm(cart, cntrl.db)
 		f.Method = "POST"
 		cntrl.tmpl.SetMain(f.Render())
-		response(w, cntrl.tmpl.Render())
+		cntrl.router.Response(w, cntrl.tmpl.Render())
 	}
 }
