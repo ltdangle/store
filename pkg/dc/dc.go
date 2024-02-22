@@ -27,9 +27,10 @@ type Dc struct {
 	CartService        *service.CartService
 
 	AppRouter *web.AppRouter
-	Logger logger.LoggerInterface
+	Logger    logger.LoggerInterface
 
-	CartController *web.CartController
+	CartController  *web.CartController
+	AdminController *web.AdminController
 }
 
 func NewDc(envFile string) *Dc {
@@ -53,6 +54,7 @@ func NewDc(envFile string) *Dc {
 
 	tmpl := web.NewTmpl(dc.AppRouter)
 	dc.CartController = web.NewCartController(dc.AppRouter, dc.CartService, dc.CartRepo, dc.Logger, tmpl, dc.Db)
+	dc.AdminController = web.NewAdminController(dc.AppRouter, dc.Logger, tmpl, dc.Db)
 
 	return dc
 }

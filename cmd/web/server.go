@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os/exec"
 	"store/pkg/dc"
+	"store/pkg/models"
 	"store/pkg/web"
 
 	log "github.com/sirupsen/logrus"
@@ -15,6 +16,12 @@ func main() {
 	dc := dc.NewDc(".env")
 	router := dc.AppRouter.Router
 	router.Use(loggingMiddleware)
+
+	dc.AdminController.AddMappedEntity("cart", &models.Cart{})
+	dc.AdminController.AddMappedEntity("cartItem", &models.CartItem{})
+
+	router.HandleFunc("/{entity}/{uuid}/view", dc.AdminController.View).Name(web.ADMIN_VIEW_ENTITY_ROUTE)
+
 	router.HandleFunc("/cart/{uuid}", dc.CartController.View).Methods("GET").Name(web.CART_VIEW_ROUTE)
 	router.HandleFunc("/cartItem/{uuid}/delete", dc.CartController.DeleteItem).Methods("GET").Name(web.CART_ITEM_DELETE_ROUTE)
 	router.HandleFunc("/cartItem/{uuid}/edit", dc.CartController.EditCart).Name(web.CART_EDIT_ROUTE)
