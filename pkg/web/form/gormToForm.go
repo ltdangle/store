@@ -8,13 +8,15 @@ import (
 )
 
 // TODO:  to display first-level related entities, try looping over struct field first and then match them with gorm schema
-func inspectStruct(entity any) error {
+func GormToForm(entity any) *Form {
 	value := reflect.ValueOf(entity)
 
 	// Check if the given entity is a struct
 	if value.Kind() != reflect.Struct {
-		return fmt.Errorf("Provided entity is not a struct.")
+		panic(fmt.Errorf("Provided entity is not a struct."))
 	}
+
+	form := NewForm()
 
 	// Loop through the fields of the struct
 	for i := 0; i < value.NumField(); i++ {
@@ -30,20 +32,22 @@ func inspectStruct(entity any) error {
 			for j := 0; j < field.Len(); j++ {
 				elemValue := field.Index(j) // get the element at index j
 				fmt.Printf("Index: %d, Element Value: %s\n", j, elemValue.Interface())
+				form.AddField(&Field{Name: fieldType.Name, Type: "url", Value: fmt.Sprintf("%s", elemValue.Interface())})
 			}
 		}
 		// field.Interface() is used to extract the field value as type `interface{}`
-		fmt.Printf("Field Name: '%s', Field Type: '%s', Field Value: '%v', Field kind:'%s'\n",
-			fieldType.Name, fieldType.Type.Name(), field.Interface(), field.Kind().String())
+		fmt.Printf("Field Name: '%s', Field Type: '%s', Field Value: '%v', Field kind:'%s'\n", fieldType.Name, fieldType.Type.Name(), field.Interface(), field.Kind().String())
+		switch fieldType.Type.Name() {
+		case "string":
+			form.AddField(&Field{Name: fieldType.Name, Type: "text", Value: fmt.Sprintf("%v", field.Interface())})
+		case "uint", "int":
+			form.AddField(&Field{Name: fieldType.Name, Type: "number", Value: fmt.Sprintf("%v", field.Interface())})
+		}
 	}
-	return nil
+	return form
 }
 
-func GormToForm(entity any, db *gorm.DB) *Form {
-	err := inspectStruct(entity)
-	if err != nil {
-		panic(err)
-	}
+func GormToFormOld(entity any, db *gorm.DB) *Form {
 	form := NewForm()
 	var anyStruct struct{}
 	schema := db.Model(entity).First(&anyStruct).Statement.Schema
