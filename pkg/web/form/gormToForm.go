@@ -31,7 +31,7 @@ func GormToForm(entity any) *Form {
 				elemValue := field.Index(j) // get the element at index j
 				fmt.Printf("Index: %d, Element Value: %s\n", j, elemValue.Interface())
 				field := &Field{
-					Input: Input{Name: fieldType.Name, Type: "url", Value: fmt.Sprintf("%s", elemValue.Interface())},
+					Html: fmt.Sprintf(`<a href="%s" style="color:blue;">%s</a>`, elemValue.Interface(), elemValue.Interface()),
 				}
 				form.AddField(field)
 			}
@@ -41,12 +41,14 @@ func GormToForm(entity any) *Form {
 		switch fieldType.Type.Name() {
 		case "string":
 			field := &Field{
-				Input: Input{Name: fieldType.Name, Type: "text", Value: fmt.Sprintf("%v", field.Interface())},
+				Label: Label{Name: fieldType.Name},
+				Input: &Input{Name: fieldType.Name, Type: "text", Value: fmt.Sprintf("%v", field.Interface())},
 			}
 			form.AddField(field)
 		case "uint", "int":
 			field := &Field{
-				Input: Input{Name: fieldType.Name, Type: "number", Value: fmt.Sprintf("%v", field.Interface())},
+				Label: Label{Name: fieldType.Name},
+				Input: &Input{Name: fieldType.Name, Type: "number", Value: fmt.Sprintf("%v", field.Interface())},
 			}
 			form.AddField(field)
 		}
