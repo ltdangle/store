@@ -7,10 +7,8 @@ import (
 	"store/pkg/models"
 	"store/pkg/repo"
 	"store/pkg/service"
-	"store/pkg/web/form"
 
 	"github.com/gorilla/mux"
-	"github.com/gorilla/schema"
 	"gorm.io/gorm"
 )
 
@@ -73,54 +71,4 @@ func (cntrl *CartController) DeleteItem(w http.ResponseWriter, r *http.Request) 
 	cntrl.logger.Info(fmt.Sprintf("CartController.DeleteItem: item deleted, redirect to %s", cartUrl))
 
 	http.Redirect(w, r, cartUrl.Value, http.StatusTemporaryRedirect)
-}
-
-const CART_EDIT_ROUTE = "edit cart"
-
-func (cntrl *CartController) EditCart(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case http.MethodPost:
-		if err := r.ParseForm(); err != nil {
-			cntrl.tmpl.SetMain(err.Error())
-			cntrl.router.Response(w, cntrl.tmpl.Render())
-			return
-		}
-
-		var cart models.Cart
-
-		// gorilla schema
-		var decoder = schema.NewDecoder()
-		err := decoder.Decode(&cart, r.PostForm)
-		if err != nil {
-			cntrl.logger.Warn(err)
-			cntrl.tmpl.SetMain(err.Error())
-			cntrl.router.Response(w, cntrl.tmpl.Render())
-			return
-		}
-
-		err = cntrl.repo.Save(&cart)
-		if err != nil {
-			cntrl.logger.Warn(err)
-			cntrl.tmpl.SetMain(err.Error())
-			cntrl.router.Response(w, cntrl.tmpl.Render())
-			return
-		}
-
-		http.Redirect(w, r, r.URL.String(), http.StatusFound)
-
-	case http.MethodGet:
-		vars := mux.Vars(r)
-		uuid := vars["uuid"]
-
-		cart, err := cntrl.repo.FindByUuid(uuid)
-		if err != nil {
-			cntrl.logger.Warn(fmt.Sprintf("CartController.View: cart %s : %s", uuid, err.Error()))
-			fmt.Fprint(w, err.Error())
-		}
-
-		f := form.GormToForm(cart, cntrl.db)
-		f.Method = "POST"
-		cntrl.tmpl.SetMain(f.Render())
-		cntrl.router.Response(w, cntrl.tmpl.Render())
-	}
 }

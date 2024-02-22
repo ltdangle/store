@@ -42,7 +42,7 @@ func (t *Tmpl) cart(cartVM CartVM) string {
 
 	}
 	html = strings.Replace(html, "###cart_items###", cartItems, -1)
-	html = strings.Replace(html, "###edit_link###", t.router.UrlInternal(CART_EDIT_ROUTE, "uuid", cartVM.Cart.Uuid).Value, -1)
+	html = strings.Replace(html, "###edit_link###", t.router.UrlInternal(ADMIN_VIEW_ENTITY_ROUTE, "entity", "cart", "uuid", cartVM.Cart.Uuid).Value, -1)
 	return html
 }
 
