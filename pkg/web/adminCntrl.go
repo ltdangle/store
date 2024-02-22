@@ -54,6 +54,7 @@ func (cntrl *AdminController) View(w http.ResponseWriter, r *http.Request) {
 	entityValue := reflect.ValueOf(entityPointer).Elem().Interface()
 
 	f := form.GormToForm(entityValue, cntrl.db)
+	f.Action = cntrl.router.UrlInternal(ADMIN_UPDATE_ENTITY_ROUTE, "entity", entityName, "uuid", uuid).Value
 	cntrl.tmpl.SetMain(f.Render())
 	cntrl.router.Response(w, cntrl.tmpl.Render())
 
@@ -63,5 +64,6 @@ const ADMIN_UPDATE_ENTITY_ROUTE = "admin update entity route"
 
 // Updates mapped entity.
 func (cntrl *AdminController) Update(w http.ResponseWriter, r *http.Request) {
-
+	cntrl.tmpl.SetMain("You posted a form!")
+	cntrl.router.Response(w, cntrl.tmpl.Render())
 }
