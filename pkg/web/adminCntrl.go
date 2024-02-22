@@ -7,6 +7,7 @@ import (
 	"store/pkg/web/form"
 
 	"github.com/gorilla/mux"
+	"github.com/gorilla/schema"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -64,6 +65,41 @@ const ADMIN_UPDATE_ENTITY_ROUTE = "admin update entity route"
 
 // Updates mapped entity.
 func (cntrl *AdminController) Update(w http.ResponseWriter, r *http.Request) {
-	cntrl.tmpl.SetMain("You posted a form!")
-	cntrl.router.Response(w, cntrl.tmpl.Render())
+	vars := mux.Vars(r)
+	entityName := vars["entity"]
+	uuid := vars["uuid"]
+
+	entityPointer, ok := cntrl.mappedEntities[entityName]
+	if !ok {
+		http.Error(w, "Entity type not found", http.StatusNotFound)
+		return
+	}
+
+	// entityValue := reflect.ValueOf(entityPointer).Elem().Interface()
+
+	if err := r.ParseForm(); err != nil {
+		cntrl.tmpl.SetMain(err.Error())
+		cntrl.router.Response(w, cntrl.tmpl.Render())
+		return
+	}
+
+	// gorilla schema
+	var decoder = schema.NewDecoder()
+	err := decoder.Decode(entityPointer, r.PostForm)
+	if err != nil {
+		cntrl.logger.Warn(err)
+		cntrl.tmpl.SetMain(err.Error())
+		cntrl.router.Response(w, cntrl.tmpl.Render())
+		return
+	}
+
+	result := cntrl.db.Save(entityPointer)
+	if result.Error != nil {
+		http.Error(w, result.Error.Error(), http.StatusNotFound)
+		cntrl.logger.Warn(result.Error)
+		return
+	}
+
+	redirectUrl := cntrl.router.UrlInternal(ADMIN_VIEW_ENTITY_ROUTE, "entity", entityName, "uuid", uuid)
+	http.Redirect(w, r, redirectUrl.Value, http.StatusFound)
 }
