@@ -26,12 +26,13 @@ func NewAdminController(router *AppRouter, logger logger.LoggerInterface, tmpl *
 	}
 }
 
-// Views mapped entity.
-const ADMIN_VIEW_ENTITY_ROUTE = "admin view entity route"
-
 func (cntrl *AdminController) AddMappedEntity(key string, entity any) {
 	cntrl.mappedEntities[key] = entity
 }
+
+// Views mapped entity.
+const ADMIN_VIEW_ENTITY_ROUTE = "admin view entity route"
+
 func (cntrl *AdminController) View(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	entityName := vars["entity"]
@@ -39,12 +40,10 @@ func (cntrl *AdminController) View(w http.ResponseWriter, r *http.Request) {
 
 	entityPointer, ok := cntrl.mappedEntities[entityName]
 	if !ok {
-		// TODO: display error
 		http.Error(w, "Entity type not found", http.StatusNotFound)
 		return
 	}
 
-	// TODO: check for result error and 0 returned results.
 	result := cntrl.db.Preload(clause.Associations).Where("uuid = ?", uuid).First(entityPointer)
 	if result.Error != nil {
 		http.Error(w, result.Error.Error(), http.StatusNotFound)
@@ -59,6 +58,8 @@ func (cntrl *AdminController) View(w http.ResponseWriter, r *http.Request) {
 	cntrl.router.Response(w, cntrl.tmpl.Render())
 
 }
+
+const ADMIN_UPDATE_ENTITY_ROUTE = "admin update entity route"
 
 // Updates mapped entity.
 func (cntrl *AdminController) Update(w http.ResponseWriter, r *http.Request) {

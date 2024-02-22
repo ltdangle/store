@@ -20,7 +20,9 @@ func main() {
 	dc.AdminController.AddMappedEntity("cart", &models.Cart{})
 	dc.AdminController.AddMappedEntity("cartItem", &models.CartItem{})
 
-	router.HandleFunc("/{entity}/{uuid}/view", dc.AdminController.View).Name(web.ADMIN_VIEW_ENTITY_ROUTE)
+	// Admin panel.
+	router.HandleFunc("/{entity}/{uuid}/view", dc.AdminController.View).Methods("GET").Name(web.ADMIN_VIEW_ENTITY_ROUTE)
+	router.HandleFunc("/{entity}/{uuid}/update", dc.AdminController.Update).Methods("POST").Name(web.ADMIN_UPDATE_ENTITY_ROUTE)
 
 	router.HandleFunc("/cart/{uuid}", dc.CartController.View).Methods("GET").Name(web.CART_VIEW_ROUTE)
 	router.HandleFunc("/cartItem/{uuid}/delete", dc.CartController.DeleteItem).Methods("GET").Name(web.CART_ITEM_DELETE_ROUTE)
