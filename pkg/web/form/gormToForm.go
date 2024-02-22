@@ -23,6 +23,11 @@ func GormToForm(entity any) *Form {
 
 		// Check if the field is an array or a slice
 		if field.Kind() == reflect.Array || field.Kind() == reflect.Slice {
+			f := &Field{
+				Label: Label{Name: fieldType.Name},
+			}
+			form.AddField(f)
+
 			// Get the element type of the array or slice
 			elemType := field.Type().Elem()
 			fmt.Printf("This field is an array/slice with element type: '%s'\n", elemType)
@@ -31,9 +36,10 @@ func GormToForm(entity any) *Form {
 				elemValue := field.Index(j) // get the element at index j
 				fmt.Printf("Index: %d, Element Value: %s\n", j, elemValue.Interface())
 				field := &Field{
-					Html: fmt.Sprintf(`<a href="%s" style="color:blue;">%s</a>`, elemValue.Interface(), elemValue.Interface()),
+					Html:  fmt.Sprintf(`<a href="%s" style="color:blue;">%s</a>`, elemValue.Interface(), elemValue.Interface()),
 				}
 				form.AddField(field)
+				continue
 			}
 		}
 		// field.Interface() is used to extract the field value as type `interface{}`
