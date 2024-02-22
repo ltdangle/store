@@ -22,9 +22,16 @@ type ParsedUrl struct {
 	Value string
 	Error error
 }
+type AppRouter struct {
+	Router *mux.Router
+}
 
-func UrlInternal(router *mux.Router, routeName string, pairs ...string) ParsedUrl {
-	route := router.Get(routeName)
+func NewAppRouter(router *mux.Router) *AppRouter {
+	return &AppRouter{Router: router}
+}
+
+func (appRouter *AppRouter) UrlInternal(routeName string, pairs ...string) ParsedUrl {
+	route := appRouter.Router.Get(routeName)
 	if route == nil {
 		return ParsedUrl{Error: fmt.Errorf("UrlInternal: url for route %s not found", routeName)}
 	}

@@ -6,7 +6,7 @@ import (
 
 	"gorm.io/gorm"
 )
-
+// TODO:  to display first-level related entities, try looping over struct field first and then match them with gorm schema
 func GormToForm(entity any, db *gorm.DB) *Form {
 	form := NewForm()
 	var anyStruct struct{}

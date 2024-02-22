@@ -15,7 +15,7 @@ import (
 )
 
 type CartController struct {
-	router  *mux.Router
+	router  *AppRouter
 	service *service.CartService
 	repo    *repo.CartRepo
 	logger  logger.LoggerInterface
@@ -23,7 +23,7 @@ type CartController struct {
 	db      *gorm.DB
 }
 
-func NewCartController(router *mux.Router, service *service.CartService, repo *repo.CartRepo, logger logger.LoggerInterface, tmpl *Tmpl, db *gorm.DB) *CartController {
+func NewCartController(router *AppRouter, service *service.CartService, repo *repo.CartRepo, logger logger.LoggerInterface, tmpl *Tmpl, db *gorm.DB) *CartController {
 	return &CartController{router: router, service: service, repo: repo, logger: logger, tmpl: tmpl, db: db}
 }
 
@@ -66,7 +66,7 @@ func (cntrl *CartController) DeleteItem(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	cartUrl := UrlInternal(cntrl.router, CART_VIEW_ROUTE, "uuid", cart.Uuid)
+	cartUrl := cntrl.router.UrlInternal(CART_VIEW_ROUTE, "uuid", cart.Uuid)
 	if cartUrl.Error != nil {
 		cntrl.logger.Warn("CartController.DeleteItem: could not parse redirect url")
 	}

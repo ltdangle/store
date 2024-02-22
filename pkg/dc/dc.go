@@ -26,7 +26,7 @@ type Dc struct {
 	ProductService     *service.ProductService
 	CartService        *service.CartService
 
-	Router *mux.Router
+	AppRouter *web.AppRouter
 	Logger logger.LoggerInterface
 
 	CartController *web.CartController
@@ -49,10 +49,10 @@ func NewDc(envFile string) *Dc {
 	dc.CartItemRepo = repo.NewCartItemRepo(dc.Db)
 	dc.CartService = service.NewCartService(dc.CartRepo, dc.CartItemRepo)
 
-	dc.Router = mux.NewRouter()
+	dc.AppRouter = web.NewAppRouter(mux.NewRouter())
 
-	tmpl := web.NewTmpl(dc.Router)
-	dc.CartController = web.NewCartController(dc.Router, dc.CartService, dc.CartRepo, dc.Logger, tmpl, dc.Db)
+	tmpl := web.NewTmpl(dc.AppRouter)
+	dc.CartController = web.NewCartController(dc.AppRouter, dc.CartService, dc.CartRepo, dc.Logger, tmpl, dc.Db)
 
 	return dc
 }

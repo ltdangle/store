@@ -5,15 +5,13 @@ import (
 	"store/pkg/models"
 	"strconv"
 	"strings"
-
-	"github.com/gorilla/mux"
 )
 
 type CartTmpl struct {
-	router *mux.Router
+	router *AppRouter
 }
 
-func NewCartTmpl(router *mux.Router) *CartTmpl {
+func NewCartTmpl(router *AppRouter) *CartTmpl {
 	return &CartTmpl{router: router}
 }
 
@@ -26,7 +24,7 @@ func (t *CartTmpl) cart(cartVM CartVM) string {
 
 	}
 	html = strings.Replace(html, "###cart_items###", cartItems, -1)
-	html = strings.Replace(html, "###edit_link###", UrlInternal(t.router, CART_EDIT_ROUTE, "uuid", cartVM.Cart.Uuid).Value, -1)
+	html = strings.Replace(html, "###edit_link###", t.router.UrlInternal(CART_EDIT_ROUTE, "uuid", cartVM.Cart.Uuid).Value, -1)
 	return html
 }
 
@@ -41,6 +39,6 @@ func (t *CartTmpl) cartItem(item *models.CartItem) string {
 		fields = append(fields, fieldHtml)
 	}
 	html = strings.Replace(html, "###product_fields###", strings.Join(fields, "\n"), -1)
-	html = strings.Replace(html, "###remove_link###", UrlInternal(t.router, CART_ITEM_DELETE_ROUTE, "uuid", item.Uuid).Value, -1)
+	html = strings.Replace(html, "###remove_link###", t.router.UrlInternal(CART_ITEM_DELETE_ROUTE, "uuid", item.Uuid).Value, -1)
 	return html
 }

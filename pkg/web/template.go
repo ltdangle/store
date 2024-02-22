@@ -8,7 +8,6 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/gorilla/mux"
 )
 
 type Link struct {
@@ -17,15 +16,15 @@ type Link struct {
 }
 
 type Tmpl struct {
-	router       *mux.Router
+	router       *AppRouter
 	main         string
 	leftNavLinks []Link
 }
 
-func NewTmpl(router *mux.Router) *Tmpl {
+func NewTmpl(router *AppRouter) *Tmpl {
 	t := &Tmpl{router: router}
 	// TODO: fix
-	url := UrlInternal(t.router, CART_VIEW_ROUTE, "uuid", "someuuid").Value
+	url := router.UrlInternal( CART_VIEW_ROUTE, "uuid", "someuuid").Value
 	t.AddNavLink(url, "Cart")
 	t.AddNavLink(url, "CartItem")
 	t.AddNavLink(url, "Product")
