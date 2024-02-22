@@ -78,6 +78,7 @@ func (form *Form) Render() string {
       <p class="mt-1 text-sm leading-6 text-gray-600">This information will be displayed publicly so be careful what you share.</p>
 
 	  	%s
+
     </div>
  </div>
 <div class="mt-6 flex items-center justify-end gap-x-6">
