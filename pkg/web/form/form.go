@@ -45,19 +45,23 @@ func (form *Form) AddField(field *Field) {
 func (form *Form) Render() string {
 	var fieldsHtml []string
 	for _, field := range form.Fields {
+		label := fmt.Sprintf(`
+		  <label for="%s" class="block text-sm font-medium leading-6 text-gray-900">%s</label>
+		`, field.Input.Name, field.Input.Name)
 		var required string
 		if field.Input.Required {
 			required = "required"
 		}
+
 		formField := fmt.Sprintf(`
 	 <div>
-		  <label for="%s" class="block text-sm font-medium leading-6 text-gray-900">%s</label>
+	 		%s
 		  <div class="mt-2" style="margin-bottom:1em">
 		    <input type="%s" name="%s" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="%s" value="%s" %s>
       <p class="mt-2 text-sm text-red-600" style="padding:0;margin:0">%s</p>
 		  </div>
 		</div>`,
-			field.Input.Name, field.Input.Name, field.Input.Type, field.Input.Name, field.Input.Placeholder, field.Input.Value, required, field.Input.Error)
+			label, field.Input.Type, field.Input.Name, field.Input.Placeholder, field.Input.Value, required, field.Input.Error)
 
 		fieldsHtml = append(fieldsHtml, formField)
 	}

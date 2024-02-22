@@ -54,25 +54,6 @@ func GormToForm(entity any) *Form {
 	return form
 }
 
-// func GormToFormOld(entity any, db *gorm.DB) *Form {
-// 	form := NewForm()
-// 	var anyStruct struct{}
-// 	schema := db.Model(entity).First(&anyStruct).Statement.Schema
-//
-// 	for _, field := range schema.Fields {
-// 		switch field.DataType {
-// 		case "string":
-// 			form.AddField(&Input{Name: field.Name, Type: "text", Required: field.NotNull, Value: GetFieldValueByName(entity, field.Name)})
-// 		case "uint":
-// 			form.AddField(&Input{Name: field.Name, Type: "number", Required: field.NotNull, Value: GetFieldValueByName(entity, field.Name)})
-// 		case "int":
-// 			form.AddField(&Input{Name: field.Name, Type: "number", Required: field.NotNull, Value: GetFieldValueByName(entity, field.Name)})
-// 		}
-//
-// 	}
-// 	return form
-// }
-
 // TODO: return errors
 func GetFieldValueByName(data interface{}, name string) string {
 	value := reflect.ValueOf(data)
