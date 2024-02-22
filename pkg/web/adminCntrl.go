@@ -22,10 +22,7 @@ type AdminController struct {
 
 func NewAdminController(router *AppRouter, logger logger.LoggerInterface, tmpl *Tmpl, db *gorm.DB) *AdminController {
 	return &AdminController{router: router, logger: logger, tmpl: tmpl, db: db,
-		mappedEntities: map[string]any{
-			// "cart":     &models.Cart{},
-			// "cartItem": &models.CartItem{},
-		},
+		mappedEntities: make(map[string]any),
 	}
 }
 
@@ -47,7 +44,6 @@ func (cntrl *AdminController) View(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// TODO: check for result error and 0 returned results.
-
 	result := cntrl.db.Preload(clause.Associations).Where("uuid = ?", uuid).First(entityPointer)
 	if result.Error != nil {
 		cntrl.logger.Warn(result.Error)
@@ -56,7 +52,6 @@ func (cntrl *AdminController) View(w http.ResponseWriter, r *http.Request) {
 	entityValue := reflect.ValueOf(entityPointer).Elem().Interface()
 
 	f := form.GormToForm(entityValue, cntrl.db)
-	f.Method = "POST"
 	cntrl.tmpl.SetMain(f.Render())
 	cntrl.router.Response(w, cntrl.tmpl.Render())
 

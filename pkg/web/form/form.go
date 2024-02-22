@@ -26,7 +26,7 @@ type Form struct {
 }
 
 func NewForm() *Form {
-	return &Form{}
+	return &Form{Method: "POST"}
 }
 
 func (form *Form) AddField(field *Field) {
