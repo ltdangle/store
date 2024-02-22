@@ -5,7 +5,11 @@ import (
 	"strings"
 )
 
-type Field struct {
+type Label struct {
+	Name string
+}
+
+type Input struct {
 	Name        string
 	Type        string
 	Placeholder string
@@ -14,9 +18,14 @@ type Field struct {
 	Required    bool
 	Error       string
 }
+type Field struct {
+	Label Label
+	Input Input
+	Html  string
+}
 
-func NewField() *Field {
-	return &Field{}
+func NewInput() *Input {
+	return &Input{}
 }
 
 type Form struct {
@@ -37,7 +46,7 @@ func (form *Form) Render() string {
 	var fieldsHtml []string
 	for _, field := range form.Fields {
 		var required string
-		if field.Required {
+		if field.Input.Required {
 			required = "required"
 		}
 		formField := fmt.Sprintf(`
@@ -48,7 +57,7 @@ func (form *Form) Render() string {
       <p class="mt-2 text-sm text-red-600" style="padding:0;margin:0">%s</p>
 		  </div>
 		</div>`,
-			field.Name, field.Name, field.Type, field.Name, field.Placeholder, field.Value, required, field.Error)
+			field.Input.Name, field.Input.Name, field.Input.Type, field.Input.Name, field.Input.Placeholder, field.Input.Value, required, field.Input.Error)
 
 		fieldsHtml = append(fieldsHtml, formField)
 	}
