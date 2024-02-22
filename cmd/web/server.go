@@ -60,11 +60,12 @@ func seed(w http.ResponseWriter, _ *http.Request) {
 
 func logAllResponsesMiddleware(handler http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("request: %s %s ", r.Method, r.RequestURI)
 		rec := newStatusRecorder(w)
 		handler.ServeHTTP(rec, r)
 
 		// Now you can log the response status
-		log.Printf("%s %s %d", r.Method, r.RequestURI, rec.status)
+		log.Printf("response:  %d", rec.status)
 	})
 }
 

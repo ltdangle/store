@@ -39,6 +39,7 @@ func (cntrl *AdminController) View(w http.ResponseWriter, r *http.Request) {
 
 	entityPointer, ok := cntrl.mappedEntities[entityName]
 	if !ok {
+		// TODO: display error
 		http.Error(w, "Entity type not found", http.StatusNotFound)
 		return
 	}
@@ -46,7 +47,9 @@ func (cntrl *AdminController) View(w http.ResponseWriter, r *http.Request) {
 	// TODO: check for result error and 0 returned results.
 	result := cntrl.db.Preload(clause.Associations).Where("uuid = ?", uuid).First(entityPointer)
 	if result.Error != nil {
+		http.Error(w, result.Error.Error(), http.StatusNotFound)
 		cntrl.logger.Warn(result.Error)
+		return
 	}
 
 	entityValue := reflect.ValueOf(entityPointer).Elem().Interface()
