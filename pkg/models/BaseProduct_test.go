@@ -33,5 +33,4 @@ func TestProduct(t *testing.T) {
 		t.Fatal(result.Error)
 	}
 	assert.Equal(t, product.Uuid, fndPrdct.Uuid)
-	// TODO: perhaps store field data in product json field? With Json, you can structure product form...
 }

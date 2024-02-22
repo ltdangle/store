@@ -45,3 +45,6 @@ func NewCartItem() *CartItem {
 		CreatedAt: time.Now(),
 	}
 }
+func (cartItem CartItem) String() string {
+	return cartItem.Uuid
+}
