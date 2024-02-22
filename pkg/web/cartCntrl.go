@@ -47,8 +47,7 @@ func (cntrl *CartController) View(w http.ResponseWriter, r *http.Request) {
 		vm := CartVM{
 			Cart: cart,
 		}
-		cartTmpl := NewCartTmpl(cntrl.router)
-		cntrl.tmpl.SetMain(cartTmpl.cart(vm))
+		cntrl.tmpl.SetMain(cntrl.tmpl.cart(vm))
 		cntrl.router.Response(w, cntrl.tmpl.Render())
 	}
 }

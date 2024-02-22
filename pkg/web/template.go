@@ -6,8 +6,9 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"store/pkg/models"
+	"strconv"
 	"strings"
-
 )
 
 type Link struct {
@@ -24,12 +25,40 @@ type Tmpl struct {
 func NewTmpl(router *AppRouter) *Tmpl {
 	t := &Tmpl{router: router}
 	// TODO: fix
-	url := router.UrlInternal( CART_VIEW_ROUTE, "uuid", "someuuid").Value
+	url := router.UrlInternal(CART_VIEW_ROUTE, "uuid", "someuuid").Value
 	t.AddNavLink(url, "Cart")
 	t.AddNavLink(url, "CartItem")
 	t.AddNavLink(url, "Product")
 	t.AddNavLink(url, "Product fields")
 	return t
+}
+
+func (t *Tmpl) cart(cartVM CartVM) string {
+	html := LoadTemplate("cart.html")
+	var cartItems string
+
+	for _, item := range cartVM.Cart.CartItems {
+		cartItems += t.cartItem(item) + "\n"
+
+	}
+	html = strings.Replace(html, "###cart_items###", cartItems, -1)
+	html = strings.Replace(html, "###edit_link###", t.router.UrlInternal(CART_EDIT_ROUTE, "uuid", cartVM.Cart.Uuid).Value, -1)
+	return html
+}
+
+func (t *Tmpl) cartItem(item *models.CartItem) string {
+	html := LoadTemplate("cart_item.html")
+	html = strings.Replace(html, "###name###", item.Product.Name, -1)
+	html = strings.Replace(html, "###description###", item.Product.Description, -1)
+	html = strings.Replace(html, "###price###", "$ "+strconv.Itoa(item.Subtotal), -1)
+	var fields []string
+	for _, field := range item.Product.Fields {
+		fieldHtml := fmt.Sprintf(`<li class="mt-1 text-sm text-gray-500"><span style="font-weight:bold">%s</span>:<br /> %s</li>`, field.Title, field.Value)
+		fields = append(fields, fieldHtml)
+	}
+	html = strings.Replace(html, "###product_fields###", strings.Join(fields, "\n"), -1)
+	html = strings.Replace(html, "###remove_link###", t.router.UrlInternal(CART_ITEM_DELETE_ROUTE, "uuid", item.Uuid).Value, -1)
+	return html
 }
 
 // TODO: use "html/template"
