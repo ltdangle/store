@@ -34,12 +34,28 @@ func GormToForm(entity any) *Form {
 			// Loop over array or slice elements
 			for j := 0; j < field.Len(); j++ {
 				elemValue := field.Index(j) // get the element at index j
-				fmt.Printf("Index: %d, Element Value: %s\n", j, elemValue.Interface())
-				field := &Field{
-					Html:  fmt.Sprintf(`<a href="%s" style="color:blue;">%s</a>`, elemValue.Interface(), elemValue.Interface()),
+
+				// If elemValue is a pointer to a struct, we need to dereference it.
+				if elemValue.Kind() == reflect.Ptr {
+					elemValue = elemValue.Elem()
 				}
-				form.AddField(field)
-				continue
+
+				// Attempt to get the Uuid field
+				uuidField := elemValue.FieldByName("Uuid")
+				if uuidField.IsValid() { // Check if the Uuid field exists
+					uuid := uuidField.Interface()
+					fmt.Printf("Index: %d, UUID Value: %s\n", j, uuid)
+
+					// Use `uuid` to construct the link
+					field := &Field{
+						// TODO: fix path/to/resource
+						Html: fmt.Sprintf(`<a href="/path/to/resource/%s" style="color:blue;">%s</a>`, uuid, uuid)}
+					form.AddField(field)
+					continue // Continue with the next iteration
+				} else {
+					// Handle case where Uuid field does not exist
+					fmt.Printf("Index: %d, Element does not have a Uuid field\n", j)
+				}
 			}
 		}
 		// field.Interface() is used to extract the field value as type `interface{}`
