@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"reflect"
 	"store/pkg/logger"
-	"store/pkg/web/form"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/schema"
@@ -54,7 +53,7 @@ func (cntrl *AdminController) View(w http.ResponseWriter, r *http.Request) {
 
 	entityValue := reflect.ValueOf(entityPointer).Elem().Interface()
 
-	f := form.GormToForm(entityValue)
+	f := GormAdminForm(entityValue, cntrl.router)
 	f.Action = cntrl.router.UrlInternal(ADMIN_UPDATE_ENTITY_ROUTE, "entity", entityName, "uuid", uuid).Value
 	cntrl.tmpl.SetMain(f.Render())
 	cntrl.router.Response(w, cntrl.tmpl.Render())

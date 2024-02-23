@@ -1,30 +1,28 @@
-package form
+package web
 
 import (
 	"fmt"
 	"reflect"
+	forms "store/pkg/web/form"
 )
 
 // TODO:  to display first-level related entities, try looping over struct field first and then match them with gorm schema
-func GormToForm(entity any) *Form {
+func GormAdminForm(entity any, router *AppRouter) *forms.Form {
 	value := reflect.ValueOf(entity)
-
 	// Check if the given entity is a struct
 	if value.Kind() != reflect.Struct {
 		panic(fmt.Errorf("Provided entity is not a struct."))
 	}
 
-	form := NewForm()
-
+	form := forms.NewForm()
 	// Loop through the fields of the struct
 	for i := 0; i < value.NumField(); i++ {
 		field := value.Field(i)
 		fieldType := value.Type().Field(i)
-
 		// Check if the field is an array or a slice
 		if field.Kind() == reflect.Array || field.Kind() == reflect.Slice {
-			f := &Field{
-				Label: Label{Name: fieldType.Name},
+			f := &forms.Field{
+				Label: forms.Label{Name: fieldType.Name},
 			}
 			form.AddField(f)
 
@@ -47,7 +45,7 @@ func GormToForm(entity any) *Form {
 					fmt.Printf("Index: %d, UUID Value: %s\n", j, uuid)
 
 					// Use `uuid` to construct the link
-					field := &Field{
+					field := &forms.Field{
 						// TODO: fix path/to/resource
 						Html: fmt.Sprintf(`<a href="/path/to/resource/%s" style="color:blue;">%s</a>`, uuid, uuid)}
 					form.AddField(field)
@@ -62,15 +60,15 @@ func GormToForm(entity any) *Form {
 		fmt.Printf("Field Name: '%s', Field Type: '%s', Field Value: '%v', Field kind:'%s'\n", fieldType.Name, fieldType.Type.Name(), field.Interface(), field.Kind().String())
 		switch fieldType.Type.Name() {
 		case "string":
-			field := &Field{
-				Label: Label{Name: fieldType.Name},
-				Input: &Input{Name: fieldType.Name, Type: "text", Value: fmt.Sprintf("%v", field.Interface())},
+			field := &forms.Field{
+				Label: forms.Label{Name: fieldType.Name},
+				Input: &forms.Input{Name: fieldType.Name, Type: "text", Value: fmt.Sprintf("%v", field.Interface())},
 			}
 			form.AddField(field)
 		case "uint", "int":
-			field := &Field{
-				Label: Label{Name: fieldType.Name},
-				Input: &Input{Name: fieldType.Name, Type: "number", Value: fmt.Sprintf("%v", field.Interface())},
+			field := &forms.Field{
+				Label: forms.Label{Name: fieldType.Name},
+				Input: &forms.Input{Name: fieldType.Name, Type: "number", Value: fmt.Sprintf("%v", field.Interface())},
 			}
 			form.AddField(field)
 		}
