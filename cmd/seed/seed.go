@@ -56,7 +56,7 @@ func main() {
 
 	cartRepo := repo.NewCartRepo(db)
 	cartItemRepo := repo.NewCartItemRepo(db)
-	cartService := service.NewCartService(cartRepo, cartItemRepo)
+	cartService := service.NewCartService(cartRepo, cartItemRepo, db)
 	cart, err := cartService.CreateCart()
 	if err != nil {
 		panic(err)

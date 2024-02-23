@@ -1,7 +1,6 @@
 package service
 
 import (
-	"errors"
 	"store/pkg/models"
 	"store/pkg/repo"
 
@@ -73,5 +72,5 @@ func (service *ProductService) CopyBaseProduct(baseProduct *models.BaseProduct) 
 	if err != nil {
 		return nil, err
 	}
-	return product, errors.New("not implemented")
+	return product, nil
 }
