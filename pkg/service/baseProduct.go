@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"store/pkg/models"
 	"store/pkg/repo"
 )
@@ -50,10 +51,5 @@ func (service *BaseProductService) FindByUuuid(uuid string) (*models.BaseProduct
 }
 
 func (service *BaseProductService) AddField(product *models.BaseProduct, field *models.BaseProductField) error {
-	product.Fields = append(product.Fields, field)
-	err := service.Save(product)
-	if err != nil {
-		return err
-	}
-	return nil
+	return errors.New("not implemented")
 }

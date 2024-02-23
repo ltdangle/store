@@ -48,11 +48,12 @@ func (seeder *Seeder) BuildBasicProduct(name string, description string) *BasePr
 	product.Type = "furniture"
 	product.Name = name
 	product.Description = description
-	product.Fields = append(product.Fields, instrctns)
-	product.Fields = append(product.Fields, date)
-	product.Fields = append(product.Fields, file)
-	product.Fields = append(product.Fields, size)
-	product.Fields = append(product.Fields, color)
+	// TODO: 
+	// product.Fields = append(product.Fields, instrctns)
+	// product.Fields = append(product.Fields, date)
+	// product.Fields = append(product.Fields, file)
+	// product.Fields = append(product.Fields, size)
+	// product.Fields = append(product.Fields, color)
 
 	// Save product.
 	tx := seeder.db.Save(product)

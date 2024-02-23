@@ -2,8 +2,7 @@ package models
 
 type Product struct {
 	*BaseProduct
-	Fields     []*ProductField `gorm:"foreignKey:ProductID"`
-	CartItemID uint
+	CartItemUuid string
 }
 
 func NewProduct() *Product {
@@ -12,7 +11,7 @@ func NewProduct() *Product {
 
 type ProductField struct {
 	*BaseProductField
-	ProductID uint
+	ProductUuid string 
 }
 
 func NewProductField() *ProductField {

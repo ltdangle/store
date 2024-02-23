@@ -7,11 +7,9 @@ import (
 )
 
 type Cart struct {
-	ID        uint   `gorm:"primarykey"`
-	Uuid      string `gorm:"unique"`
+	Uuid      string `gorm:"primarykey"`
 	UserUuid  string
-	CartItems []*CartItem `gorm:"foreignKey:CartID"`
-	Total     int         `gorm:"not null;default:0"`
+	Total     int `gorm:"not null;default:0"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt
@@ -25,13 +23,9 @@ func NewCart() *Cart {
 }
 
 type CartItem struct {
-	ID       uint   `gorm:"primarykey"`
-	Uuid     string `gorm:"unique"`
+	Uuid     string `gorm:"primarykey"`
+
 	CartUuid string
-
-	CartID  uint
-	Product *Product `gorm:"foreignKey:CartItemID;references:ID"`
-
 	Quantity  int `gorm:"not null;default:1"`
 	Subtotal  int `gorm:"not null;default:0"`
 	CreatedAt time.Time
