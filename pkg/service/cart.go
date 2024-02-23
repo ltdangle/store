@@ -30,7 +30,7 @@ func (service *CartService) CreateCart() (*models.Cart, error) {
 func (service *CartService) AddProductToCart(cart *models.Cart, product *models.Product) error {
 	cartItem := models.NewCartItem()
 	cartItem.CartUuid = cart.Uuid
-	product.CartItemUuid = cartItem.Uuid
+	cartItem.ProductUuid = product.Uuid
 
 	tx := service.db.Save(cart)
 	if tx.Error != nil {

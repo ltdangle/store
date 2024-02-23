@@ -1,19 +1,27 @@
 package models
 
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
+
 type Product struct {
-	*BaseProduct
-	CartItemUuid string
+	Uuid string `gorm:"primarykey"`
+
+	Type        string
+	Name        string `gorm:"type:varchar(255);not null"`
+	Description string `gorm:"type:text;not null"`
+	BasePrice   int    `gorm:"not null;default:0"`
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt
 }
 
 func NewProduct() *Product {
-	return &Product{BaseProduct: NewBaseProduct()}
-}
-
-type ProductField struct {
-	*BaseProductField
-	ProductUuid string 
-}
-
-func NewProductField() *ProductField {
-	return &ProductField{BaseProductField: NewBaseProductField()}
+	return &Product{
+		Uuid:      NewUuid(),
+		CreatedAt: time.Now(),
+	}
 }

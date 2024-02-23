@@ -37,22 +37,14 @@ func main() {
 
 	// Seed products.
 	seeder := models.NewSeeder(db)
-	baseProducts := []*models.BaseProduct{
+	products := []*models.Product{
 		seeder.BuildBasicProduct("shelf", "A shelf build to your specifications"),
 		seeder.BuildBasicProduct("chair", "A chair build to your specifications"),
 		seeder.BuildBasicProduct("table", "A table build to your specifications"),
 		seeder.BuildBasicProduct("sofa", "A sofa build to your specifications"),
 	}
 
-	productService := service.NewProductService(repo.NewProductRepo(db), db)
-	var products []*models.Product
-	for _, baseProduct := range baseProducts {
-		product, err := productService.CopyBaseProduct(baseProduct)
-		if err != nil {
-			panic(err)
-		}
-		products = append(products, product)
-	}
+	// productService := service.NewProductService(repo.NewProductRepo(db), db)
 
 	cartRepo := repo.NewCartRepo(db)
 	cartItemRepo := repo.NewCartItemRepo(db)

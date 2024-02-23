@@ -14,17 +14,15 @@ import (
 
 // Dependency container.
 type Dc struct {
-	Db              *gorm.DB
-	CustomerRepo    *repo.CustomerRepo
-	BaseProductRepo *repo.BaseProductRepo
-	ProductRepo     *repo.ProductRepo
-	CartRepo        *repo.CartRepo
-	CartItemRepo    *repo.CartItemRepo
+	Db           *gorm.DB
+	CustomerRepo *repo.CustomerRepo
+	ProductRepo  *repo.ProductRepo
+	CartRepo     *repo.CartRepo
+	CartItemRepo *repo.CartItemRepo
 
-	CustomerService    *service.CustomerService
-	BaseProductService *service.BaseProductService
-	ProductService     *service.ProductService
-	CartService        *service.CartService
+	CustomerService *service.CustomerService
+	ProductService  *service.ProductService
+	CartService     *service.CartService
 
 	AppRouter *web.AppRouter
 	Logger    logger.LoggerInterface

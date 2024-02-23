@@ -26,6 +26,7 @@ type CartItem struct {
 	Uuid     string `gorm:"primarykey"`
 
 	CartUuid string
+	ProductUuid string 
 	Quantity  int `gorm:"not null;default:1"`
 	Subtotal  int `gorm:"not null;default:0"`
 	CreatedAt time.Time
