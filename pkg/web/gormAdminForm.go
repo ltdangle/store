@@ -43,11 +43,12 @@ func GormAdminForm(entity any, router *AppRouter) *forms.Form {
 				if uuidField.IsValid() { // Check if the Uuid field exists
 					uuid := uuidField.Interface()
 					fmt.Printf("Index: %d, UUID Value: %s\n", j, uuid)
-
-					// Use `uuid` to construct the link
+					url := router.UrlInternal(ADMIN_VIEW_ENTITY_ROUTE, "entity", "cartItem", "uuid", fmt.Sprintf("%v", uuid))
+					fmt.Println(">>>URL: " + url.Value)
+					fmt.Printf(">>>URL ERROR: %v", url.Error)
 					field := &forms.Field{
 						// TODO: fix path/to/resource
-						Html: fmt.Sprintf(`<a href="/path/to/resource/%s" style="color:blue;">%s</a>`, uuid, uuid)}
+						Html: fmt.Sprintf(`<a href="%s" style="color:blue;">%s</a>`, url.Value, uuid)}
 					form.AddField(field)
 					continue // Continue with the next iteration
 				} else {
