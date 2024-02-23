@@ -6,7 +6,6 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
-	"store/pkg/models"
 	"strconv"
 	"strings"
 )
@@ -33,7 +32,30 @@ func NewTmpl(router *AppRouter) *Tmpl {
 	return t
 }
 
-func (t *Tmpl) cart(cartVM CartVM) string {
+type Cart struct {
+	Uuid      string
+	CartItems []CartItem
+}
+type CartItem struct {
+	Uuid     string
+	Product  Product
+	Subtotal int
+}
+
+type Product struct {
+	Name        string
+	Description string
+	Fields      []ProductField
+}
+type ProductField struct {
+	Title string
+	Value string
+}
+type VM struct {
+	Cart Cart
+}
+
+func (t *Tmpl) cart(cartVM VM) string {
 	html := LoadTemplate("cart.html")
 	var cartItems string
 
@@ -46,7 +68,7 @@ func (t *Tmpl) cart(cartVM CartVM) string {
 	return html
 }
 
-func (t *Tmpl) cartItem(item *models.CartItem) string {
+func (t *Tmpl) cartItem(item CartItem) string {
 	html := LoadTemplate("cart_item.html")
 	html = strings.Replace(html, "###name###", item.Product.Name, -1)
 	html = strings.Replace(html, "###description###", item.Product.Description, -1)

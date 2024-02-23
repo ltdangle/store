@@ -25,16 +25,8 @@ func (service *CartService) CreateCart() (*models.Cart, error) {
 }
 
 func (service *CartService) AddProductToCart(cart *models.Cart, product *models.Product) error {
-	cartItem := models.NewCartItem()
-	cartItem.Product = product
-	cart.CartItems = append(cart.CartItems, cartItem)
 
-	error := service.repo.Save(cart)
-	if error != nil {
-		return error
-	}
-
-	return nil
+	return errors.New("not implemented")
 }
 
 func (service *CartService) RemoveCartItem(cartItemUuid string) (*models.Cart, error) {

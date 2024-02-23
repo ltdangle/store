@@ -69,9 +69,9 @@ func main() {
 		}
 	}
 	// set cart item subtotal
-	for _, item := range cart.CartItems {
-		item.Subtotal = 35
-	}
+	// for _, item := range cart.CartItems {
+	// 	item.Subtotal = 35
+	// }
 
 	tx := db.Session(&gorm.Session{FullSaveAssociations: true}).Updates(&cart)
 	if tx.Error != nil {
