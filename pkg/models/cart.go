@@ -23,15 +23,15 @@ func NewCart() *Cart {
 }
 
 type CartItem struct {
-	Uuid     string `gorm:"primarykey"`
+	Uuid string `gorm:"primarykey" db:"uuid"`
 
-	CartUuid string
-	ProductUuid string 
-	Quantity  int `gorm:"not null;default:1"`
-	Subtotal  int `gorm:"not null;default:0"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt
+	CartUuid    string         `db:"cart_uuid"`
+	ProductUuid string         `db:"product_uuid"`
+	Quantity    int            `gorm:"not null;default:1" db:"quantity"`
+	Subtotal    int            `gorm:"not null;default:0" db:"subtotal"`
+	CreatedAt   time.Time      `db:"created_at"`
+	UpdatedAt   time.Time      `db:"updated_at"`
+	DeletedAt   gorm.DeletedAt `db:"deleted_at"`
 }
 
 func NewCartItem() *CartItem {
