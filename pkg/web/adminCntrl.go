@@ -2,7 +2,6 @@ package web
 
 import (
 	"net/http"
-	"reflect"
 	"store/pkg/logger"
 	"store/pkg/repo"
 
@@ -57,10 +56,8 @@ func (cntrl *AdminController) View(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	entityValue := reflect.ValueOf(mappedEntity).Elem().Interface()
-
 	// Populate form.
-	f := GormAdminForm(entityValue, cntrl.router)
+	f := GormAdminForm(mappedEntity, cntrl.router)
 	f.Action = cntrl.router.UrlInternal(ADMIN_UPDATE_ENTITY_ROUTE, "entity", entityName, "uuid", uuid).Value
 	cntrl.tmpl.SetMain(f.Render())
 	cntrl.router.Response(w, cntrl.tmpl.Render())
