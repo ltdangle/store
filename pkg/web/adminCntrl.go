@@ -7,12 +7,12 @@ import (
 	"reflect"
 	"store/pkg/infra"
 	"store/pkg/logger"
+	"store/pkg/repo"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/schema"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	"gorm.io/gorm"
 )
 
 type EntityToTableMap struct {
@@ -24,13 +24,14 @@ type AdminController struct {
 	router *AppRouter
 	logger logger.LoggerInterface
 	tmpl   *Tmpl
-	db     *gorm.DB
+	repo   *repo.GeneralRepo
+
 	// map[EntityName]EntityObject
 	mappedEntities map[string]EntityToTableMap
 }
 
-func NewAdminController(router *AppRouter, logger logger.LoggerInterface, tmpl *Tmpl, db *gorm.DB) *AdminController {
-	return &AdminController{router: router, logger: logger, tmpl: tmpl, db: db,
+func NewAdminController(router *AppRouter, logger logger.LoggerInterface, tmpl *Tmpl, repo *repo.GeneralRepo) *AdminController {
+	return &AdminController{router: router, logger: logger, tmpl: tmpl, repo: repo,
 		mappedEntities: make(map[string]EntityToTableMap),
 	}
 }
@@ -97,9 +98,9 @@ func (cntrl *AdminController) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// gorilla schema
+	// Convert request to struct using gorilla schema.
 	var decoder = schema.NewDecoder()
-	err := decoder.Decode(entityPointer, r.PostForm)
+	err := decoder.Decode(entityPointer.Entity, r.PostForm)
 	if err != nil {
 		cntrl.logger.Warn(err)
 		cntrl.tmpl.SetMain(err.Error())
@@ -107,10 +108,11 @@ func (cntrl *AdminController) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result := cntrl.db.Save(entityPointer)
-	if result.Error != nil {
-		http.Error(w, result.Error.Error(), http.StatusNotFound)
-		cntrl.logger.Warn(result.Error)
+	// Save entity.
+	err = cntrl.repo.Save(entityPointer.Entity)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		cntrl.logger.Warn(err)
 		return
 	}
 

@@ -5,12 +5,13 @@ import (
 	"os"
 	"time"
 
+	"github.com/jmoiron/sqlx"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
 
-func Gorm(postgresUrl string ) *gorm.DB {
+func Gorm(postgresUrl string) *gorm.DB {
 
 	// Init db (GORM)
 	newLogger := logger.New(
@@ -26,4 +27,13 @@ func Gorm(postgresUrl string ) *gorm.DB {
 		panic("failed to connect database")
 	}
 	return db
+}
+ 
+func Sqlx(postgresUrl string) *sqlx.DB {
+	sqlx, err := sqlx.Open("postgres", postgresUrl)
+	if err != nil {
+		panic("failed to connect database")
+	}
+
+	return sqlx
 }
