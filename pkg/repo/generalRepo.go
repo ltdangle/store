@@ -24,6 +24,7 @@ func NewGeneralRepo(sqlx *sqlx.DB, gorm *gorm.DB) *GeneralRepo {
 	return &GeneralRepo{sqlx: sqlx, gorm: gorm}
 }
 
+// Save / Update entity via GORM (convenient).
 func (repo *GeneralRepo) Save(entity any) error {
 	tx := repo.gorm.Save(entity)
 	if tx.Error != nil {
@@ -32,6 +33,7 @@ func (repo *GeneralRepo) Save(entity any) error {
 	return nil
 }
 
+// Retrieve entity via sqlx (GORM produces unexpected queries).
 func (repo *GeneralRepo) GetByPrimaryKey(entity MappedEntity, search string) error {
 	query := fmt.Sprintf(`SELECT * FROM %s WHERE %s = $1;`, entity.TableName(), entity.PrimaryKey())
 	err := repo.sqlx.Get(entity, query, search)
