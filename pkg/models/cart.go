@@ -40,6 +40,15 @@ func NewCartItem() *CartItem {
 		CreatedAt: time.Now(),
 	}
 }
-func (cartItem CartItem) String() string {
+
+func (cartItem *CartItem) PrimaryKey() string {
+	return "uuid"
+}
+
+func (cartItem *CartItem) TableName() string {
+	return "cart_items"
+}
+
+func (cartItem *CartItem) String() string {
 	return cartItem.Uuid
 }

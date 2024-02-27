@@ -1,0 +1,43 @@
+package repo
+
+import (
+	"fmt"
+
+	"github.com/jmoiron/sqlx"
+	"gorm.io/gorm"
+)
+
+type MappedEntity interface {
+	// Primary key of the table.
+	PrimaryKey() string
+	// Name of the database table for the entity.
+	TableName() string
+}
+
+// A repo that can save and find by uuid any mapped entity.
+type GeneralRepo struct {
+	gorm *gorm.DB
+	sqlx *sqlx.DB
+}
+
+func NewGeneralRepo(sqlx *sqlx.DB, gorm *gorm.DB) *GeneralRepo {
+	return &GeneralRepo{sqlx: sqlx, gorm: gorm}
+}
+
+func (repo *GeneralRepo) Save(entity any) error {
+	tx := repo.gorm.Save(entity)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
+}
+
+func (repo *GeneralRepo) GetByPrimaryKey(entity MappedEntity, search string) error {
+	query := fmt.Sprintf(`SELECT * FROM %s WHERE %s = $1;`, entity.TableName(), entity.PrimaryKey())
+	err := repo.sqlx.Get(entity, query, search)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
