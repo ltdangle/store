@@ -11,7 +11,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func TestCartItemSqlxz(t *testing.T) {
+func TestCartItemSqlxz(_ *testing.T) {
 	cfg := infra.ReadConfig("../../.env")
 	db, err := sqlx.Open("postgres", cfg.POSTGRES_URL)
 	if err != nil {

@@ -17,8 +17,8 @@ func main() {
 	router := dc.AppRouter.Router
 	router.Use(loggingMiddleware)
 
-	dc.AdminController.AddMappedEntity("cart", &models.Cart{})
-	dc.AdminController.AddMappedEntity("cartItem", &models.CartItem{})
+	dc.AdminController.AddMappedEntity("cart", &models.Cart{}, "carts")
+	dc.AdminController.AddMappedEntity("cartItem", &models.CartItem{}, "cart_items")
 
 	// Admin panel.
 	router.HandleFunc("/admin/{entity}/{uuid}/view", dc.AdminController.View).Methods("GET").Name(web.ADMIN_VIEW_ENTITY_ROUTE)

@@ -15,23 +15,28 @@ import (
 	"gorm.io/gorm"
 )
 
+type EntityToTableMap struct {
+	Entity    any
+	TableName string
+}
+
 type AdminController struct {
 	router *AppRouter
 	logger logger.LoggerInterface
 	tmpl   *Tmpl
 	db     *gorm.DB
 	// map[EntityName]EntityObject
-	mappedEntities map[string]any
+	mappedEntities map[string]EntityToTableMap
 }
 
 func NewAdminController(router *AppRouter, logger logger.LoggerInterface, tmpl *Tmpl, db *gorm.DB) *AdminController {
 	return &AdminController{router: router, logger: logger, tmpl: tmpl, db: db,
-		mappedEntities: make(map[string]any),
+		mappedEntities: make(map[string]EntityToTableMap),
 	}
 }
 
-func (cntrl *AdminController) AddMappedEntity(key string, entity any) {
-	cntrl.mappedEntities[key] = entity
+func (cntrl *AdminController) AddMappedEntity(key string, entity any, tableName string) {
+	cntrl.mappedEntities[key] = EntityToTableMap{Entity: entity, TableName: tableName}
 }
 
 // Views mapped entity.
@@ -42,7 +47,7 @@ func (cntrl *AdminController) View(w http.ResponseWriter, r *http.Request) {
 	entityName := vars["entity"]
 	uuid := vars["uuid"]
 
-	entityPointer, ok := cntrl.mappedEntities[entityName]
+	mappedEntity, ok := cntrl.mappedEntities[entityName]
 	if !ok {
 		http.Error(w, "Entity type not found", http.StatusNotFound)
 		return
@@ -55,19 +60,13 @@ func (cntrl *AdminController) View(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("failed to connect database")
 	}
 
-	query := `
-SELECT 
-    uuid, cart_uuid, product_uuid, quantity, subtotal, created_at, updated_at, deleted_at  
-FROM 
-    cart_items
-WHERE 
-  cart_items.uuid = $1;`
-	err = db.Get(entityPointer, query, uuid)
+	query := fmt.Sprintf(`SELECT * FROM %s WHERE uuid = $1;`, mappedEntity.TableName)
+	err = db.Get(mappedEntity.Entity, query, uuid)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	entityValue := reflect.ValueOf(entityPointer).Elem().Interface()
+	entityValue := reflect.ValueOf(mappedEntity.Entity).Elem().Interface()
 
 	f := GormAdminForm(entityValue, cntrl.router)
 	f.Action = cntrl.router.UrlInternal(ADMIN_UPDATE_ENTITY_ROUTE, "entity", entityName, "uuid", uuid).Value
