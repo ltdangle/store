@@ -1,14 +1,18 @@
 package web
 
 import (
+	"fmt"
+	"log"
 	"net/http"
 	"reflect"
+	"store/pkg/infra"
 	"store/pkg/logger"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/schema"
+	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 )
 
 type AdminController struct {
@@ -44,11 +48,23 @@ func (cntrl *AdminController) View(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result := cntrl.db.Preload(clause.Associations).Where("uuid = ?", uuid).First(entityPointer)
-	if result.Error != nil {
-		http.Error(w, result.Error.Error(), http.StatusNotFound)
-		cntrl.logger.Warn(result.Error)
-		return
+	cfg := infra.ReadConfig(".env")
+	fmt.Println(cfg)
+	db, err := sqlx.Open("postgres", cfg.POSTGRES_URL)
+	if err != nil {
+		log.Fatal("failed to connect database")
+	}
+
+	query := `
+SELECT 
+    uuid, cart_uuid, product_uuid, quantity, subtotal, created_at, updated_at, deleted_at  
+FROM 
+    cart_items
+WHERE 
+  cart_items.uuid = $1;`
+	err = db.Get(entityPointer, query, uuid)
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	entityValue := reflect.ValueOf(entityPointer).Elem().Interface()
