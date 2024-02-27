@@ -22,6 +22,14 @@ func NewCart() *Cart {
 	}
 }
 
+func (cart *Cart) PrimaryKey() string {
+	return "uuid"
+}
+
+func (cart *Cart) TableName() string {
+	return "carts"
+}
+
 type CartItem struct {
 	Uuid string `gorm:"primarykey" db:"uuid"`
 

@@ -27,17 +27,17 @@ type AdminController struct {
 	repo   *repo.GeneralRepo
 
 	// map[EntityName]EntityObject
-	mappedEntities map[string]EntityToTableMap
+	mappedEntities map[string]repo.MappedEntity
 }
 
-func NewAdminController(router *AppRouter, logger logger.LoggerInterface, tmpl *Tmpl, repo *repo.GeneralRepo) *AdminController {
-	return &AdminController{router: router, logger: logger, tmpl: tmpl, repo: repo,
-		mappedEntities: make(map[string]EntityToTableMap),
+func NewAdminController(router *AppRouter, logger logger.LoggerInterface, tmpl *Tmpl, r *repo.GeneralRepo) *AdminController {
+	return &AdminController{router: router, logger: logger, tmpl: tmpl, repo: r,
+		mappedEntities: make(map[string]repo.MappedEntity),
 	}
 }
 
-func (cntrl *AdminController) AddMappedEntity(key string, entity any, tableName string) {
-	cntrl.mappedEntities[key] = EntityToTableMap{Entity: entity, TableName: tableName}
+func (cntrl *AdminController) AddMappedEntity(key string, entity repo.MappedEntity) {
+	cntrl.mappedEntities[key] = entity
 }
 
 // Views mapped entity.
@@ -61,13 +61,13 @@ func (cntrl *AdminController) View(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("failed to connect database")
 	}
 
-	query := fmt.Sprintf(`SELECT * FROM %s WHERE uuid = $1;`, mappedEntity.TableName)
-	err = db.Get(mappedEntity.Entity, query, uuid)
+	query := fmt.Sprintf(`SELECT * FROM %s WHERE uuid = $1;`, mappedEntity.TableName())
+	err = db.Get(mappedEntity, query, uuid)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	entityValue := reflect.ValueOf(mappedEntity.Entity).Elem().Interface()
+	entityValue := reflect.ValueOf(mappedEntity).Elem().Interface()
 
 	f := GormAdminForm(entityValue, cntrl.router)
 	f.Action = cntrl.router.UrlInternal(ADMIN_UPDATE_ENTITY_ROUTE, "entity", entityName, "uuid", uuid).Value
@@ -100,7 +100,7 @@ func (cntrl *AdminController) Update(w http.ResponseWriter, r *http.Request) {
 
 	// Convert request to struct using gorilla schema.
 	var decoder = schema.NewDecoder()
-	err := decoder.Decode(entityPointer.Entity, r.PostForm)
+	err := decoder.Decode(entityPointer, r.PostForm)
 	if err != nil {
 		cntrl.logger.Warn(err)
 		cntrl.tmpl.SetMain(err.Error())
@@ -109,7 +109,7 @@ func (cntrl *AdminController) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Save entity.
-	err = cntrl.repo.Save(entityPointer.Entity)
+	err = cntrl.repo.Save(entityPointer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		cntrl.logger.Warn(err)
