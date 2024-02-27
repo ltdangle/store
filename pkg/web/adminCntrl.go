@@ -1,18 +1,13 @@
 package web
 
 import (
-	"fmt"
-	"log"
 	"net/http"
 	"reflect"
-	"store/pkg/infra"
 	"store/pkg/logger"
 	"store/pkg/repo"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/schema"
-	"github.com/jmoiron/sqlx"
-	_ "github.com/lib/pq"
 )
 
 type EntityToTableMap struct {
@@ -54,26 +49,21 @@ func (cntrl *AdminController) View(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cfg := infra.ReadConfig(".env")
-	fmt.Println(cfg)
-	db, err := sqlx.Open("postgres", cfg.POSTGRES_URL)
+	// Retrieve mapped entity.
+	err := cntrl.repo.GetByPrimaryKey(mappedEntity, uuid)
 	if err != nil {
-		log.Fatal("failed to connect database")
-	}
-
-	query := fmt.Sprintf(`SELECT * FROM %s WHERE uuid = $1;`, mappedEntity.TableName())
-	err = db.Get(mappedEntity, query, uuid)
-	if err != nil {
-		log.Fatal(err)
+		cntrl.tmpl.SetMain(err.Error())
+		cntrl.router.Response(w, cntrl.tmpl.Render())
+		return
 	}
 
 	entityValue := reflect.ValueOf(mappedEntity).Elem().Interface()
 
+	// Populate form.
 	f := GormAdminForm(entityValue, cntrl.router)
 	f.Action = cntrl.router.UrlInternal(ADMIN_UPDATE_ENTITY_ROUTE, "entity", entityName, "uuid", uuid).Value
 	cntrl.tmpl.SetMain(f.Render())
 	cntrl.router.Response(w, cntrl.tmpl.Render())
-
 }
 
 const ADMIN_UPDATE_ENTITY_ROUTE = "admin update entity route"

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -28,7 +29,7 @@ func Gorm(postgresUrl string) *gorm.DB {
 	}
 	return db
 }
- 
+
 func Sqlx(postgresUrl string) *sqlx.DB {
 	sqlx, err := sqlx.Open("postgres", postgresUrl)
 	if err != nil {
