@@ -52,3 +52,42 @@ func (repo *GeneralRepo) FindAll(entity MappedEntity, results interface{}) error
 
 	return nil
 }
+
+type QueryToMapResult struct {
+	ColumnNames []string
+	DataMap     []map[string]interface{}
+}
+
+func (repo *GeneralRepo) QueryToMap(query string) (*QueryToMapResult, error) {
+	result := &QueryToMapResult{}
+	// Execute the query
+	rows, err := repo.sqlx.Queryx(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	result.ColumnNames, err = rows.Columns()
+	if err != nil {
+		return nil, err
+	}
+
+	// Iterate over each row
+	for rows.Next() {
+		rowMap := make(map[string]interface{})
+		// MapScan will fill the map with column name-value pairs
+		err := rows.MapScan(rowMap)
+		if err != nil {
+			return nil, err
+		}
+		// Append the map to the results slice
+		result.DataMap = append(result.DataMap, rowMap)
+	}
+
+	// Check for errors from iterating over rows
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}

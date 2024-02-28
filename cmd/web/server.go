@@ -19,6 +19,7 @@ func main() {
 
 	dc.AdminController.AddMappedEntity("cart", &models.Cart{})
 	dc.AdminController.AddMappedEntity("cartItem", &models.CartItem{})
+	dc.AdminController.AddMappedEntity("product", &models.Product{})
 
 	// Admin panel.
 	router.HandleFunc("/admin/{entity}/view", dc.AdminController.ViewAll).Methods("GET").Name(web.ADMIN_VIEW_ALL_ENTITIES_ROUTE)

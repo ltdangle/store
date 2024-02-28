@@ -25,3 +25,10 @@ func NewProduct() *Product {
 		CreatedAt: time.Now(),
 	}
 }
+func (product *Product) PrimaryKey() string {
+	return "uuid"
+}
+
+func (product *Product) TableName() string {
+	return "products"
+}

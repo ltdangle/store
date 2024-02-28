@@ -1,9 +1,9 @@
 package web
 
 import (
+	"fmt"
 	"net/http"
 	"store/pkg/logger"
-	"store/pkg/models"
 	"store/pkg/repo"
 
 	"github.com/gorilla/mux"
@@ -48,15 +48,18 @@ func (cntrl *AdminController) ViewAll(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var results []models.CartItem
-	err := cntrl.repo.FindAll(entity, &results)
+	query := fmt.Sprintf(`SELECT * FROM %s;`, entity.TableName())
+	resultsMap, err := cntrl.repo.QueryToMap(query)
 	if err != nil {
 		cntrl.tmpl.SetMain(err.Error())
 		cntrl.router.Response(w, cntrl.tmpl.Render())
 		return
 	}
+	fmt.Println(resultsMap)
 
-	table := NewAdminTable()
+
+	// table := NewAdminTable()
+	table := &AdminTable{DataMap: resultsMap}
 	cntrl.tmpl.SetMain(table.Render())
 	cntrl.router.Response(w, cntrl.tmpl.Render())
 
