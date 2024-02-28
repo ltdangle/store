@@ -1,6 +1,8 @@
 package web
 
 import (
+	"bytes"
+	"context"
 	"fmt"
 	"strings"
 )
@@ -22,7 +24,10 @@ func (table *AdminTable) AddRow(row TableRow) {
 	table.rows = append(table.rows, row)
 }
 func (table *AdminTable) Render() string {
-	return table.tmpl()
+	var buf bytes.Buffer
+	_ = AdminTbl(table.headings).Render(context.Background(), &buf)
+	return string(buf.String())
+	// return table.tmpl()
 }
 func (table *AdminTable) renderHeading() string {
 	var cols []string
