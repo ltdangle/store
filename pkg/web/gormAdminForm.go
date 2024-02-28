@@ -6,8 +6,7 @@ import (
 	forms "store/pkg/web/form"
 )
 
-// TODO:  to display first-level related entities, try looping over struct field first and then match them with gorm schema
-func GormAdminForm(entity any, router *AppRouter) *forms.Form {
+func GormAdminForm(entity any, entityName string, primaryKey string, router *AppRouter) (*forms.Form, error) {
 	value := reflect.ValueOf(entity)
 
 	// Check if the given entity is a struct
@@ -15,9 +14,8 @@ func GormAdminForm(entity any, router *AppRouter) *forms.Form {
 		value = value.Elem()
 	}
 
-	// TODO: return error
 	if value.Kind() != reflect.Struct {
-		panic(fmt.Errorf("Provided entity is not a struct."))
+		return nil, fmt.Errorf("Provided entity is not a struct.")
 	}
 
 	form := forms.NewForm()
@@ -45,7 +43,7 @@ func GormAdminForm(entity any, router *AppRouter) *forms.Form {
 				uuidField := elemValue.FieldByName("Uuid")
 				if uuidField.IsValid() { // Check if the Uuid field exists
 					uuid := uuidField.Interface()
-					url := router.UrlInternal(ADMIN_VIEW_ENTITY_ROUTE, "entity", "cartItem", "uuid", fmt.Sprintf("%v", uuid))
+					url := router.UrlInternal(ADMIN_VIEW_ENTITY_ROUTE, "entity", entityName, primaryKey, fmt.Sprintf("%v", uuid))
 					field := &forms.Field{
 						// TODO: fix path/to/resource
 						Html: fmt.Sprintf(`<a href="%s" style="color:blue;">%s</a>`, url.Value, uuid)}
@@ -74,5 +72,5 @@ func GormAdminForm(entity any, router *AppRouter) *forms.Form {
 			form.AddField(field)
 		}
 	}
-	return form
+	return form, nil
 }

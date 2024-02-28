@@ -57,7 +57,13 @@ func (cntrl *AdminController) View(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Populate form.
-	f := GormAdminForm(mappedEntity, cntrl.router)
+	f, err := GormAdminForm(mappedEntity, entityName, uuid, cntrl.router)
+	if err != nil {
+		cntrl.tmpl.SetMain(err.Error())
+		cntrl.router.Response(w, cntrl.tmpl.Render())
+		return
+	}
+
 	f.Action = cntrl.router.UrlInternal(ADMIN_UPDATE_ENTITY_ROUTE, "entity", entityName, "uuid", uuid).Value
 	cntrl.tmpl.SetMain(f.Render())
 	cntrl.router.Response(w, cntrl.tmpl.Render())
