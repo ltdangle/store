@@ -1,6 +1,6 @@
 package web
 
-templ AdminTbl(headings []string) {
+templ AdminTbl(headings []string, data []string) {
 	<div class="px-4 sm:px-6 lg:px-8">
 		<div class="sm:flex sm:items-center">
 			<div class="sm:flex-auto">
@@ -33,10 +33,9 @@ templ AdminTbl(headings []string) {
 						</thead>
 						<tbody class="divide-y divide-gray-200">
 							<tr>
-								<td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">Name </td>
-								<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">Title</td>
-								<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">Email</td>
-								<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">Smto</td>
+								for _,td:=range data {
+									<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{ td }</td>
+								}
 							</tr>
 						</tbody>
 					</table>
