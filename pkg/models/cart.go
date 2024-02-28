@@ -7,12 +7,12 @@ import (
 )
 
 type Cart struct {
-	Uuid      string `gorm:"primarykey"`
-	UserUuid  string
-	Total     int `gorm:"not null;default:0"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt
+	Uuid      string         `gorm:"primarykey" db:"uuid"`
+	UserUuid  string         `db:"user_uuid"`
+	Total     int            `gorm:"not null;default:0" db:"total"`
+	CreatedAt time.Time      `db:"created_at"`
+	UpdatedAt time.Time      `db:"updated_at"`
+	DeletedAt gorm.DeletedAt `db:"deleted_at"`
 }
 
 func NewCart() *Cart {
