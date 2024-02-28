@@ -43,3 +43,12 @@ func (repo *GeneralRepo) GetByPrimaryKey(entity MappedEntity, search string) err
 
 	return nil
 }
+func (repo *GeneralRepo) FindAll(entity MappedEntity, results interface{}) error {
+	query := fmt.Sprintf(`SELECT * FROM %s;`, entity.TableName())
+	err := repo.sqlx.Select(results, query)
+	if err != nil {
+		return fmt.Errorf("sqlx: %v", err)
+	}
+
+	return nil
+}

@@ -3,6 +3,7 @@ package web
 import (
 	"net/http"
 	"store/pkg/logger"
+	"store/pkg/models"
 	"store/pkg/repo"
 
 	"github.com/gorilla/mux"
@@ -41,9 +42,17 @@ func (cntrl *AdminController) ViewAll(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	entityName := vars["entity"]
 
-	_, ok := cntrl.mappedEntities[entityName]
+	entity, ok := cntrl.mappedEntities[entityName]
 	if !ok {
 		http.Error(w, "Entity type not found", http.StatusNotFound)
+		return
+	}
+
+	var results []models.CartItem
+	err := cntrl.repo.FindAll(entity, &results)
+	if err != nil {
+		cntrl.tmpl.SetMain(err.Error())
+		cntrl.router.Response(w, cntrl.tmpl.Render())
 		return
 	}
 

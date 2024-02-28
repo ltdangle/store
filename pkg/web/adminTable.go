@@ -14,11 +14,11 @@ type AdminTable struct {
 
 func NewAdminTable() *AdminTable {
 	return &AdminTable{
-		headings: []string{"one", "two", "three", "four", ""},
+		headings: []string{"one", "two", "three", "four"},
 		data: [][]string{
-			{"oneData", "twoData", "threeData", "fourData", ""},
-			{"oneData", "twoData", "threeData", "fourData", ""},
-			{"oneData", "twoData", "threeData", "fourData", ""},
+			{"oneData", "twoData", "threeData", "fourData"},
+			{"oneData", "twoData", "threeData", "fourData"},
+			{"oneData", "twoData", "threeData", "fourData"},
 		},
 	}
 }
