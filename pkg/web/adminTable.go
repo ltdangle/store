@@ -9,13 +9,17 @@ type TableRow map[string]string
 
 type AdminTable struct {
 	headings []string
-	data     []string
+	data     [][]string
 }
 
 func NewAdminTable() *AdminTable {
 	return &AdminTable{
 		headings: []string{"one", "two", "three", "four", ""},
-		data:     []string{"oneData", "twoData", "threeData", "fourData", ""},
+		data: [][]string{
+			{"oneData", "twoData", "threeData", "fourData", ""},
+			{"oneData", "twoData", "threeData", "fourData", ""},
+			{"oneData", "twoData", "threeData", "fourData", ""},
+		},
 	}
 }
 
