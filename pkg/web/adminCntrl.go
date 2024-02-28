@@ -34,10 +34,29 @@ func (cntrl *AdminController) AddMappedEntity(key string, entity repo.MappedEnti
 	cntrl.mappedEntities[key] = entity
 }
 
+// Views all mapped entity.
+const ADMIN_VIEW_ALL_ENTITIES_ROUTE = "admin view all entities route"
+
+func (cntrl *AdminController) ViewAll(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	entityName := vars["entity"]
+
+	_, ok := cntrl.mappedEntities[entityName]
+	if !ok {
+		http.Error(w, "Entity type not found", http.StatusNotFound)
+		return
+	}
+
+	table := NewAdminTable()
+	cntrl.tmpl.SetMain(table.Render())
+	cntrl.router.Response(w, cntrl.tmpl.Render())
+
+}
+
 // Views mapped entity.
 const ADMIN_VIEW_ENTITY_ROUTE = "admin view entity route"
 
-func (cntrl *AdminController) View(w http.ResponseWriter, r *http.Request) {
+func (cntrl *AdminController) ViewEntity(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	entityName := vars["entity"]
 	uuid := vars["uuid"]
@@ -57,7 +76,7 @@ func (cntrl *AdminController) View(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Populate form.
-	f, err := GormAdminForm(mappedEntity)
+	f, err := AdminForm(mappedEntity)
 	if err != nil {
 		cntrl.tmpl.SetMain(err.Error())
 		cntrl.router.Response(w, cntrl.tmpl.Render())

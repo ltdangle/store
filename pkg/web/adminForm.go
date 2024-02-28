@@ -6,7 +6,7 @@ import (
 	forms "store/pkg/web/form"
 )
 
-func GormAdminForm(entity any) (*forms.Form, error) {
+func AdminForm(entity any) (*forms.Form, error) {
 	value := reflect.ValueOf(entity)
 
 	// Check if the given entity is a struct
