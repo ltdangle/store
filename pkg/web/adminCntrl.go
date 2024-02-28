@@ -57,7 +57,7 @@ func (cntrl *AdminController) View(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Populate form.
-	f, err := GormAdminForm(mappedEntity, entityName, uuid, cntrl.router)
+	f, err := GormAdminForm(mappedEntity)
 	if err != nil {
 		cntrl.tmpl.SetMain(err.Error())
 		cntrl.router.Response(w, cntrl.tmpl.Render())
