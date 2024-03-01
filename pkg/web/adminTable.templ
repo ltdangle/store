@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-templ AdminTbl(queryResult *repo.QueryToMapResult) {
+templ AdminTbl(queryResult *repo.QueryToMapResult, router *AppRouter) {
 	<div class="px-4 sm:px-6 lg:px-8">
 		<div class="sm:flex sm:items-center">
 			<div class="sm:flex-auto">
@@ -31,19 +31,29 @@ templ AdminTbl(queryResult *repo.QueryToMapResult) {
 					<table class="min-w-full divide-y divide-gray-300">
 						<thead>
 							<tr>
+								<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"></th>
 								for _,heading:=range queryResult.ColumnNames {
 									<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">{ heading }</th>
 								}
 							</tr>
 						</thead>
 						<tbody class="divide-y divide-gray-200">
-								for _,tr:=range queryResult.DataMap {
-							<tr>
+							for _,tr:=range queryResult.DataMap {
+								<tr>
+									<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+									<!-- TODO: remove hardcoding -->
+										<a
+											href={ templ.URL( router.UrlInternal(ADMIN_VIEW_ENTITY_ROUTE,"entity","cartItem", "uuid" ,
+									fmt.Sprintf("%v",tr["uuid"])).Value ) }
+										>
+											Edit
+										</a>
+									</td>
 									for _,col:=range queryResult.ColumnNames {
 										<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{ fmt.Sprintf("%v",tr[col]) }</td>
 									}
-							</tr>
-								}
+								</tr>
+							}
 						</tbody>
 					</table>
 				</div>

@@ -9,24 +9,16 @@ import (
 type TableRow map[string]string
 
 type AdminTable struct {
-	headings []string
-	data     [][]string
 	DataMap  *repo.QueryToMapResult
+	router   *AppRouter
 }
 
-func NewAdminTable() *AdminTable {
-	return &AdminTable{
-		headings: []string{"one", "two", "three", "four"},
-		data: [][]string{
-			{"oneData", "twoData", "threeData", "fourData"},
-			{"oneData", "twoData", "threeData", "fourData"},
-			{"oneData", "twoData", "threeData", "fourData"},
-		},
-	}
+func NewAdminTable(router *AppRouter) *AdminTable {
+	return &AdminTable{router: router}
 }
 
 func (table *AdminTable) Render() string {
 	var buf bytes.Buffer
-	_ = AdminTbl(table.DataMap).Render(context.Background(), &buf)
+	_ = AdminTbl(table.DataMap, table.router).Render(context.Background(), &buf)
 	return string(buf.String())
 }
