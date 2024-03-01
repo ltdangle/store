@@ -17,11 +17,11 @@ type CartController struct {
 	service *service.CartService
 	repo    *repo.CartRepo
 	logger  logger.LoggerInterface
-	tmpl    *Tmpl
+	tmpl    *AdminTmpl
 	db      *gorm.DB
 }
 
-func NewCartController(router *AppRouter, service *service.CartService, repo *repo.CartRepo, logger logger.LoggerInterface, tmpl *Tmpl, db *gorm.DB) *CartController {
+func NewCartController(router *AppRouter, service *service.CartService, repo *repo.CartRepo, logger logger.LoggerInterface, tmpl *AdminTmpl, db *gorm.DB) *CartController {
 	return &CartController{router: router, service: service, repo: repo, logger: logger, tmpl: tmpl, db: db}
 }
 

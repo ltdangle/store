@@ -18,14 +18,14 @@ type EntityToTableMap struct {
 type AdminController struct {
 	router *AppRouter
 	logger logger.LoggerInterface
-	tmpl   *Tmpl
+	tmpl   *AdminTmpl
 	repo   *repo.GeneralRepo
 
 	// map[EntityName]EntityObject
 	mappedEntities map[string]repo.MappedEntity
 }
 
-func NewAdminController(router *AppRouter, logger logger.LoggerInterface, tmpl *Tmpl, r *repo.GeneralRepo) *AdminController {
+func NewAdminController(router *AppRouter, logger logger.LoggerInterface, tmpl *AdminTmpl, r *repo.GeneralRepo) *AdminController {
 	return &AdminController{router: router, logger: logger, tmpl: tmpl, repo: r,
 		mappedEntities: make(map[string]repo.MappedEntity),
 	}

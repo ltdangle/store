@@ -15,14 +15,14 @@ type Link struct {
 	text string
 }
 
-type Tmpl struct {
+type AdminTmpl struct {
 	router       *AppRouter
 	main         string
 	leftNavLinks []Link
 }
 
-func NewTmpl(router *AppRouter) *Tmpl {
-	t := &Tmpl{router: router}
+func NewAdminTmpl(router *AppRouter) *AdminTmpl {
+	t := &AdminTmpl{router: router}
 	// TODO: fix
 	url := router.UrlInternal(CART_VIEW_ROUTE, "uuid", "someuuid").Value
 	t.AddNavLink(url, "Cart")
@@ -55,7 +55,7 @@ type VM struct {
 	Cart Cart
 }
 
-func (t *Tmpl) cart(cartVM VM) string {
+func (t *AdminTmpl) cart(cartVM VM) string {
 	html := LoadTemplate("cart.html")
 	var cartItems string
 
@@ -68,7 +68,7 @@ func (t *Tmpl) cart(cartVM VM) string {
 	return html
 }
 
-func (t *Tmpl) cartItem(item CartItem) string {
+func (t *AdminTmpl) cartItem(item CartItem) string {
 	html := LoadTemplate("cart_item.html")
 	html = strings.Replace(html, "###name###", item.Product.Name, -1)
 	html = strings.Replace(html, "###description###", item.Product.Description, -1)
@@ -101,12 +101,12 @@ func LoadTemplate(tmpl string) string {
 	return string(content)
 }
 
-func (t *Tmpl) AddNavLink(url string, text string) {
+func (t *AdminTmpl) AddNavLink(url string, text string) {
 	link := Link{url: url, text: text}
 	t.leftNavLinks = append(t.leftNavLinks, link)
 }
 
-func (t *Tmpl) buildLeftNav() string {
+func (t *AdminTmpl) buildLeftNav() string {
 	var links []string
 	for _, link := range t.leftNavLinks {
 		html := fmt.Sprintf(`
@@ -123,10 +123,10 @@ func (t *Tmpl) buildLeftNav() string {
 	return strings.Join(links, "\n")
 }
 
-func (t *Tmpl) SetMain(html string) {
+func (t *AdminTmpl) SetMain(html string) {
 	t.main = html
 }
-func (t *Tmpl) Render() string {
+func (t *AdminTmpl) Render() string {
 
 	html := LoadTemplate("template.html")
 	html = strings.Replace(html, "###left-nav###", t.buildLeftNav(), 1)
