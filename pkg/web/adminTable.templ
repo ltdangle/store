@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-templ AdminTbl(queryResult *repo.QueryToMapResult, router *AppRouter) {
+templ AdminTbl(entityName string, queryResult *repo.QueryToMapResult, router *AppRouter) {
 	<div class="px-4 sm:px-6 lg:px-8">
 		<div class="sm:flex sm:items-center">
 			<div class="sm:flex-auto">
@@ -41,9 +41,9 @@ templ AdminTbl(queryResult *repo.QueryToMapResult, router *AppRouter) {
 							for _,tr:=range queryResult.DataMap {
 								<tr>
 									<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-									<!-- TODO: remove hardcoding -->
+										<!-- TODO: remove hardcoding -->
 										<a
-											href={ templ.URL( router.UrlInternal(ADMIN_VIEW_ENTITY_ROUTE,"entity","cartItem", "uuid" ,
+											href={ templ.URL( router.UrlInternal(ADMIN_VIEW_ENTITY_ROUTE,"entity",entityName, "uuid" ,
 									fmt.Sprintf("%v",tr["uuid"])).Value ) }
 										>
 											Edit

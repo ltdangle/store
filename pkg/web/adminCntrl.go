@@ -57,7 +57,7 @@ func (cntrl *AdminController) ViewAll(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println(resultsMap)
 
-	table := NewAdminTable(cntrl.router)
+	table := NewAdminTable(entityName, cntrl.router)
 	table.DataMap = resultsMap
 	cntrl.tmpl.SetMain(table.Render())
 	cntrl.router.Response(w, cntrl.tmpl.Render())

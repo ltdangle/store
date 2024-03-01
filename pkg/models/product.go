@@ -7,16 +7,16 @@ import (
 )
 
 type Product struct {
-	Uuid string `gorm:"primarykey"`
+	Uuid string `gorm:"primarykey" db:"uuid"`
 
-	Type        string
-	Name        string `gorm:"type:varchar(255);not null"`
-	Description string `gorm:"type:text;not null"`
-	BasePrice   int    `gorm:"not null;default:0"`
+	Type        string `db:"type"`
+	Name        string `gorm:"type:varchar(255);not null" db:"name"`
+	Description string `gorm:"type:text;not null" db:"description"`
+	BasePrice   int    `gorm:"not null;default:0" db:"base_price"`
 
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt
+	CreatedAt time.Time `db:"created_at"`
+	UpdatedAt time.Time `db:"updated_at"`
+	DeletedAt gorm.DeletedAt `db:"deleted_at"`
 }
 
 func NewProduct() *Product {

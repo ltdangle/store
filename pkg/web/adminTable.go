@@ -9,16 +9,17 @@ import (
 type TableRow map[string]string
 
 type AdminTable struct {
-	DataMap  *repo.QueryToMapResult
-	router   *AppRouter
+	entityName string
+	DataMap    *repo.QueryToMapResult
+	router     *AppRouter
 }
 
-func NewAdminTable(router *AppRouter) *AdminTable {
-	return &AdminTable{router: router}
+func NewAdminTable(entityName string, router *AppRouter) *AdminTable {
+	return &AdminTable{entityName: entityName, router: router}
 }
 
 func (table *AdminTable) Render() string {
 	var buf bytes.Buffer
-	_ = AdminTbl(table.DataMap, table.router).Render(context.Background(), &buf)
+	_ = AdminTbl(table.entityName, table.DataMap, table.router).Render(context.Background(), &buf)
 	return string(buf.String())
 }
