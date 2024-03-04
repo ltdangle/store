@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"store/pkg/infra"
@@ -11,12 +12,17 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func TestCartItemSqlxz(_ *testing.T) {
+func setup(t *testing.T) *sqlx.DB {
 	cfg := infra.ReadConfig("../../.env")
 	db, err := sqlx.Open("postgres", cfg.POSTGRES_URL)
 	if err != nil {
-		log.Fatal("failed to connect database")
+		t.Fatal("failed to connect database")
 	}
+	return db
+
+}
+func TestGetCartItem(t *testing.T) {
+	db := setup(t)
 	var cartItem models.CartItem
 	uuid := "klf"
 
@@ -27,9 +33,14 @@ FROM
     cart_items
 WHERE 
   cart_items.uuid = $1;`
-	err = db.Get(&cartItem, query, uuid)
+	err := db.Get(&cartItem, query, uuid)
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Printf("%v", cartItem)
+}
+
+type FullCart struct {
+	*models.Cart
+	*models.CartItem `db:"cart_item"`
 }

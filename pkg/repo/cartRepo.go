@@ -22,7 +22,7 @@ func (repo *CartRepo) Save(cart *models.Cart) error {
 	return nil
 }
 
-func (repo *CartRepo) FindByUuid(uuid string) (*models.Cart, error) {
+func (repo *CartRepo) FullCart(uuid string) (*models.Cart, error) {
 	var cart models.Cart
 	result := repo.db.Preload("CartItems").Preload("CartItems.Product").Preload("CartItems.Product.Fields").Where("uuid = ?", uuid).First(&cart)
 	if result.Error != nil {
