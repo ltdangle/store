@@ -1,6 +1,8 @@
 package web
 
 import (
+	"bytes"
+	"context"
 	"fmt"
 	"log"
 	"os"
@@ -126,9 +128,10 @@ func (t *AdminTmpl) Render() string {
 	t.AddNavLink(t.router.UrlInternal(ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "cart"), "Carts")
 	t.AddNavLink(t.router.UrlInternal(ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "cartItem"), "Cart Items")
 	t.AddNavLink(t.router.UrlInternal(ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "product"), "Products")
-	html := LoadTemplate("template.html")
-	html = strings.Replace(html, "###left-nav###", t.buildLeftNav(), 1)
-	html = strings.Replace(html, "###cart###", t.main, 1)
 
-	return html
+	templ := Admintmpl(t.buildLeftNav(), t.main)
+
+	var html bytes.Buffer
+	_ = templ.Render(context.Background(), &html)
+	return html.String()
 }
