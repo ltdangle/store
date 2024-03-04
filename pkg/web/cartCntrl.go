@@ -62,11 +62,8 @@ func (cntrl *CartController) DeleteItem(w http.ResponseWriter, r *http.Request) 
 	}
 
 	cartUrl := cntrl.router.UrlInternal(CART_VIEW_ROUTE, "uuid", cart.Uuid)
-	if cartUrl.Error != nil {
-		cntrl.logger.Warn("CartController.DeleteItem: could not parse redirect url")
-	}
 
 	cntrl.logger.Info(fmt.Sprintf("CartController.DeleteItem: item deleted, redirect to %s", cartUrl))
 
-	http.Redirect(w, r, cartUrl.Value, http.StatusTemporaryRedirect)
+	http.Redirect(w, r, cartUrl, http.StatusTemporaryRedirect)
 }

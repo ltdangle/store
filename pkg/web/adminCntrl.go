@@ -94,7 +94,7 @@ func (cntrl *AdminController) ViewEntity(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	f.Action = cntrl.router.UrlInternal(ADMIN_UPDATE_ENTITY_ROUTE, "entity", entityName, "uuid", uuid).Value
+	f.Action = cntrl.router.UrlInternal(ADMIN_UPDATE_ENTITY_ROUTE, "entity", entityName, "uuid", uuid)
 	cntrl.tmpl.SetMain(f.Render())
 	cntrl.router.Response(w, cntrl.tmpl.Render())
 }
@@ -140,5 +140,5 @@ func (cntrl *AdminController) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	redirectUrl := cntrl.router.UrlInternal(ADMIN_VIEW_ENTITY_ROUTE, "entity", entityName, "uuid", uuid)
-	http.Redirect(w, r, redirectUrl.Value, http.StatusFound)
+	http.Redirect(w, r, redirectUrl, http.StatusFound)
 }

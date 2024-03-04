@@ -58,7 +58,7 @@ func (t *AdminTmpl) cart(cartVM VM) string {
 
 	}
 	html = strings.Replace(html, "###cart_items###", cartItems, -1)
-	html = strings.Replace(html, "###edit_link###", t.router.UrlInternal(ADMIN_VIEW_ENTITY_ROUTE, "entity", "cart", "uuid", cartVM.Cart.Uuid).Value, -1)
+	html = strings.Replace(html, "###edit_link###", t.router.UrlInternal(ADMIN_VIEW_ENTITY_ROUTE, "entity", "cart", "uuid", cartVM.Cart.Uuid), -1)
 	return html
 }
 
@@ -73,7 +73,7 @@ func (t *AdminTmpl) cartItem(item CartItem) string {
 		fields = append(fields, fieldHtml)
 	}
 	html = strings.Replace(html, "###product_fields###", strings.Join(fields, "\n"), -1)
-	html = strings.Replace(html, "###remove_link###", t.router.UrlInternal(CART_ITEM_DELETE_ROUTE, "uuid", item.Uuid).Value, -1)
+	html = strings.Replace(html, "###remove_link###", t.router.UrlInternal(CART_ITEM_DELETE_ROUTE, "uuid", item.Uuid), -1)
 	return html
 }
 
@@ -123,9 +123,9 @@ func (t *AdminTmpl) SetMain(html string) {
 func (t *AdminTmpl) Render() string {
 
 	// TODO: log UrlInternal errors to logger.
-	t.AddNavLink(t.router.UrlInternal(ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "cart").Value, "Carts")
-	t.AddNavLink(t.router.UrlInternal(ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "cartItem").Value, "Cart Items")
-	t.AddNavLink(t.router.UrlInternal(ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "product").Value, "Products")
+	t.AddNavLink(t.router.UrlInternal(ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "cart"), "Carts")
+	t.AddNavLink(t.router.UrlInternal(ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "cartItem"), "Cart Items")
+	t.AddNavLink(t.router.UrlInternal(ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "product"), "Products")
 	html := LoadTemplate("template.html")
 	html = strings.Replace(html, "###left-nav###", t.buildLeftNav(), 1)
 	html = strings.Replace(html, "###cart###", t.main, 1)
