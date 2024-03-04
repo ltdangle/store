@@ -11,15 +11,14 @@ type TableRow map[string]string
 type AdminTable struct {
 	entityName string
 	DataMap    *repo.QueryToMapResult
-	router     *AppRouter
 }
 
-func NewAdminTable(entityName string, router *AppRouter) *AdminTable {
-	return &AdminTable{entityName: entityName, router: router}
+func NewAdminTable(entityName string) *AdminTable {
+	return &AdminTable{entityName: entityName}
 }
 
-func (table *AdminTable) Render() string {
+func (table *AdminTable) Render(router *AppRouter) string {
 	var buf bytes.Buffer
-	_ = AdminTbl(table.entityName, table.DataMap, table.router).Render(context.Background(), &buf)
+	_ = AdminTbl(table.entityName, table.DataMap, router).Render(context.Background(), &buf)
 	return string(buf.String())
 }

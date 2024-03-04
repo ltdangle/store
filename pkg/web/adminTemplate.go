@@ -23,12 +23,6 @@ type AdminTmpl struct {
 
 func NewAdminTmpl(router *AppRouter) *AdminTmpl {
 	t := &AdminTmpl{router: router}
-	// TODO: fix
-	url := router.UrlInternal(CART_VIEW_ROUTE, "uuid", "someuuid").Value
-	t.AddNavLink(url, "Cart")
-	t.AddNavLink(url, "CartItem")
-	t.AddNavLink(url, "Product")
-	t.AddNavLink(url, "Product fields")
 	return t
 }
 
@@ -83,7 +77,7 @@ func (t *AdminTmpl) cartItem(item CartItem) string {
 	return html
 }
 
-// TODO: use "html/template"
+// TODO: use a-ha/templ
 func LoadTemplate(tmpl string) string {
 	_, currentFilePath, _, ok := runtime.Caller(0)
 	if !ok {
@@ -128,6 +122,10 @@ func (t *AdminTmpl) SetMain(html string) {
 }
 func (t *AdminTmpl) Render() string {
 
+	// TODO: log UrlInternal errors to logger.
+	t.AddNavLink(t.router.UrlInternal(ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "cart").Value, "Carts")
+	t.AddNavLink(t.router.UrlInternal(ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "cartItem").Value, "Cart Items")
+	t.AddNavLink(t.router.UrlInternal(ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "product").Value, "Products")
 	html := LoadTemplate("template.html")
 	html = strings.Replace(html, "###left-nav###", t.buildLeftNav(), 1)
 	html = strings.Replace(html, "###cart###", t.main, 1)

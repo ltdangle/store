@@ -3,6 +3,7 @@ package web
 import (
 	"fmt"
 	"net/http"
+	"store/pkg/logger"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -14,10 +15,11 @@ type ParsedUrl struct {
 }
 type AppRouter struct {
 	Router *mux.Router
+	Logger logger.LoggerInterface
 }
 
-func NewAppRouter(router *mux.Router) *AppRouter {
-	return &AppRouter{Router: router}
+func NewAppRouter(router *mux.Router, logger logger.LoggerInterface) *AppRouter {
+	return &AppRouter{Router: router, Logger: logger}
 }
 
 func (appRouter *AppRouter) Response(w http.ResponseWriter, html string) {
@@ -32,11 +34,13 @@ func (appRouter *AppRouter) Response(w http.ResponseWriter, html string) {
 func (appRouter *AppRouter) UrlInternal(routeName string, pairs ...string) ParsedUrl {
 	route := appRouter.Router.Get(routeName)
 	if route == nil {
+		appRouter.Logger.Warn(fmt.Sprintf("UrlInternal: url for route %s not found ", routeName))
 		return ParsedUrl{Error: fmt.Errorf("UrlInternal: url for route %s not found", routeName)}
 	}
 
 	url, err := route.URL(pairs...)
 	if err != nil || url == nil {
+		appRouter.Logger.Warn(fmt.Sprintf("UrlInternal: url params %s for route %s could not be parsed", pairs, routeName))
 		return ParsedUrl{Error: fmt.Errorf("UrlInternal: url params %s for route %s could not be parsed", pairs, routeName)}
 	}
 
