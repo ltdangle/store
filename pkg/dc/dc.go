@@ -50,7 +50,7 @@ func NewDc(envFile string) *Dc {
 	dc.ProductRepo = repo.NewProductRepo(dc.Db)
 	dc.ProductService = service.NewProductService(dc.ProductRepo, dc.Db)
 
-	dc.CartRepo = repo.NewCartRepo(dc.Db)
+	dc.CartRepo = repo.NewCartRepo(dc.Db, dc.Sqlx)
 	dc.CartItemRepo = repo.NewCartItemRepo(dc.Db)
 	dc.CartService = service.NewCartService(dc.CartRepo, dc.CartItemRepo, dc.Db)
 

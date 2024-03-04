@@ -46,7 +46,7 @@ func main() {
 
 	// productService := service.NewProductService(repo.NewProductRepo(db), db)
 
-	cartRepo := repo.NewCartRepo(db)
+	cartRepo := repo.NewCartRepo(db, infra.Sqlx(cfg.POSTGRES_URL))
 	cartItemRepo := repo.NewCartItemRepo(db)
 	cartService := service.NewCartService(cartRepo, cartItemRepo, db)
 	cart, err := cartService.CreateCart()

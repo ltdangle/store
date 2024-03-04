@@ -3,15 +3,17 @@ package repo
 import (
 	"store/pkg/models"
 
+	"github.com/jmoiron/sqlx"
 	"gorm.io/gorm"
 )
 
 type CartRepo struct {
-	db *gorm.DB
+	db   *gorm.DB
+	sqlx *sqlx.DB
 }
 
-func NewCartRepo(db *gorm.DB) *CartRepo {
-	return &CartRepo{db: db}
+func NewCartRepo(db *gorm.DB, sqlx *sqlx.DB) *CartRepo {
+	return &CartRepo{db: db, sqlx: sqlx}
 }
 
 func (repo *CartRepo) Save(cart *models.Cart) error {
@@ -20,6 +22,47 @@ func (repo *CartRepo) Save(cart *models.Cart) error {
 		return tx.Error
 	}
 	return nil
+}
+
+type FullCart struct {
+	*models.Cart
+	CartItems []*struct {
+		*models.CartItem
+		Product *models.Product
+	}
+}
+
+// TODO: introduce full cart model that contains cart items and products. Hydrate the full cart model via separate queries, no joins.
+func (repo *CartRepo) FullCartNew(cartUuid string) (*FullCart, error) {
+	var cartVM *FullCart
+	// Retrieve cart.
+	var cart models.Cart
+	err := repo.sqlx.Get(&cart, `SELECT * FROM carts WHERE uuid = $1;`, cartUuid)
+	if err != nil {
+		return nil, err
+	}
+
+	// cartVM.Cart = &cart
+	//
+	// Retrieve cart items.
+	var cartItems []*models.CartItem
+	err = repo.sqlx.Select(&cartItems, `SELECT * FROM cart_items WHERE cart_uuid = $1;`, cartUuid)
+	if err != nil {
+		return nil, err
+	}
+
+	// Retrieve products for each cart item.
+	var products []*models.Product
+	for _, cartItem := range cartItems {
+		var product models.Product
+		err = repo.sqlx.Get(&product, `SELECT * FROM products WHERE uuid = $1;`, cartItem.ProductUuid)
+		// cartVM.CartItems[key].Product = product
+		products = append(products, &product)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return cartVM, nil
 }
 
 func (repo *CartRepo) FullCart(uuid string) (*models.Cart, error) {

@@ -1,7 +1,6 @@
 package repo
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"store/pkg/infra"
@@ -38,9 +37,4 @@ WHERE
 		log.Fatal(err)
 	}
 	fmt.Printf("%v", cartItem)
-}
-
-type FullCart struct {
-	*models.Cart
-	*models.CartItem `db:"cart_item"`
 }
