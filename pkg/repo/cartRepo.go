@@ -25,12 +25,12 @@ func (repo *CartRepo) Save(cart *models.Cart) error {
 }
 
 type CartItemVM struct {
-	CartItem models.CartItem
-	Product  models.Product
+	CartItem *models.CartItem
+	Product  *models.Product
 }
 
 type CartVM struct {
-	Cart      models.Cart
+	Cart      *models.Cart
 	CartItems []CartItemVM
 }
 
@@ -43,7 +43,7 @@ func (repo *CartRepo) FullCartNew(cartUuid string) (*CartVM, error) {
 		return nil, err
 	}
 
-	cartVM.Cart = cart
+	cartVM.Cart = &cart
 
 	// Retrieve cart items.
 	var cartItems []*models.CartItem
@@ -59,7 +59,7 @@ func (repo *CartRepo) FullCartNew(cartUuid string) (*CartVM, error) {
 		if err != nil {
 			return nil, err
 		}
-		cartItemVm := CartItemVM{CartItem: *cartItem, Product: product}
+		cartItemVm := CartItemVM{CartItem: cartItem, Product: &product}
 		cartVM.CartItems = append(cartVM.CartItems, cartItemVm)
 	}
 	return cartVM, nil
