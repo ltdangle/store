@@ -24,17 +24,18 @@ func (repo *CartRepo) Save(cart *models.Cart) error {
 	return nil
 }
 
-type FullCart struct {
-	*models.Cart
-	CartItems []*struct {
-		*models.CartItem
-		Product *models.Product
-	}
+type CartItemVM struct {
+	CartItem models.CartItem
+	Product  models.Product
 }
 
-// TODO: introduce full cart model that contains cart items and products. Hydrate the full cart model via separate queries, no joins.
-func (repo *CartRepo) FullCartNew(cartUuid string) (*FullCart, error) {
-	var cartVM *FullCart
+type CartVM struct {
+	Cart      models.Cart
+	CartItems []CartItemVM
+}
+
+func (repo *CartRepo) FullCartNew(cartUuid string) (*CartVM, error) {
+	cartVM := &CartVM{}
 	// Retrieve cart.
 	var cart models.Cart
 	err := repo.sqlx.Get(&cart, `SELECT * FROM carts WHERE uuid = $1;`, cartUuid)
@@ -42,8 +43,8 @@ func (repo *CartRepo) FullCartNew(cartUuid string) (*FullCart, error) {
 		return nil, err
 	}
 
-	// cartVM.Cart = &cart
-	//
+	cartVM.Cart = cart
+
 	// Retrieve cart items.
 	var cartItems []*models.CartItem
 	err = repo.sqlx.Select(&cartItems, `SELECT * FROM cart_items WHERE cart_uuid = $1;`, cartUuid)
@@ -52,15 +53,14 @@ func (repo *CartRepo) FullCartNew(cartUuid string) (*FullCart, error) {
 	}
 
 	// Retrieve products for each cart item.
-	var products []*models.Product
 	for _, cartItem := range cartItems {
 		var product models.Product
 		err = repo.sqlx.Get(&product, `SELECT * FROM products WHERE uuid = $1;`, cartItem.ProductUuid)
-		// cartVM.CartItems[key].Product = product
-		products = append(products, &product)
 		if err != nil {
 			return nil, err
 		}
+		cartItemVm := CartItemVM{CartItem: *cartItem, Product: product}
+		cartVM.CartItems = append(cartVM.CartItems, cartItemVm)
 	}
 	return cartVM, nil
 }
