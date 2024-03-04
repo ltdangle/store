@@ -36,15 +36,13 @@ func (cntrl *CartController) View(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	uuid := vars["uuid"]
 
-	// _, err := cntrl.repo.FullCart(uuid)
-	_, err := cntrl.repo.FullCartNew(uuid)
+	cartVM, err := cntrl.repo.CartVM(uuid)
 
 	if err != nil {
 		cntrl.logger.Warn(fmt.Sprintf("CartController.View: cart %s : %s", uuid, err.Error()))
 		fmt.Fprint(w, err.Error())
 	} else {
-		vm := VM{}
-		cntrl.tmpl.SetMain(cntrl.tmpl.cart(vm))
+		cntrl.tmpl.SetMain(cntrl.tmpl.cart(cartVM))
 		cntrl.router.Response(w, cntrl.tmpl.Render())
 	}
 }

@@ -34,7 +34,7 @@ type CartVM struct {
 	CartItems []CartItemVM
 }
 
-func (repo *CartRepo) FullCartNew(cartUuid string) (*CartVM, error) {
+func (repo *CartRepo) CartVM(cartUuid string) (*CartVM, error) {
 	cartVM := &CartVM{}
 	// Retrieve cart.
 	var cart models.Cart
@@ -65,15 +65,6 @@ func (repo *CartRepo) FullCartNew(cartUuid string) (*CartVM, error) {
 	return cartVM, nil
 }
 
-func (repo *CartRepo) FullCart(uuid string) (*models.Cart, error) {
-	var cart models.Cart
-	result := repo.db.Preload("CartItems").Preload("CartItems.Product").Preload("CartItems.Product.Fields").Where("uuid = ?", uuid).First(&cart)
-	if result.Error != nil {
-		return nil, result.Error
-	}
-
-	return &cart, nil
-}
 func (repo *CartRepo) FindByCartItemUuid(cartItemUuid string) (*models.Cart, error) {
 	var cart models.Cart
 
