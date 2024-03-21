@@ -17,15 +17,20 @@ func main() {
 	router := dc.AppRouter.Router
 	router.Use(loggingMiddleware)
 
-	dc.AdminController.AddMappedEntity("cart", &models.Cart{})
-	dc.AdminController.AddMappedEntity("cartItem", &models.CartItem{})
-	dc.AdminController.AddMappedEntity("product", &models.Product{})
-
 	// Admin panel.
 	router.HandleFunc("/admin/{entity}/view", dc.AdminController.ViewAll).Methods("GET").Name(web.ADMIN_VIEW_ALL_ENTITIES_ROUTE)
 	router.HandleFunc("/admin/{entity}/{uuid}/view", dc.AdminController.ViewEntity).Methods("GET").Name(web.ADMIN_VIEW_ENTITY_ROUTE)
 	router.HandleFunc("/admin/{entity}/{uuid}/update", dc.AdminController.Update).Methods("POST").Name(web.ADMIN_UPDATE_ENTITY_ROUTE)
 
+	dc.AdminController.AddMappedEntity("cart", &models.Cart{})
+	dc.AdminController.AddMappedEntity("cartItem", &models.CartItem{})
+	dc.AdminController.AddMappedEntity("product", &models.Product{})
+
+	dc.AdminTemplate.AddNavLink(dc.AppRouter.UrlInternal(web.ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "cart"), "Carts")
+	dc.AdminTemplate.AddNavLink(dc.AppRouter.UrlInternal(web.ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "cartItem"), "Cart Items")
+	dc.AdminTemplate.AddNavLink(dc.AppRouter.UrlInternal(web.ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "product"), "Products")
+
+	// Cart.
 	router.HandleFunc("/cart/{uuid}", dc.CartController.View).Methods("GET").Name(web.CART_VIEW_ROUTE)
 	router.HandleFunc("/cartItem/{uuid}/delete", dc.CartController.DeleteItem).Methods("GET").Name(web.CART_ITEM_DELETE_ROUTE)
 	router.HandleFunc("/seed", seed).Methods("GET")

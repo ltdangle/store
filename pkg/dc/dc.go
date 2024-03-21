@@ -60,9 +60,6 @@ func NewDc(envFile string) *Dc {
 
 	dc.AdminTemplate = web.NewAdminTmpl(dc.AppRouter)
 
-	dc.AdminTemplate.AddNavLink(dc.AppRouter.UrlInternal(web.ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "cart"), "Carts")
-	dc.AdminTemplate.AddNavLink(dc.AppRouter.UrlInternal(web.ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "cartItem"), "Cart Items")
-	dc.AdminTemplate.AddNavLink(dc.AppRouter.UrlInternal(web.ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "product"), "Products")
 
 	dc.CartController = web.NewCartController(dc.AppRouter, dc.CartService, dc.CartRepo, dc.Logger, dc.AdminTemplate, dc.Db)
 	dc.AdminController = web.NewAdminController(dc.AppRouter, dc.Logger, dc.AdminTemplate, dc.GeneralRepo)
