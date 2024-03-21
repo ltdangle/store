@@ -46,11 +46,11 @@ func (cntrl *CartController) View(w http.ResponseWriter, r *http.Request) {
 	} else {
 		// render template
 		var html bytes.Buffer
-		templ := cart(cartVM, cntrl.router)
+		templ := store(cartVM, cntrl.router)
 		_ = templ.Render(context.Background(), &html)
 
 		cntrl.tmpl.SetMain(html.String())
-		cntrl.router.Response(w, cntrl.tmpl.Render())
+		cntrl.router.Response(w, html.String())
 	}
 }
 
