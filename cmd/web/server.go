@@ -26,10 +26,10 @@ func main() {
 	dc.AdminController.AddMappedEntity("cartItem", &models.CartItem{})
 	dc.AdminController.AddMappedEntity("product", &models.Product{})
 
-	dc.AdminTemplate.AddNavLink(dc.AppRouter.UrlInternal(web.ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "cart"), "Carts")
-	dc.AdminTemplate.AddNavLink(dc.AppRouter.UrlInternal(web.ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "cartItem"), "Cart Items")
-	dc.AdminTemplate.AddNavLink(dc.AppRouter.UrlInternal(web.ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "product"), "Products")
-
+	// dc.AdminTemplate.AddNavLink(dc.AppRouter.UrlInternal(web.ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "cart"), "Carts")
+	// dc.AdminTemplate.AddNavLink(dc.AppRouter.UrlInternal(web.ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "cartItem"), "Cart Items")
+	// dc.AdminTemplate.AddNavLink(dc.AppRouter.UrlInternal(web.ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "product"), "Products")
+	//
 	// Cart.
 	router.HandleFunc("/cart/{uuid}", dc.CartController.View).Methods("GET").Name(web.CART_VIEW_ROUTE)
 	router.HandleFunc("/cartItem/{uuid}/delete", dc.CartController.DeleteItem).Methods("GET").Name(web.CART_ITEM_DELETE_ROUTE)

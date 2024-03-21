@@ -1,6 +1,20 @@
 package web
 
-templ Admintmpl(leftNav []Link, cart string) {
+type Link struct {
+	Url  string
+	Text string
+}
+
+type AdminTmpl struct {
+	Router       *AppRouter
+	LeftNavLinks []Link
+}
+
+func NewAdminTempl(router *AppRouter) *AdminTmpl {
+	return &AdminTmpl{Router: router}
+}
+
+templ admin(conf AdminTmpl, content string) {
 	<!DOCTYPE html>
 	<html class="h-full bg-white">
 		<head>
@@ -323,7 +337,7 @@ templ Admintmpl(leftNav []Link, cart string) {
 								<li>
 									<ul role="list" class="-mx-2 space-y-1">
 										<!-- Left nav menu -->
-										for _,link:=range leftNav {
+										for _,link:=range conf.LeftNavLinks {
 											<li>
 												<a href={ templ.URL(link.Url) } class="text-gray-400 hover:text-white hover:bg-gray-800 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold">
 													{ link.Text }
@@ -428,7 +442,7 @@ templ Admintmpl(leftNav []Link, cart string) {
 					<main class="py-10">
 						<div class="px-4 sm:px-6 lg:px-8">
 							<!-- Your content -->
-							@templ.Raw(cart)
+							@templ.Raw(content)
 							<hr/>
 						</div>
 					</main>

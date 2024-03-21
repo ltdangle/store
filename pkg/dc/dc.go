@@ -58,8 +58,7 @@ func NewDc(envFile string) *Dc {
 
 	dc.AppRouter = web.NewAppRouter(mux.NewRouter(), dc.Logger)
 
-	dc.AdminTemplate = web.NewAdminTmpl(dc.AppRouter)
-
+	dc.AdminTemplate = web.NewAdminTempl(dc.AppRouter)
 
 	dc.CartController = web.NewCartController(dc.AppRouter, dc.CartService, dc.CartRepo, dc.Logger, dc.AdminTemplate, dc.Db)
 	dc.AdminController = web.NewAdminController(dc.AppRouter, dc.Logger, dc.AdminTemplate, dc.GeneralRepo)

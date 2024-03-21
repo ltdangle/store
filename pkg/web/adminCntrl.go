@@ -1,6 +1,8 @@
 package web
 
 import (
+	"bytes"
+	"context"
 	"fmt"
 	"net/http"
 	"store/pkg/logger"
@@ -51,16 +53,20 @@ func (cntrl *AdminController) ViewAll(w http.ResponseWriter, r *http.Request) {
 	query := fmt.Sprintf(`SELECT * FROM %s;`, entity.TableName())
 	resultsMap, err := cntrl.repo.QueryToMap(query)
 	if err != nil {
-		cntrl.tmpl.SetMain(err.Error())
-		cntrl.router.Response(w, cntrl.tmpl.Render())
+		var html bytes.Buffer
+		templ := admin(AdminTmpl{}, err.Error())
+		_ = templ.Render(context.Background(), &html)
+		cntrl.router.Response(w, html.String())
 		return
 	}
 	fmt.Println(resultsMap)
 
 	table := NewAdminTable(entityName)
 	table.DataMap = resultsMap
-	cntrl.tmpl.SetMain(table.Render(cntrl.router))
-	cntrl.router.Response(w, cntrl.tmpl.Render())
+	var html bytes.Buffer
+	templ := admin(AdminTmpl{}, table.Render(cntrl.router))
+	_ = templ.Render(context.Background(), &html)
+	cntrl.router.Response(w, html.String())
 
 }
 
@@ -81,22 +87,28 @@ func (cntrl *AdminController) ViewEntity(w http.ResponseWriter, r *http.Request)
 	// Retrieve mapped entity.
 	err := cntrl.repo.GetByPrimaryKey(mappedEntity, uuid)
 	if err != nil {
-		cntrl.tmpl.SetMain(err.Error())
-		cntrl.router.Response(w, cntrl.tmpl.Render())
+		var html bytes.Buffer
+		templ := admin(AdminTmpl{}, err.Error())
+		_ = templ.Render(context.Background(), &html)
+		cntrl.router.Response(w, html.String())
 		return
 	}
 
 	// Populate form.
-	f, err := AdminForm(mappedEntity)
+	form, err := AdminForm(mappedEntity)
 	if err != nil {
-		cntrl.tmpl.SetMain(err.Error())
-		cntrl.router.Response(w, cntrl.tmpl.Render())
+		var html bytes.Buffer
+		templ := admin(AdminTmpl{}, err.Error())
+		_ = templ.Render(context.Background(), &html)
+		cntrl.router.Response(w, html.String())
 		return
 	}
 
-	f.Action = cntrl.router.UrlInternal(ADMIN_UPDATE_ENTITY_ROUTE, "entity", entityName, "uuid", uuid)
-	cntrl.tmpl.SetMain(f.Render())
-	cntrl.router.Response(w, cntrl.tmpl.Render())
+	form.Action = cntrl.router.UrlInternal(ADMIN_UPDATE_ENTITY_ROUTE, "entity", entityName, "uuid", uuid)
+	var html bytes.Buffer
+	templ := admin(AdminTmpl{}, form.Render())
+	_ = templ.Render(context.Background(), &html)
+	cntrl.router.Response(w, html.String())
 }
 
 const ADMIN_UPDATE_ENTITY_ROUTE = "admin update entity route"
@@ -116,8 +128,10 @@ func (cntrl *AdminController) Update(w http.ResponseWriter, r *http.Request) {
 	// entityValue := reflect.ValueOf(entityPointer).Elem().Interface()
 
 	if err := r.ParseForm(); err != nil {
-		cntrl.tmpl.SetMain(err.Error())
-		cntrl.router.Response(w, cntrl.tmpl.Render())
+		var html bytes.Buffer
+		templ := admin(AdminTmpl{}, err.Error())
+		_ = templ.Render(context.Background(), &html)
+		cntrl.router.Response(w, html.String())
 		return
 	}
 
@@ -126,8 +140,10 @@ func (cntrl *AdminController) Update(w http.ResponseWriter, r *http.Request) {
 	err := decoder.Decode(entityPointer, r.PostForm)
 	if err != nil {
 		cntrl.logger.Warn(err)
-		cntrl.tmpl.SetMain(err.Error())
-		cntrl.router.Response(w, cntrl.tmpl.Render())
+		var html bytes.Buffer
+		templ := admin(AdminTmpl{}, err.Error())
+		_ = templ.Render(context.Background(), &html)
+		cntrl.router.Response(w, html.String())
 		return
 	}
 
