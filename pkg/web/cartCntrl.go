@@ -49,7 +49,6 @@ func (cntrl *CartController) View(w http.ResponseWriter, r *http.Request) {
 		templ := store(cartVM, cntrl.router)
 		_ = templ.Render(context.Background(), &html)
 
-		cntrl.tmpl.SetMain(html.String())
 		cntrl.router.Response(w, html.String())
 	}
 }
