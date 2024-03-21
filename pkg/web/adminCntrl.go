@@ -54,7 +54,7 @@ func (cntrl *AdminController) ViewAll(w http.ResponseWriter, r *http.Request) {
 	resultsMap, err := cntrl.repo.QueryToMap(query)
 	if err != nil {
 		var html bytes.Buffer
-		templ := admin(AdminTmpl{}, err.Error())
+		templ := admin(cntrl.tmpl, err.Error())
 		_ = templ.Render(context.Background(), &html)
 		cntrl.router.Response(w, html.String())
 		return
@@ -64,7 +64,7 @@ func (cntrl *AdminController) ViewAll(w http.ResponseWriter, r *http.Request) {
 	table := NewAdminTable(entityName)
 	table.DataMap = resultsMap
 	var html bytes.Buffer
-	templ := admin(AdminTmpl{}, table.Render(cntrl.router))
+	templ := admin(cntrl.tmpl, table.Render(cntrl.router))
 	_ = templ.Render(context.Background(), &html)
 	cntrl.router.Response(w, html.String())
 
@@ -88,7 +88,7 @@ func (cntrl *AdminController) ViewEntity(w http.ResponseWriter, r *http.Request)
 	err := cntrl.repo.GetByPrimaryKey(mappedEntity, uuid)
 	if err != nil {
 		var html bytes.Buffer
-		templ := admin(AdminTmpl{}, err.Error())
+		templ := admin(cntrl.tmpl, err.Error())
 		_ = templ.Render(context.Background(), &html)
 		cntrl.router.Response(w, html.String())
 		return
@@ -98,7 +98,7 @@ func (cntrl *AdminController) ViewEntity(w http.ResponseWriter, r *http.Request)
 	form, err := AdminForm(mappedEntity)
 	if err != nil {
 		var html bytes.Buffer
-		templ := admin(AdminTmpl{}, err.Error())
+		templ := admin(cntrl.tmpl, err.Error())
 		_ = templ.Render(context.Background(), &html)
 		cntrl.router.Response(w, html.String())
 		return
@@ -106,7 +106,7 @@ func (cntrl *AdminController) ViewEntity(w http.ResponseWriter, r *http.Request)
 
 	form.Action = cntrl.router.UrlInternal(ADMIN_UPDATE_ENTITY_ROUTE, "entity", entityName, "uuid", uuid)
 	var html bytes.Buffer
-	templ := admin(AdminTmpl{}, form.Render())
+	templ := admin(cntrl.tmpl, form.Render())
 	_ = templ.Render(context.Background(), &html)
 	cntrl.router.Response(w, html.String())
 }
@@ -129,7 +129,7 @@ func (cntrl *AdminController) Update(w http.ResponseWriter, r *http.Request) {
 
 	if err := r.ParseForm(); err != nil {
 		var html bytes.Buffer
-		templ := admin(AdminTmpl{}, err.Error())
+		templ := admin(cntrl.tmpl, err.Error())
 		_ = templ.Render(context.Background(), &html)
 		cntrl.router.Response(w, html.String())
 		return
@@ -141,7 +141,7 @@ func (cntrl *AdminController) Update(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		cntrl.logger.Warn(err)
 		var html bytes.Buffer
-		templ := admin(AdminTmpl{}, err.Error())
+		templ := admin(cntrl.tmpl, err.Error())
 		_ = templ.Render(context.Background(), &html)
 		cntrl.router.Response(w, html.String())
 		return

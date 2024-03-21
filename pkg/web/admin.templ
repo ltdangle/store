@@ -19,7 +19,7 @@ func (t *AdminTmpl) AddNavLink(url string, text string) {
 	t.LeftNavLinks = append(t.LeftNavLinks, link)
 }
 
-templ admin(conf AdminTmpl, content string) {
+templ admin(conf *AdminTmpl, content string) {
 	<!DOCTYPE html>
 	<html class="h-full bg-white">
 		<head>
