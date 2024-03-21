@@ -32,6 +32,8 @@ type Dc struct {
 
 	CartController  *web.CartController
 	AdminController *web.AdminController
+
+	AdminTemplate *web.AdminTmpl
 }
 
 func NewDc(envFile string) *Dc {
@@ -56,9 +58,14 @@ func NewDc(envFile string) *Dc {
 
 	dc.AppRouter = web.NewAppRouter(mux.NewRouter(), dc.Logger)
 
-	tmpl := web.NewAdminTmpl(dc.AppRouter)
-	dc.CartController = web.NewCartController(dc.AppRouter, dc.CartService, dc.CartRepo, dc.Logger, tmpl, dc.Db)
-	dc.AdminController = web.NewAdminController(dc.AppRouter, dc.Logger, tmpl, dc.GeneralRepo)
+	dc.AdminTemplate = web.NewAdminTmpl(dc.AppRouter)
+
+	dc.AdminTemplate.AddNavLink(dc.AppRouter.UrlInternal(web.ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "cart"), "Carts")
+	dc.AdminTemplate.AddNavLink(dc.AppRouter.UrlInternal(web.ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "cartItem"), "Cart Items")
+	dc.AdminTemplate.AddNavLink(dc.AppRouter.UrlInternal(web.ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "product"), "Products")
+
+	dc.CartController = web.NewCartController(dc.AppRouter, dc.CartService, dc.CartRepo, dc.Logger, dc.AdminTemplate, dc.Db)
+	dc.AdminController = web.NewAdminController(dc.AppRouter, dc.Logger, dc.AdminTemplate, dc.GeneralRepo)
 
 	return dc
 }

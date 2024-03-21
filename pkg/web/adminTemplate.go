@@ -3,7 +3,6 @@ package web
 import (
 	"bytes"
 	"context"
-	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -14,8 +13,8 @@ import (
 )
 
 type Link struct {
-	url  string
-	text string
+	Url  string
+	Text string
 }
 
 type AdminTmpl struct {
@@ -95,38 +94,15 @@ func LoadTemplate(tmpl string) string {
 }
 
 func (t *AdminTmpl) AddNavLink(url string, text string) {
-	link := Link{url: url, text: text}
+	link := Link{Url: url, Text: text}
 	t.leftNavLinks = append(t.leftNavLinks, link)
-}
-
-func (t *AdminTmpl) buildLeftNav() string {
-	var links []string
-	for _, link := range t.leftNavLinks {
-		html := fmt.Sprintf(`
-								<li>
-									<a href="%s" class="text-gray-400 hover:text-white hover:bg-gray-800 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold">
-									   %s	
-									</a>
-								</li>
-            `,
-			link.url, link.text,
-		)
-		links = append(links, html)
-	}
-	return strings.Join(links, "\n")
 }
 
 func (t *AdminTmpl) SetMain(html string) {
 	t.main = html
 }
 func (t *AdminTmpl) Render() string {
-
-	// TODO: log UrlInternal errors to logger.
-	t.AddNavLink(t.router.UrlInternal(ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "cart"), "Carts")
-	t.AddNavLink(t.router.UrlInternal(ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "cartItem"), "Cart Items")
-	t.AddNavLink(t.router.UrlInternal(ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "product"), "Products")
-
-	templ := Admintmpl(t.buildLeftNav(), t.main)
+	templ := Admintmpl(t.leftNavLinks, t.main)
 
 	var html bytes.Buffer
 	_ = templ.Render(context.Background(), &html)
