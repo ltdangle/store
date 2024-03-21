@@ -18,6 +18,12 @@ func (t *AdminTmpl) AddNavLink(url string, text string) {
 	link := Link{Url: url, Text: text}
 	t.LeftNavLinks = append(t.LeftNavLinks, link)
 }
+func (t *AdminTmpl) Render(content string) string {
+	var html bytes.Buffer
+	templ := admin(t, content)
+	_ = templ.Render(context.Background(), &html)
+	return html.String()
+}
 
 templ admin(conf *AdminTmpl, content string) {
 	<!DOCTYPE html>

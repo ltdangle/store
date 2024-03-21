@@ -1,8 +1,6 @@
 package web
 
 import (
-	"bytes"
-	"context"
 	"fmt"
 	"net/http"
 	"store/pkg/logger"
@@ -46,28 +44,20 @@ func (cntrl *AdminController) ViewAll(w http.ResponseWriter, r *http.Request) {
 
 	entity, ok := cntrl.mappedEntities[entityName]
 	if !ok {
-		http.Error(w, "Entity type not found", http.StatusNotFound)
+		cntrl.router.Response(w, cntrl.tmpl.Render("Entity type not found"))
 		return
 	}
 
 	query := fmt.Sprintf(`SELECT * FROM %s;`, entity.TableName())
 	resultsMap, err := cntrl.repo.QueryToMap(query)
 	if err != nil {
-		var html bytes.Buffer
-		templ := admin(cntrl.tmpl, err.Error())
-		_ = templ.Render(context.Background(), &html)
-		cntrl.router.Response(w, html.String())
+		cntrl.router.Response(w, cntrl.tmpl.Render(err.Error()))
 		return
 	}
-	fmt.Println(resultsMap)
 
 	table := NewAdminTable(entityName)
 	table.DataMap = resultsMap
-	var html bytes.Buffer
-	templ := admin(cntrl.tmpl, table.Render(cntrl.router))
-	_ = templ.Render(context.Background(), &html)
-	cntrl.router.Response(w, html.String())
-
+	cntrl.router.Response(w, cntrl.tmpl.Render(table.Render(cntrl.router)))
 }
 
 // Views mapped entity.
@@ -80,35 +70,26 @@ func (cntrl *AdminController) ViewEntity(w http.ResponseWriter, r *http.Request)
 
 	mappedEntity, ok := cntrl.mappedEntities[entityName]
 	if !ok {
-		http.Error(w, "Entity type not found", http.StatusNotFound)
+		cntrl.router.Response(w, cntrl.tmpl.Render("Entity type not found"))
 		return
 	}
 
 	// Retrieve mapped entity.
 	err := cntrl.repo.GetByPrimaryKey(mappedEntity, uuid)
 	if err != nil {
-		var html bytes.Buffer
-		templ := admin(cntrl.tmpl, err.Error())
-		_ = templ.Render(context.Background(), &html)
-		cntrl.router.Response(w, html.String())
+		cntrl.router.Response(w, cntrl.tmpl.Render("Entity type not found"))
 		return
 	}
 
 	// Populate form.
 	form, err := AdminForm(mappedEntity)
 	if err != nil {
-		var html bytes.Buffer
-		templ := admin(cntrl.tmpl, err.Error())
-		_ = templ.Render(context.Background(), &html)
-		cntrl.router.Response(w, html.String())
+		cntrl.router.Response(w, err.Error())
 		return
 	}
 
 	form.Action = cntrl.router.UrlInternal(ADMIN_UPDATE_ENTITY_ROUTE, "entity", entityName, "uuid", uuid)
-	var html bytes.Buffer
-	templ := admin(cntrl.tmpl, form.Render())
-	_ = templ.Render(context.Background(), &html)
-	cntrl.router.Response(w, html.String())
+	cntrl.router.Response(w, cntrl.tmpl.Render(form.Render()))
 }
 
 const ADMIN_UPDATE_ENTITY_ROUTE = "admin update entity route"
@@ -121,17 +102,12 @@ func (cntrl *AdminController) Update(w http.ResponseWriter, r *http.Request) {
 
 	entityPointer, ok := cntrl.mappedEntities[entityName]
 	if !ok {
-		http.Error(w, "Entity type not found", http.StatusNotFound)
+		cntrl.router.Response(w, cntrl.tmpl.Render("Entity type not found"))
 		return
 	}
 
-	// entityValue := reflect.ValueOf(entityPointer).Elem().Interface()
-
 	if err := r.ParseForm(); err != nil {
-		var html bytes.Buffer
-		templ := admin(cntrl.tmpl, err.Error())
-		_ = templ.Render(context.Background(), &html)
-		cntrl.router.Response(w, html.String())
+		cntrl.router.Response(w, err.Error())
 		return
 	}
 
@@ -140,17 +116,14 @@ func (cntrl *AdminController) Update(w http.ResponseWriter, r *http.Request) {
 	err := decoder.Decode(entityPointer, r.PostForm)
 	if err != nil {
 		cntrl.logger.Warn(err)
-		var html bytes.Buffer
-		templ := admin(cntrl.tmpl, err.Error())
-		_ = templ.Render(context.Background(), &html)
-		cntrl.router.Response(w, html.String())
+		cntrl.router.Response(w, err.Error())
 		return
 	}
 
 	// Save entity.
 	err = cntrl.repo.Save(entityPointer)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusNotFound)
+		cntrl.router.Response(w, err.Error())
 		cntrl.logger.Warn(err)
 		return
 	}
