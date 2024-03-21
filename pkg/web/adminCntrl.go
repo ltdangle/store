@@ -18,17 +18,14 @@ type EntityToTableMap struct {
 type AdminController struct {
 	router *AppRouter
 	logger logger.LoggerInterface
-	tmpl   *AdminTmpl
 	repo   *repo.GeneralRepo
 
 	// map[EntityName]EntityObject
 	mappedEntities map[string]repo.MappedEntity
 }
 
-func NewAdminController(router *AppRouter, logger logger.LoggerInterface, tmpl *AdminTmpl, r *repo.GeneralRepo) *AdminController {
-	return &AdminController{router: router, logger: logger, tmpl: tmpl, repo: r,
-		mappedEntities: make(map[string]repo.MappedEntity),
-	}
+func NewAdminController(router *AppRouter, logger logger.LoggerInterface, r *repo.GeneralRepo) *AdminController {
+	return &AdminController{router: router, logger: logger, repo: r, mappedEntities: make(map[string]repo.MappedEntity)}
 }
 
 func (cntrl *AdminController) AddMappedEntity(key string, entity repo.MappedEntity) {
@@ -44,20 +41,20 @@ func (cntrl *AdminController) ViewAll(w http.ResponseWriter, r *http.Request) {
 
 	entity, ok := cntrl.mappedEntities[entityName]
 	if !ok {
-		cntrl.router.Response(w, cntrl.tmpl.Render("Entity type not found"))
+		cntrl.router.RndrTmpl(w, "Entity type not found")
 		return
 	}
 
 	query := fmt.Sprintf(`SELECT * FROM %s;`, entity.TableName())
 	resultsMap, err := cntrl.repo.QueryToMap(query)
 	if err != nil {
-		cntrl.router.Response(w, cntrl.tmpl.Render(err.Error()))
+		cntrl.router.RndrTmpl(w, err.Error())
 		return
 	}
 
 	table := NewAdminTable(entityName)
 	table.DataMap = resultsMap
-	cntrl.router.Response(w, cntrl.tmpl.Render(table.Render(cntrl.router)))
+	cntrl.router.RndrTmpl(w, table.Render(cntrl.router))
 }
 
 // Views mapped entity.
@@ -70,14 +67,14 @@ func (cntrl *AdminController) ViewEntity(w http.ResponseWriter, r *http.Request)
 
 	mappedEntity, ok := cntrl.mappedEntities[entityName]
 	if !ok {
-		cntrl.router.Response(w, cntrl.tmpl.Render("Entity type not found"))
+		cntrl.router.RndrTmpl(w, "Entity type not found")
 		return
 	}
 
 	// Retrieve mapped entity.
 	err := cntrl.repo.GetByPrimaryKey(mappedEntity, uuid)
 	if err != nil {
-		cntrl.router.Response(w, cntrl.tmpl.Render("Entity type not found"))
+		cntrl.router.RndrTmpl(w, "Entity type not found")
 		return
 	}
 
@@ -89,7 +86,7 @@ func (cntrl *AdminController) ViewEntity(w http.ResponseWriter, r *http.Request)
 	}
 
 	form.Action = cntrl.router.UrlInternal(ADMIN_UPDATE_ENTITY_ROUTE, "entity", entityName, "uuid", uuid)
-	cntrl.router.Response(w, cntrl.tmpl.Render(form.Render()))
+	cntrl.router.RndrTmpl(w, form.Render())
 }
 
 const ADMIN_UPDATE_ENTITY_ROUTE = "admin update entity route"
@@ -102,7 +99,7 @@ func (cntrl *AdminController) Update(w http.ResponseWriter, r *http.Request) {
 
 	entityPointer, ok := cntrl.mappedEntities[entityName]
 	if !ok {
-		cntrl.router.Response(w, cntrl.tmpl.Render("Entity type not found"))
+		cntrl.router.RndrTmpl(w, "Entity type not found")
 		return
 	}
 

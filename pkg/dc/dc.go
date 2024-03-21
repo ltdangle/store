@@ -56,12 +56,12 @@ func NewDc(envFile string) *Dc {
 	dc.CartItemRepo = repo.NewCartItemRepo(dc.Db)
 	dc.CartService = service.NewCartService(dc.CartRepo, dc.CartItemRepo, dc.Db)
 
-	dc.AppRouter = web.NewAppRouter(mux.NewRouter(), dc.Logger)
-
 	dc.AdminTemplate = web.NewAdminTempl(dc.AppRouter)
 
+	dc.AppRouter = web.NewAppRouter(mux.NewRouter(), dc.AdminTemplate, dc.Logger)
+
 	dc.CartController = web.NewCartController(dc.AppRouter, dc.CartService, dc.CartRepo, dc.Logger, dc.AdminTemplate, dc.Db)
-	dc.AdminController = web.NewAdminController(dc.AppRouter, dc.Logger, dc.AdminTemplate, dc.GeneralRepo)
+	dc.AdminController = web.NewAdminController(dc.AppRouter, dc.Logger, dc.GeneralRepo)
 
 	return dc
 }

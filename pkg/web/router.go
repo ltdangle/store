@@ -13,13 +13,21 @@ type ParsedUrl struct {
 	Value string
 	Error error
 }
+type Template interface {
+	Render(content string) string
+}
 type AppRouter struct {
-	Router *mux.Router
-	Logger logger.LoggerInterface
+	Router   *mux.Router
+	Logger   logger.LoggerInterface
+	Template Template
 }
 
-func NewAppRouter(router *mux.Router, logger logger.LoggerInterface) *AppRouter {
-	return &AppRouter{Router: router, Logger: logger}
+func NewAppRouter(router *mux.Router, template Template, logger logger.LoggerInterface) *AppRouter {
+	return &AppRouter{Router: router, Template: template, Logger: logger}
+}
+
+func (appRouter *AppRouter) RndrTmpl(w http.ResponseWriter, html string) {
+	appRouter.Response(w, appRouter.Template.Render(html))
 }
 
 func (appRouter *AppRouter) Response(w http.ResponseWriter, html string) {
@@ -45,4 +53,8 @@ func (appRouter *AppRouter) UrlInternal(routeName string, pairs ...string) strin
 	}
 
 	return url.String()
+}
+
+func (appRouter *AppRouter) Render(content string) {
+
 }
