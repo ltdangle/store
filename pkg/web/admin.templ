@@ -14,6 +14,11 @@ func NewAdminTempl(router *AppRouter) *AdminTmpl {
 	return &AdminTmpl{Router: router}
 }
 
+func (t *AdminTmpl) AddNavLink(url string, text string) {
+	link := Link{Url: url, Text: text}
+	t.LeftNavLinks = append(t.LeftNavLinks, link)
+}
+
 templ admin(conf AdminTmpl, content string) {
 	<!DOCTYPE html>
 	<html class="h-full bg-white">
