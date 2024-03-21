@@ -3,7 +3,6 @@ package web
 import (
 	"bytes"
 	"context"
-	"store/pkg/repo"
 )
 
 type Link struct {
@@ -43,15 +42,6 @@ type ProductField struct {
 }
 type VM struct {
 	Cart Cart
-}
-
-func (t *AdminTmpl) cart(cartVM *repo.CartVM) string {
-
-	var h bytes.Buffer
-	templ := cart(cartVM, t.router)
-	_ = templ.Render(context.Background(), &h)
-
-	return h.String()
 }
 
 func (t *AdminTmpl) AddNavLink(url string, text string) {

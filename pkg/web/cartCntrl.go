@@ -1,6 +1,8 @@
 package web
 
 import (
+	"bytes"
+	"context"
 	"fmt"
 	"net/http"
 	"store/pkg/logger"
@@ -42,7 +44,12 @@ func (cntrl *CartController) View(w http.ResponseWriter, r *http.Request) {
 		cntrl.logger.Warn(fmt.Sprintf("CartController.View: cart %s : %s", uuid, err.Error()))
 		fmt.Fprint(w, err.Error())
 	} else {
-		cntrl.tmpl.SetMain(cntrl.tmpl.cart(cartVM))
+		// render template
+		var html bytes.Buffer
+		templ := cart(cartVM, cntrl.router)
+		_ = templ.Render(context.Background(), &html)
+
+		cntrl.tmpl.SetMain(html.String())
 		cntrl.router.Response(w, cntrl.tmpl.Render())
 	}
 }
