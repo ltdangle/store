@@ -35,6 +35,10 @@ func (cart Cart) New() i.AdminEntity {
 	return NewCart()
 }
 
+func (cart *Cart) GetUuid() string {
+	return cart.Uuid
+}
+
 type CartItem struct {
 	Uuid string `gorm:"primarykey" db:"uuid"`
 
@@ -67,4 +71,7 @@ func (cartItem CartItem) String() string {
 }
 func (cart CartItem) New() i.AdminEntity {
 	return NewCartItem()
+}
+func (cartItem *CartItem) GetUuid() string {
+	return cartItem.Uuid
 }

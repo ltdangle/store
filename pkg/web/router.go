@@ -42,13 +42,13 @@ func (appRouter *AppRouter) Response(w http.ResponseWriter, html string) {
 func (appRouter *AppRouter) UrlInternal(routeName string, pairs ...string) string {
 	route := appRouter.Router.Get(routeName)
 	if route == nil {
-		appRouter.Logger.Warn(fmt.Sprintf("UrlInternal: url for route %s not found ", routeName))
+		appRouter.Logger.Warn(fmt.Sprintf("UrlInternal: url for route: %s not found ", routeName))
 		return ""
 	}
 
 	url, err := route.URL(pairs...)
 	if err != nil || url == nil || url.String()=="" {
-		appRouter.Logger.Warn(fmt.Sprintf("UrlInternal: url params %s for route %s could not be parsed", pairs, routeName))
+		appRouter.Logger.Warn(fmt.Sprintf("UrlInternal: route could not be parsed. Url params: %s. Route: %s", pairs, routeName))
 		return ""
 	}
 

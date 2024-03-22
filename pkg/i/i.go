@@ -9,4 +9,6 @@ type AdminEntity interface {
 	TableName() string
 	// Constructor function.
 	New() AdminEntity
+	// Get Uuid.
+	GetUuid() string
 }

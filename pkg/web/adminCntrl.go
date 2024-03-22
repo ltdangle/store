@@ -142,13 +142,17 @@ func (cntrl *AdminController) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Populate form.
-	form, err := AdminForm(mappedEntity)
+	// Create new entity.
+	newEntity := mappedEntity.New()
+
+	// Save entity.
+	err := cntrl.repo.Save(newEntity)
 	if err != nil {
 		cntrl.router.Response(w, err.Error())
+		cntrl.logger.Warn(err)
 		return
 	}
 
-	form.Action = cntrl.router.UrlInternal(ADMIN_UPDATE_ENTITY_ROUTE, "entity", entityName, "uuid", "xxx")
-	cntrl.router.RndrTmpl(w, form.Render())
+	redirectUrl := cntrl.router.UrlInternal(ADMIN_VIEW_ENTITY_ROUTE, "entity", entityName, "uuid", newEntity.GetUuid())
+	http.Redirect(w, r, redirectUrl, http.StatusFound)
 }

@@ -33,6 +33,9 @@ func (product Product) PrimaryKey() string {
 func (product Product) TableName() string {
 	return "products"
 }
-func (cart Product) New() i.AdminEntity {
+func (product Product) New() i.AdminEntity {
 	return NewProduct()
+}
+func (product *Product) GetUuid() string {
+	return product.Uuid
 }
