@@ -7,4 +7,6 @@ type AdminEntity interface {
 	PrimaryKey() string
 	// Name of the database table for the entity.
 	TableName() string
+	// Constructor function.
+	New() AdminEntity
 }

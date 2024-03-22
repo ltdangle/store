@@ -1,6 +1,7 @@
 package models
 
 import (
+	"store/pkg/i"
 	"time"
 
 	"gorm.io/gorm"
@@ -22,12 +23,16 @@ func NewCart() *Cart {
 	}
 }
 
-func (cart *Cart) PrimaryKey() string {
+func (cart Cart) PrimaryKey() string {
 	return "uuid"
 }
 
-func (cart *Cart) TableName() string {
+func (cart Cart) TableName() string {
 	return "carts"
+}
+
+func (cart Cart) New() i.AdminEntity {
+	return NewCart()
 }
 
 type CartItem struct {
@@ -49,14 +54,17 @@ func NewCartItem() *CartItem {
 	}
 }
 
-func (cartItem *CartItem) PrimaryKey() string {
+func (cartItem CartItem) PrimaryKey() string {
 	return "uuid"
 }
 
-func (cartItem *CartItem) TableName() string {
+func (cartItem CartItem) TableName() string {
 	return "cart_items"
 }
 
-func (cartItem *CartItem) String() string {
+func (cartItem CartItem) String() string {
 	return cartItem.Uuid
+}
+func (cart CartItem) New() i.AdminEntity {
+	return NewCartItem()
 }

@@ -23,9 +23,9 @@ func main() {
 	router.HandleFunc("/admin/{entity}/{uuid}/update", dc.AdminController.Update).Methods("POST").Name(web.ADMIN_UPDATE_ENTITY_ROUTE)
 	router.HandleFunc("/admin/{entity}/create", dc.AdminController.Create).Methods("GET").Name(web.ADMIN_CREATE_ENTITY_ROUTE)
 
-	dc.AdminController.AddMappedEntity("cart", &models.Cart{})
-	dc.AdminController.AddMappedEntity("cartItem", &models.CartItem{})
-	dc.AdminController.AddMappedEntity("product", &models.Product{})
+	dc.AdminController.AddMappedEntity("cart", models.Cart{})
+	dc.AdminController.AddMappedEntity("cartItem", models.CartItem{})
+	dc.AdminController.AddMappedEntity("product", models.Product{})
 
 	dc.AdminTemplate.AddNavLink(dc.AppRouter.UrlInternal(web.ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "cart"), "Carts")
 	dc.AdminTemplate.AddNavLink(dc.AppRouter.UrlInternal(web.ADMIN_VIEW_ALL_ENTITIES_ROUTE, "entity", "cartItem"), "Cart Items")

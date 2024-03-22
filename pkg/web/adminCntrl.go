@@ -21,7 +21,6 @@ type AdminController struct {
 	logger logger.LoggerInterface
 	repo   *repo.GeneralRepo
 
-	// map[EntityName]EntityObject
 	mappedEntities map[string]i.AdminEntity
 }
 

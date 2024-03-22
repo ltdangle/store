@@ -1,6 +1,7 @@
 package models
 
 import (
+	"store/pkg/i"
 	"time"
 
 	"gorm.io/gorm"
@@ -14,8 +15,8 @@ type Product struct {
 	Description string `gorm:"type:text;not null" db:"description"`
 	BasePrice   int    `gorm:"not null;default:0" db:"base_price"`
 
-	CreatedAt time.Time `db:"created_at"`
-	UpdatedAt time.Time `db:"updated_at"`
+	CreatedAt time.Time      `db:"created_at"`
+	UpdatedAt time.Time      `db:"updated_at"`
 	DeletedAt gorm.DeletedAt `db:"deleted_at"`
 }
 
@@ -25,10 +26,13 @@ func NewProduct() *Product {
 		CreatedAt: time.Now(),
 	}
 }
-func (product *Product) PrimaryKey() string {
+func (product Product) PrimaryKey() string {
 	return "uuid"
 }
 
-func (product *Product) TableName() string {
+func (product Product) TableName() string {
 	return "products"
+}
+func (cart Product) New() i.AdminEntity {
+	return NewProduct()
 }
