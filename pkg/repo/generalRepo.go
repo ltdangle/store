@@ -2,17 +2,11 @@ package repo
 
 import (
 	"fmt"
+	"store/pkg/i"
 
 	"github.com/jmoiron/sqlx"
 	"gorm.io/gorm"
 )
-
-type MappedEntity interface {
-	// Primary key of the table.
-	PrimaryKey() string
-	// Name of the database table for the entity.
-	TableName() string
-}
 
 // A repo that can save and find by uuid any mapped entity.
 type GeneralRepo struct {
@@ -34,7 +28,7 @@ func (repo *GeneralRepo) Save(entity any) error {
 }
 
 // Retrieve entity via sqlx (GORM produces unexpected queries).
-func (repo *GeneralRepo) GetByPrimaryKey(entity MappedEntity, search string) error {
+func (repo *GeneralRepo) GetByPrimaryKey(entity i.AdminEntity, search string) error {
 	query := fmt.Sprintf(`SELECT * FROM %s WHERE %s = $1;`, entity.TableName(), entity.PrimaryKey())
 	err := repo.sqlx.Get(entity, query, search)
 	if err != nil {
@@ -43,7 +37,7 @@ func (repo *GeneralRepo) GetByPrimaryKey(entity MappedEntity, search string) err
 
 	return nil
 }
-func (repo *GeneralRepo) FindAll(entity MappedEntity, results interface{}) error {
+func (repo *GeneralRepo) FindAll(entity i.AdminEntity, results interface{}) error {
 	query := fmt.Sprintf(`SELECT * FROM %s;`, entity.TableName())
 	err := repo.sqlx.Select(results, query)
 	if err != nil {

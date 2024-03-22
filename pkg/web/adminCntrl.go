@@ -3,6 +3,7 @@ package web
 import (
 	"fmt"
 	"net/http"
+	"store/pkg/i"
 	"store/pkg/logger"
 	"store/pkg/repo"
 
@@ -21,14 +22,14 @@ type AdminController struct {
 	repo   *repo.GeneralRepo
 
 	// map[EntityName]EntityObject
-	mappedEntities map[string]repo.MappedEntity
+	mappedEntities map[string]i.AdminEntity
 }
 
 func NewAdminController(router *AppRouter, logger logger.LoggerInterface, r *repo.GeneralRepo) *AdminController {
-	return &AdminController{router: router, logger: logger, repo: r, mappedEntities: make(map[string]repo.MappedEntity)}
+	return &AdminController{router: router, logger: logger, repo: r, mappedEntities: make(map[string]i.AdminEntity)}
 }
 
-func (cntrl *AdminController) AddMappedEntity(key string, entity repo.MappedEntity) {
+func (cntrl *AdminController) AddMappedEntity(key string, entity i.AdminEntity) {
 	cntrl.mappedEntities[key] = entity
 }
 
