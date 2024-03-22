@@ -42,6 +42,7 @@ func (form *Form) AddField(field *Field) {
 	form.Fields = append(form.Fields, field)
 }
 
+// TODO: use a-ha/templ
 func (form *Form) Render() string {
 	var fieldsHtml []string
 	for _, field := range form.Fields {

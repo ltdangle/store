@@ -128,3 +128,27 @@ func (cntrl *AdminController) Update(w http.ResponseWriter, r *http.Request) {
 	redirectUrl := cntrl.router.UrlInternal(ADMIN_VIEW_ENTITY_ROUTE, "entity", entityName, "uuid", uuid)
 	http.Redirect(w, r, redirectUrl, http.StatusFound)
 }
+
+const ADMIN_CREATE_ENTITY_ROUTE = "admin create entity route"
+
+// Updates mapped entity.
+func (cntrl *AdminController) Create(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	entityName := vars["entity"]
+
+	mappedEntity, ok := cntrl.mappedEntities[entityName]
+	if !ok {
+		cntrl.router.RndrTmpl(w, "Entity type not found")
+		return
+	}
+
+	// Populate form.
+	form, err := AdminForm(mappedEntity)
+	if err != nil {
+		cntrl.router.Response(w, err.Error())
+		return
+	}
+
+	form.Action = cntrl.router.UrlInternal(ADMIN_UPDATE_ENTITY_ROUTE, "entity", entityName, "uuid", "xxx")
+	cntrl.router.RndrTmpl(w, form.Render())
+}

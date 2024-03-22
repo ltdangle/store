@@ -18,9 +18,10 @@ func main() {
 	router.Use(loggingMiddleware)
 
 	// Admin panel.
-	router.HandleFunc("/admin/{entity}/view", dc.AdminController.ViewAll).Methods("GET").Name(web.ADMIN_VIEW_ALL_ENTITIES_ROUTE)
+	router.HandleFunc("/admin/{entity}/all", dc.AdminController.ViewAll).Methods("GET").Name(web.ADMIN_VIEW_ALL_ENTITIES_ROUTE)
 	router.HandleFunc("/admin/{entity}/{uuid}/view", dc.AdminController.ViewEntity).Methods("GET").Name(web.ADMIN_VIEW_ENTITY_ROUTE)
 	router.HandleFunc("/admin/{entity}/{uuid}/update", dc.AdminController.Update).Methods("POST").Name(web.ADMIN_UPDATE_ENTITY_ROUTE)
+	router.HandleFunc("/admin/{entity}/create", dc.AdminController.Create).Methods("GET").Name(web.ADMIN_CREATE_ENTITY_ROUTE)
 
 	dc.AdminController.AddMappedEntity("cart", &models.Cart{})
 	dc.AdminController.AddMappedEntity("cartItem", &models.CartItem{})
