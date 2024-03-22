@@ -47,7 +47,7 @@ func (appRouter *AppRouter) UrlInternal(routeName string, pairs ...string) strin
 	}
 
 	url, err := route.URL(pairs...)
-	if err != nil || url == nil {
+	if err != nil || url == nil || url.String()=="" {
 		appRouter.Logger.Warn(fmt.Sprintf("UrlInternal: url params %s for route %s could not be parsed", pairs, routeName))
 		return ""
 	}
